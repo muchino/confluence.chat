@@ -10,11 +10,21 @@ package confluence.chat.actions;
  */
 public enum ChatStatus {
 
-    ONLINE, OFFLINE, AWAY, DO_NOT_DISTURB;
+    ONLINE, OFFLINE, AWAY, DO_NOT_DISTURB, NO_CHANGE;
 
     @Override
     public String toString() {
-        return this.toString().toLowerCase();
-
+        switch (this) {
+            case ONLINE:
+                return "chat";
+            case AWAY:
+                return "away";
+            case DO_NOT_DISTURB:
+                return "dnd";
+            case NO_CHANGE:
+                return "no change";                
+            default:
+                return "xa";
+        }
     }
 }

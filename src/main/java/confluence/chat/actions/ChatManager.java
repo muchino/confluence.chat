@@ -134,7 +134,7 @@ public class ChatManager {
         Date time = cal.getTime();
         for (Map.Entry<String, ChatUser> user : onlineUsers.entrySet()) {
             ChatUser chatUser = user.getValue();
-            if (ChatStatus.ONLINE.equals(chatUser.getStatus())
+            if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())
                     && time.before(chatUser.getLastSeen())) {
                 onlineUserList.add(chatUser);
 
@@ -145,9 +145,16 @@ public class ChatManager {
         return onlineUserList;
     }
 
+    public void setOnlineStatus(String user, ChatStatus status) {
+        this.setOnlineStatus(userAccessor.getUser(user), status);
+    }
+
     public void setOnlineStatus(User user, ChatStatus status) {
         ChatUser chatUser = this.onlineUsers.getChatUser(user.getName());
-        chatUser.setStatus(status);
+        chatUser.setFullName(user.getFullName());
+        if (status != null && status != ChatStatus.NO_CHANGE) {
+            chatUser.setStatus(status);
+        }
         chatUser.setLastSeen(new Date());
         if (chatUser.getUserImage() == null) {
             ProfilePictureInfo picture = userAccessor.getUserProfilePicture(user);
@@ -156,7 +163,12 @@ public class ChatManager {
                 String downloadPath = picture.getDownloadPath();
                 fileName = picture.getFileName();
                 if (downloadPath.trim() == null ? fileName.trim() != null : !downloadPath.trim().equals(fileName.trim())) {
-                    fileName = downloadPath + fileName;
+                    if (downloadPath.endsWith(fileName)) {
+                        fileName = downloadPath;
+                    } else {
+                        fileName = downloadPath + fileName;
+                    }
+
                 }
             } else {
                 fileName = ProfilePictureInfo.DEFAULT_PROFILE_PATH;

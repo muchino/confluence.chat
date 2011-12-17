@@ -1,18 +1,14 @@
 package confluence.chat.actions;
 
-import com.atlassian.confluence.core.Beanable;
-import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.spring.container.ContainerManager;
 import com.opensymphony.webwork.ServletActionContext;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
-public class ChatAction extends ConfluenceActionSupport implements Beanable {
+public class ChatAction extends AbstractChatAction {
 
     private static String PARAM_MESSAGE = "message";
     private static String PARAM_CLOSE = "close";
@@ -25,8 +21,6 @@ public class ChatAction extends ConfluenceActionSupport implements Beanable {
 
     @Override
     public final String execute() throws Exception {
-
-
         return SUCCESS;
     }
 
@@ -34,6 +28,7 @@ public class ChatAction extends ConfluenceActionSupport implements Beanable {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpSession session = request.getSession();
         chatBoxMap = chatManager.getOpenChats(session);
+        chatManager.setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
         return SUCCESS;
     }
 
@@ -45,12 +40,13 @@ public class ChatAction extends ConfluenceActionSupport implements Beanable {
     }
 
     public final String heartbeat() throws Exception {
-
-        this.chatBoxMap = chatManager.getNewChatBoxesOfUser(getRemoteUser().getName());
-        if (!this.chatBoxMap.isEmpty()) {
-            chatManager.clearNewMessages(getRemoteUser().getName());
+        if (getRemoteUser() != null) {
+            this.chatBoxMap = chatManager.getNewChatBoxesOfUser(getRemoteUser().getName());
+            if (!this.chatBoxMap.isEmpty()) {
+                chatManager.clearNewMessages(getRemoteUser().getName());
+            }
+            chatManager.setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
         }
-        chatManager.setOnlineStatus(getRemoteUser(), ChatStatus.ONLINE);
         return SUCCESS;
     }
 
@@ -66,20 +62,14 @@ public class ChatAction extends ConfluenceActionSupport implements Beanable {
 
     @Override
     public Object getBean() {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        if (!chatBoxMap.isEmpty()) {
-            chatManager.saveOpenChats(request.getSession(), chatBoxMap);
-        }
-
-        for (int i = 0; i < this.chatBoxMap.size(); i++) {
-            ChatBox get = this.chatBoxMap.get(i);
-            
-        }
-        
         Map<String, Object> bean = new HashMap<String, Object>();
-        bean.put("username", getRemoteUser().getName());
-        bean.put("chatboxes", this.chatBoxMap);
-        bean.put("users", chatManager.getOnlineUsers());
+        if (getRemoteUser() != null) {
+            HttpServletRequest request = ServletActionContext.getRequest();
+            if (!chatBoxMap.isEmpty()) {
+                chatManager.saveOpenChats(request.getSession(), chatBoxMap);
+            }
+            bean.put("chatboxes", this.chatBoxMap);
+        }
         return bean;
     }
 }

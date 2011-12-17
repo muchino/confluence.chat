@@ -10,5 +10,34 @@ package confluence.chat.actions;
  */
 public class ChatPreferences {
 
-    private String username;
+    private Boolean showContacts = false;
+    private ChatStatus chatStatus = ChatStatus.ONLINE;
+
+    /**
+     * @return the showContacts
+     */
+    public Boolean getShowContacts() {
+        return showContacts;
+    }
+
+    /**
+     * @param showContacts the showContacts to set
+     */
+    public void setShowContacts(Boolean showContacts) {
+        this.showContacts = showContacts;
+    }
+
+    /**
+     * @return the chatStatus
+     */
+    public ChatStatus getChatStatus() {
+        return chatStatus;
+    }
+
+    /**
+     * @param chatStatus the chatStatus to set
+     */
+    public void setChatStatus(ChatStatus chatStatus) {
+        this.chatStatus = chatStatus;
+    }
 }

@@ -39,13 +39,14 @@
             </action>  
             <action name="getonlineuser" class="confluence.chat.actions.GetOnlineUserAction" >
                 <result name="success" type="json" />
-            </action>                
+            </action>  
+            <action name="setstatus" class="confluence.chat.actions.SetStatusAction" >
+                <result name="success" type="json" />
+            </action>             
+            
         </package>
     </xwork>
     <web-resource key="chat-files" name="Chat Files">
-        
-        <resource type="download" name="jquery.livequery.min.js" location="confluence/chat/js/jquery.livequery.min.js"/>
-        <resource type="download" name="chat-social.js" location="confluence/chat/js/chat-social.js"/>
         
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
         <resource type="download" name="chatbar.js" location="confluence/chat/js/chatbar.js"/>
@@ -54,7 +55,7 @@
         <resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css">
             <param name="batch" value="false"/>    
         </resource>
-        <resource type="download" name="screen.css" location="confluence/chat/css/screen.css"/>
+        <resource type="download" name="chatbar.css" location="confluence/chat/css/chatbar.css"/>
         <resource type="download" name="screen_ie.css" location="confluence/chat/css/screen_ie.css">
             <param name="ieonly" value="true"/>
         </resource>
@@ -65,8 +66,11 @@
     <resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
         <param name="content-type" value="image/png"/>
     </resource>
-
+    <listener name='Login Logout Listener' class='confluence.chat.actions.LoginLogoutListener'
+              key='guLoginListener'>
+        <description>Listen for the login or the logout an user, to set the chat status </description>
+    </listener>
     
-<!--    <velocity-context-item key="getunikCoreSkinHelper" name="Core Skin Velocity Helper" context-key="guCore"  class="net.getunik.confluence.skin.core.GuThemeHelper" />-->
+     <velocity-context-item key="confluenceChatManager" name="Confluence Chat Manager" context-key="chatManager"  class="confluence.chat.actions.ChatManager" />
 
 </atlassian-plugin>

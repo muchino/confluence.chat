@@ -4,7 +4,11 @@
  */
 package confluence.chat.actions;
 
+import com.atlassian.confluence.userstatus.UserStatus;
+import com.atlassian.confluence.userstatus.UserStatusManager;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -12,13 +16,18 @@ import java.util.Date;
  */
 public class ChatUser {
 
-    private String username;
-    private String userImage;
+    private static String USERNAME = "un";
+    private static String FULLNAME = "fn";
+    private static String STATUS = "s";
+    private static String STATUSMESSAGE = "sm";
+    private static String LASTSEEN = "d";
+    private static String USERIMAGE = "p";
     private Date lastSeen;
-    private ChatStatus status = ChatStatus.OFFLINE;
+    private ChatStatus status = ChatStatus.ONLINE;
+    private Map<String, String> jsonMap = new HashMap<String, String>();
 
     public ChatUser(String username) {
-        this.username = username;
+        jsonMap.put(USERNAME, username);
         this.lastSeen = new Date();
     }
 
@@ -64,7 +73,7 @@ public class ChatUser {
             return false;
         }
         final ChatUser other = (ChatUser) obj;
-        if ((this.getUsername() == null) ? (other.getUsername() != null) : !this.username.equals(other.username)) {
+        if ((this.getUsername() == null) ? (other.getUsername() != null) : !this.jsonMap.get(USERNAME).equals(other.jsonMap.get(USERNAME))) {
             return false;
         }
         return true;
@@ -74,20 +83,43 @@ public class ChatUser {
      * @return the username
      */
     public String getUsername() {
-        return username;
+        return this.jsonMap.get(USERNAME);
     }
 
     /**
      * @return the userimage
      */
     public String getUserImage() {
-        return userImage;
+        return this.jsonMap.get(USERIMAGE);
     }
 
     /**
      * @param userimage the userimage to set
      */
     public void setUserImage(String userimage) {
-        this.userImage = userimage;
+        this.jsonMap.put(USERIMAGE, userimage);
+    }
+
+    /**
+     * @return the fullName
+     */
+    public String getFullName() {
+        if (this.jsonMap.get(FULLNAME) == null) {
+            return getUsername();
+        }
+        return this.jsonMap.get(FULLNAME);
+    }
+
+    /**
+     * @param fullName the fullName to set
+     */
+    public void setFullName(String fullName) {
+        this.jsonMap.put(FULLNAME, fullName);
+    }
+
+    public Map<String, String> getJSONMap() {
+        jsonMap.put(STATUS, getStatus().toString());
+//        jsonMap.put(LASTSEEN, formatter.getFormatMessage(getLastSeen()).toString());
+        return jsonMap;
     }
 }

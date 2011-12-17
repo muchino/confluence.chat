@@ -1,2 +1,41 @@
 #requireResource("confluence.chat:chat-files")
-<div id="chatbar"></div>
+<!--[if gte IE 9]>
+  <style type="text/css">
+    .gradient {
+       filter: none;
+    }
+  </style>	px
+height	33.8px
+<![endif]-->
+<div id="chatbar">
+    <fieldset class="parameters hidden">
+
+    </fieldset>
+    <div id="chatbar-buttons">
+        <div id="chatbar-button-online">Online Users (<span>$chatManager.getOnlineUsers().size()</span>)</div>
+        <div id="chatbar-button-config">&nbsp;</div>
+    </div>
+    <div id="chatbar-online-users" class="chatbar-box">
+        <div class="chatbar-title">Kontakte</div>
+        <div id="chatbar-online-users-list" class="chatbar-box-content">
+            <div class="chat-user" >
+                <div>
+                    <img src="/images/icons/profilepics/default.gif" />
+                    <div class="chat-user-info">
+                        <a href="$req.contextPath/display/~admin">admin</a>
+                        <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="chatbar-config" class="chatbar-box">
+        <div class="chatbar-title">Configuration</div>
+        <div  class="chatbar-box-content">
+            <a rel="chat" href="#">Online</a>
+            <a rel="xa" href="#">Offline</a>
+            <a rel="away" href="#">Away</a>
+            <a rel="dnd" href="#">DnD</a>
+        </div>
+    </div>    
+</div>

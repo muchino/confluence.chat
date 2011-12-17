@@ -14,83 +14,28 @@ var newMessagesWin = new Array();
 var chatBoxes = new Array();
 
 jQuery(document).ready(function(){
-    originalTitle = document.title;
-    startChatSession();
-    showOnlineUsers();
-
-    jQuery([window, document]).blur(function(){
-        windowFocus = false;
-    }).focus(function(){
-        windowFocus = true;
-        document.title = originalTitle;
-    });
-});
-
-function printChatUserDropDown(data){
-    if(jQuery('#confluence-chat').size()== 0 ){
-        
-        var chatBar =   jQuery('<div/>') .attr('id', 'confluence-chat');
-        var usernameDropDown =  jQuery('<ul/>') .attr('id', 'confluence-chat-dropdown').appendTo(chatBar);
-        chatBar.appendTo('body');
-        chatBar.css({
-            bottom: '22px',
-            display: 'block',
-            'list-style': 'none outside none',
-            margin: 0,
-            padding: 0,
-            position: 'absolute',
-            right: '5px',
-            width: '44px'
-        }).attr('enter', 0);
-        
-        usernameDropDown.css({
-            'list-style': 'none outside none',
-            margin: 0,
-            padding: 0,
-        })
-        usernameDropDown.mouseenter(function(){
-            jQuery(this).attr('enter', 1);
-        }).mouseleave(function(){
-            jQuery(this).attr('enter', 0);
-        })
-    }
-    var usernameDropDown = jQuery('#confluence-chat #confluence-chat-dropdown');
-    if(usernameDropDown.attr('enter') != 1){
-        usernameDropDown.empty();
-        jQuery.each(data.users, function(i,user){
-            var userLI =  jQuery('<li/>').appendTo(usernameDropDown);
-            var link = jQuery('<a href="#" />')
-            .text(user.username)
-            .attr('chatuser', user.username)
-            .css('color', '#000');
-                
-            link.click(function(){
-                chatWith(jQuery(this).attr('chatuser'));
-            })
-            link.appendTo(userLI);
+    if(AJS.params.remoteUser){
+        originalTitle = document.title;
+        startChatSession();
+        jQuery([window, document]).blur(function(){
+            windowFocus = false;
+        }).focus(function(){
+            windowFocus = true;
+            document.title = originalTitle;
         });
     }
-}
-
-function showOnlineUsers(){
-    jQuery.ajax({
-        url: getBaseUrl()+"/chat/getonlineuser.action",
-        cache: false,
-        dataType: "json",
-        success: printChatUserDropDown
-    });
-}
+});
 
 function restructureChatBoxes() {
-    align = 0;
-    for (x in chatBoxes) {
-        chatboxtitle = chatBoxes[x];
+    var  align = 0;
+    for (var x in chatBoxes) {
+        var chatboxtitle = chatBoxes[x];
 
         if (jQuery("#chatbox_"+chatboxtitle).css('display') != 'none') {
             if (align == 0) {
-                jQuery("#chatbox_"+chatboxtitle).css('right', '20px');
+                jQuery("#chatbox_"+chatboxtitle).css('right', '250px');
             } else {
-                width = (align)*(225+7)+20;
+                var width = (align)*(225+7)+250;
                 jQuery("#chatbox_"+chatboxtitle).css('right', width+'px');
             }
             align++;
@@ -129,9 +74,9 @@ function createChatBox(chatboxtitle,minimizeChatBox) {
     }
 
     if (chatBoxeslength == 0) {
-        jQuery("#chatbox_"+chatboxtitle).css('right', '20px');
+        jQuery("#chatbox_"+chatboxtitle).css('right', '250px');
     } else {
-        width = (chatBoxeslength)*(225+7)+20;
+        width = (chatBoxeslength)*(225+7)+250;
         jQuery("#chatbox_"+chatboxtitle).css('right', width+'px');
     }
 	
@@ -257,8 +202,7 @@ function chatHeartbeat(){
                     chatHeartbeatTime = maxChatHeartbeat;
                 }
             }
-		
-            printChatUserDropDown(data);
+            
             setTimeout('chatHeartbeat();',chatHeartbeatTime);
         }
     });
@@ -380,9 +324,6 @@ function startChatSession(){
         dataType: "json",
         success: function(data) {
             
-            jQuery('#chatbar').livequery(function(){
-                
-            
             jQuery.each(data.chatboxes, function(j,chatbox){
                 var chatboxtitle = chatbox.usernameOfChatPartner;
                 jQuery.each(chatbox.messages, function(i,item){
@@ -403,7 +344,7 @@ function startChatSession(){
             }
 	
             setTimeout('chatHeartbeat();',chatHeartbeatTime);
-            });
+          
 		
         }
     });
