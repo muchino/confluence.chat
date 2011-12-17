@@ -1,0 +1,37 @@
+.smiley{
+    background: url("images-chat/xenforo-smilies-sprite.png") no-repeat scroll transparent;
+    height: 18px;
+    width: 18px;
+    margin: 0 1px;
+}
+.smiley.happy{
+    background-position: 0 0 ;
+}
+.smiley.kiss {
+    background-position: -60px -84px;
+}
+.smiley.big-grin{
+    background-position: -20px 0;
+}
+.smiley.winking{
+    background-position:-60px -21px;
+}
+.smiley.tongue{
+    background-position:  -20px -21px
+}
+.smiley.surprise{
+    background-position:  -20px -42px
+}
+.smiley.whistle{
+    background-position:  -80px -126px ;
+}
+.smiley.oops{
+    background-position:  0 -42px ;
+}
+
+
+.smiley.straight-face{
+    background: url("images-chat/emoticons.gif") no-repeat scroll transparent;
+
+
+}

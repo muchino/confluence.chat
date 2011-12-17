@@ -1,0 +1,72 @@
+
+<atlassian-plugin name="${project.name}" key="${atlassian.plugin.key}">
+    <plugin-info>
+        <description>${project.description}</description>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <version>${project.version}</version>
+    </plugin-info>
+    <resource name="i18n" type="i18n" location="confluence/chat/Chat" />
+    <component key="chatManager" name="chatManager" class="confluence.chat.actions.ChatManager"  />    
+    <resource name="images-chat/" type="download" location="confluence/chat/img/" />
+    
+    
+    <xwork name="Chat" key="confluence.chat">
+        <package name="Chat" extends="default" > 
+            <action name="chat" class="confluence.chat.actions.ChatPageAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/chat.vm</result>
+            </action>
+            
+        </package>
+        
+        <package name="Chat Templates" extends="default"  namespace="/ajax/chat">
+            <action name="chatbar" class="confluence.chat.actions.ChatBarAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/chatbar.vm</result>
+            </action>
+        </package>
+        
+        <package name="ChatActions" extends="default"  namespace="/chat">
+            <action name="heartbeat" class="confluence.chat.actions.ChatAction" method="heartbeat">
+                <result name="success" type="json" />
+            </action>
+            <action name="start" class="confluence.chat.actions.ChatAction" method="start">
+                <result name="success" type="json" />
+            </action>            
+            <action name="send" class="confluence.chat.actions.ChatAction" method="send">
+                <result name="success" type="json" />
+            </action>            
+            <action name="close" class="confluence.chat.actions.ChatAction" method="close">
+                <result name="success" type="json" />
+            </action>  
+            <action name="getonlineuser" class="confluence.chat.actions.GetOnlineUserAction" >
+                <result name="success" type="json" />
+            </action>                
+        </package>
+    </xwork>
+    <web-resource key="chat-files" name="Chat Files">
+        
+        <resource type="download" name="jquery.livequery.min.js" location="confluence/chat/js/jquery.livequery.min.js"/>
+        <resource type="download" name="chat-social.js" location="confluence/chat/js/chat-social.js"/>
+        
+        <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
+        <resource type="download" name="chatbar.js" location="confluence/chat/js/chatbar.js"/>
+        <resource type="download" name="chat.css" location="confluence/chat/css/chat.vm"/>
+        
+        <resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css">
+            <param name="batch" value="false"/>    
+        </resource>
+        <resource type="download" name="screen.css" location="confluence/chat/css/screen.css"/>
+        <resource type="download" name="screen_ie.css" location="confluence/chat/css/screen_ie.css">
+            <param name="ieonly" value="true"/>
+        </resource>
+<!--        <context>main</context>-->
+     
+    </web-resource>
+    
+    <resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
+        <param name="content-type" value="image/png"/>
+    </resource>
+
+    
+<!--    <velocity-context-item key="getunikCoreSkinHelper" name="Core Skin Velocity Helper" context-key="guCore"  class="net.getunik.confluence.skin.core.GuThemeHelper" />-->
+
+</atlassian-plugin>

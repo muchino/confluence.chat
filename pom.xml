@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>com.atlassian.confluence.plugin.base</groupId>
+        <artifactId>confluence-plugin-base</artifactId>
+        <version>27</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>confluence.chat</groupId>
+    <artifactId>confluence.chat</artifactId>
+    <packaging>atlassian-plugin</packaging>
+    <name>Confluence - Chat</name>
+    <version>0.1-SNAPSHOT</version>
+    <organization>
+        <name>Oliver Straesser</name>
+    </organization>
+    <repositories>
+                <!--
+                    This is the public Atlassian Maven proxy. It makes artifacts
+                    available from the main Maven repository at ibiblio, Codehaus,
+                    and all other dependencies necessary for building Atlassian
+                    products (except Sun JARs we are not allowed to distribute
+                    ourselves). This should have everything you need to build
+                    a plugin; if something is missing, please open a JIRA issue
+                    at http://developer.atlassian.com/jira/browse/CPDK.
+                 -->
+        <repository>
+            <id>central</id>
+            <url>https://m2proxy.atlassian.com/repository/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/2/</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </repository>
+
+
+                <!--
+                    Since JIRA is still using Maven 1, this repository is used for
+                    those Maven 1 artifacts that aren't available in Maven 2.
+                 -->
+        <repository>
+            <id>atlassian-m1-repository</id>
+            <url>https://m2proxy.atlassian.com/repository/m1/</url>
+            <releases>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+<!--        needed for org.twdata.maven:maven-cli-plugi-->
+        <repository>
+            <id>repository.jboss.org</id>
+            <url>http://repository.jboss.org/maven2/</url>
+            <releases>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>https://m2proxy.atlassian.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <snapshots>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <properties>
+        <!-- Confluence version -->
+        <atlassian.plugin.key>${project.artifactId}</atlassian.plugin.key>
+        <atlassian.product.version>4.0.5</atlassian.product.version>
+        <atlassian.product.data.version>3.2</atlassian.product.data.version>
+        <jdkLevel>1.6</jdkLevel>
+    </properties>    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins.testharness</groupId>
+                <artifactId>atlassian-test-harness</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+

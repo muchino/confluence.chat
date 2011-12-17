@@ -1,0 +1,2 @@
+#requireResource("confluence.chat:chat-files")
+<div id="chatbar"></div>
