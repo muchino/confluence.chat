@@ -19,10 +19,16 @@ ChatBar.prototype.init = function(){
     this.onlineUsersBox =  this.bar.find('#chatbar-online-users');
     this.configurationBox =  this.bar.find('#chatbar-config');
     this.bar.find('#chatbar-button-online, #chatbar-online-users-title').click(function(){
-        if(!that.configurationBox.is(':hidden')){
-            that.configurationBox.fadeOut();
+        if(!that.isOnline()){
+            that.bar.find('#chatbar-button-config').click();
+        } else {
+            if(!that.configurationBox.is(':hidden')){
+                that.configurationBox.fadeOut();
+            }
+            that.onlineUsersBox.fadeToggle();
         }
-        that.onlineUsersBox.fadeToggle();
+        
+        
     })
     this.bar.find('#chatbar-button-config').click(function(){
         if(!that.onlineUsersBox.is(':hidden')){
@@ -30,16 +36,17 @@ ChatBar.prototype.init = function(){
         }
         that.configurationBox.fadeToggle();
     })
-    this.configurationBox.find('.chatbar-box-content a').click(function(){
+    this.configurationBox.find('.chatbar-box-content  select[name=status]').change(function(){
+        var status = jQuery(this).val();
         jQuery.ajax({
             url: getBaseUrl()+"/chat/setstatus.action",
             cache: false,
             data: {
-                status: jQuery(this).attr('rel')
+                status: jQuery(this).val()
             },
             dataType: "json",
             success: function(data){
-            //                that.refreshUser(data);
+                that.setStatus(status);
             }
         });
     })
@@ -54,17 +61,36 @@ ChatBar.prototype.init = function(){
     }, 5000);
 }
 
+ChatBar.prototype.isOnline = function(){
+    return  this.bar.hasClass("online");   
+}
+ChatBar.prototype.setStatus = function(status) {
+    if(status == "xa"){
+        this.bar.removeClass("online").addClass("offline");
+    }else {
+        var online = this.isOnline();
+        this.bar.removeClass("offline").addClass("online");
+        if(!online){
+            // aktualisieren die user
+            this.getOnlineUsers();    
+        }
+    }
+    this.bar.find('#chatbar-status').attr('class', status);
+    
+}
 
 ChatBar.prototype.getOnlineUsers = function() {
-    var that = this;
-    jQuery.ajax({
-        url: getBaseUrl()+"/chat/getonlineuser.action",
-        cache: false,
-        dataType: "json",
-        success: function(data){
-            that.refreshUser(data);
-        }
-    });
+    if(this.isOnline()){
+        var that = this;
+        jQuery.ajax({
+            url: getBaseUrl()+"/chat/getonlineuser.action",
+            cache: false,
+            dataType: "json",
+            success: function(data){
+                that.refreshUser(data);
+            }
+        });
+    }
 }
 ChatBar.prototype.refreshUser = function(data){
     var that = this;

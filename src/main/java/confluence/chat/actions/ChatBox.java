@@ -4,6 +4,11 @@
  */
 package confluence.chat.actions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Dev
@@ -34,10 +39,10 @@ public class ChatBox {
         this.usernameOfChatPartner = usernameOfChatPartner;
     }
 
-    public void addMessage(ChatMessage chatMessagesa){
+    public void addMessage(ChatMessage chatMessagesa) {
         this.messages.add(chatMessagesa);
     }
-    
+
     /**
      * @return the messages
      */
@@ -74,5 +79,20 @@ public class ChatBox {
             return false;
         }
         return true;
+    }
+
+    public Map<String, Object> getJSONMap() {
+        Map<String, Object> jsonMap = new HashMap<String, Object>();
+        jsonMap.put("un", usernameOfChatPartner);
+        if (!this.messages.isEmpty()) {
+            List<Map> messageList = new ArrayList<Map>();
+            for (int i = 0; i < messages.size(); i++) {
+                messageList.add(messages.get(i).getJSONMap());
+            }
+            jsonMap.put("messages", messageList);
+        }
+
+
+        return jsonMap;
     }
 }

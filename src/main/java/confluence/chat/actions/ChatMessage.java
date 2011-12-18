@@ -5,6 +5,8 @@
 package confluence.chat.actions;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -12,23 +14,30 @@ import java.util.Date;
  */
 public class ChatMessage {
 
-    private String from;
-    private String message;
+    public static final String FROM = "f";
+    public static final String TO = "r";
+    public static final String MESSAGE = "m";
+    public static final String SENDDATE = "t";
     private Date senddate = new Date();
-    private Boolean seen = false;
+    private Map<String, Object> jsonMap = new HashMap<String, Object>();
+
+    public ChatMessage() {
+        this.jsonMap.put(FROM, "");
+        this.jsonMap.put(MESSAGE, "");
+    }
 
     /**
      * @return the message
      */
     public String getMessage() {
-        return message;
+        return (String) this.jsonMap.get(MESSAGE);
     }
 
     /**
      * @param message the message to set
      */
     public void setMessage(String message) {
-        this.message = message;
+        this.jsonMap.put(MESSAGE, message);
     }
 
     /**
@@ -46,30 +55,35 @@ public class ChatMessage {
     }
 
     /**
-     * @return the seen
-     */
-    public Boolean getSeen() {
-        return seen;
-    }
-
-    /**
-     * @param seen the seen to set
-     */
-    public void setSeen(Boolean seen) {
-        this.seen = seen;
-    }
-
-    /**
      * @return the from
      */
     public String getFrom() {
-        return from;
+        return (String) this.jsonMap.get(FROM);
     }
 
     /**
      * @param from the from to set
      */
     public void setFrom(String from) {
-        this.from = from;
+        this.jsonMap.put(FROM, from);
+    }
+    
+        /**
+     * @return the from
+     */
+    public String getTo() {
+        return (String) this.jsonMap.get(TO);
+    }
+
+    /**
+     * @param from the from to set
+     */
+    public void setTo(String to) {
+        this.jsonMap.put(TO, to);
+    }
+
+    public Map<String, Object> getJSONMap() {
+        this.jsonMap.put(SENDDATE, this.senddate.getTime());
+        return jsonMap;
     }
 }

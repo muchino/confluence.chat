@@ -6,7 +6,6 @@ import com.atlassian.event.Event;
 import com.atlassian.event.EventListener;
 import com.atlassian.spring.container.ContainerManager;
 import org.apache.log4j.Logger;
-import java.util.HashMap;
 
 public class LoginLogoutListener implements EventListener {
 
@@ -18,6 +17,7 @@ public class LoginLogoutListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof LoginEvent) {
             LoginEvent loginEvent = (LoginEvent) event;
+            System.out.println("login"+ loginEvent.getUsername());
             chatManager.setOnlineStatus(loginEvent.getUsername(), ChatStatus.NO_CHANGE);
         } else if (event instanceof LogoutEvent) {
             LogoutEvent logoutEvent = (LogoutEvent) event;

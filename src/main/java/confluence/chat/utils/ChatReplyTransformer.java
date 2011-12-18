@@ -27,12 +27,4 @@ public class ChatReplyTransformer {
         }
         return list;
     }
-
-    public static Map chatBoxToMap(ChatBox chatBox) {
-        return new HashMap();
-    }
-
-    public static Map chatMessageToMap(ChatMessage chatMessage, DateFormatter formatter) {
-        return new HashMap();
-    }
 }

@@ -33,6 +33,7 @@ public class ChatManager {
     private BandanaManager bandanaManager = (BandanaManager) ContainerManager.getComponent("bandanaManager");
     private UserAccessor userAccessor = (UserAccessor) ContainerManager.getComponent("userAccessor");
     private ConfluenceBandanaContext confluenceBandanaContextNewMessages = new ConfluenceBandanaContext(KEY_HISTORY_NEW);
+    private ConfluenceBandanaContext confluenceBandanaContextPreferences = new ConfluenceBandanaContext(KEY_PREFERENCES);
     private ChatMessageParser chatMessageParser = new ChatMessageParser();
     private ChatUserList onlineUsers = new ChatUserList();
 
@@ -51,10 +52,26 @@ public class ChatManager {
         return newMessages;
     }
 
+    public ChatPreferences getPreferencesOfUser(String username) {
+        ChatPreferences preferences = null;
+        try {
+            preferences = (ChatPreferences) bandanaManager.getValue(confluenceBandanaContextPreferences, username);
+        } catch (Exception e) {
+        }
+        if (preferences == null) {
+            preferences = new ChatPreferences();
+        }
+        return preferences;
+    }
+
+    public void setPreferencesOfUser(String username, ChatPreferences preferences) {
+        bandanaManager.setValue(confluenceBandanaContextPreferences, username, preferences);
+    }
+
     public ChatBox sendMessage(String sender, String receiver, String message) {
-//        message = chatMessageParser.parseString(message);
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setFrom(sender);
+        chatMessage.setTo(receiver);
         chatMessage.setMessage(message);
 
 //        chatboxes of receiver
@@ -149,32 +166,48 @@ public class ChatManager {
         this.setOnlineStatus(userAccessor.getUser(user), status);
     }
 
-    public void setOnlineStatus(User user, ChatStatus status) {
-        ChatUser chatUser = this.onlineUsers.getChatUser(user.getName());
-        chatUser.setFullName(user.getFullName());
-        if (status != null && status != ChatStatus.NO_CHANGE) {
-            chatUser.setStatus(status);
+    public ChatUser getChatUser(User user) {
+        ChatUser chatUser = null;
+        if (!this.onlineUsers.containsKey(user.getName())) {
+            chatUser = this.onlineUsers.putUser(user, getPreferencesOfUser(user.getName()));
+        } else {
+            chatUser = this.onlineUsers.get(user.getName());
         }
-        chatUser.setLastSeen(new Date());
-        if (chatUser.getUserImage() == null) {
-            ProfilePictureInfo picture = userAccessor.getUserProfilePicture(user);
-            String fileName = null;
-            if (!picture.isDefault()) {
-                String downloadPath = picture.getDownloadPath();
-                fileName = picture.getFileName();
-                if (downloadPath.trim() == null ? fileName.trim() != null : !downloadPath.trim().equals(fileName.trim())) {
-                    if (downloadPath.endsWith(fileName)) {
-                        fileName = downloadPath;
-                    } else {
-                        fileName = downloadPath + fileName;
+        return chatUser;
+
+    }
+
+    public void setOnlineStatus(User user, ChatStatus status) {
+        ChatUser chatUser = getChatUser(user);
+        if (chatUser != null) {
+            // change status
+            if (status != null && status != ChatStatus.NO_CHANGE) {
+                chatUser.setStatus(status);
+                this.setPreferencesOfUser(chatUser.getUsername(), chatUser.getPreferences());
+            }
+
+
+            chatUser.setLastSeen(new Date());
+            if (chatUser.getUserImage() == null) {
+                ProfilePictureInfo picture = userAccessor.getUserProfilePicture(user);
+                String fileName = null;
+                if (!picture.isDefault()) {
+                    String downloadPath = picture.getDownloadPath();
+                    fileName = picture.getFileName();
+                    if (downloadPath.trim() == null ? fileName.trim() != null : !downloadPath.trim().equals(fileName.trim())) {
+                        if (downloadPath.endsWith(fileName)) {
+                            fileName = downloadPath;
+                        } else {
+                            fileName = downloadPath + fileName;
+                        }
+
                     }
+                } else {
+                    fileName = ProfilePictureInfo.DEFAULT_PROFILE_PATH;
 
                 }
-            } else {
-                fileName = ProfilePictureInfo.DEFAULT_PROFILE_PATH;
-
+                chatUser.setUserImage(fileName);
             }
-            chatUser.setUserImage(fileName);
         }
     }
 }

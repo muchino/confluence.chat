@@ -4,8 +4,6 @@
  */
 package confluence.chat.actions;
 
-import com.atlassian.confluence.userstatus.UserStatus;
-import com.atlassian.confluence.userstatus.UserStatusManager;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +21,13 @@ public class ChatUser {
     private static String LASTSEEN = "d";
     private static String USERIMAGE = "p";
     private Date lastSeen;
-    private ChatStatus status = ChatStatus.ONLINE;
     private Map<String, String> jsonMap = new HashMap<String, String>();
+    private ChatPreferences preferences;
 
-    public ChatUser(String username) {
+    public ChatUser(String username, ChatPreferences preferences) {
         jsonMap.put(USERNAME, username);
         this.lastSeen = new Date();
+        this.preferences = preferences;
     }
 
     /**
@@ -49,14 +48,14 @@ public class ChatUser {
      * @return the status
      */
     public ChatStatus getStatus() {
-        return status;
+        return preferences.getChatStatus();
     }
 
     /**
      * @param status the status to set
      */
     public void setStatus(ChatStatus status) {
-        this.status = status;
+        this.preferences.setChatStatus(status);
     }
 
     @Override
@@ -121,5 +120,12 @@ public class ChatUser {
         jsonMap.put(STATUS, getStatus().toString());
 //        jsonMap.put(LASTSEEN, formatter.getFormatMessage(getLastSeen()).toString());
         return jsonMap;
+    }
+
+    /**
+     * @return the preferences
+     */
+    public ChatPreferences getPreferences() {
+        return preferences;
     }
 }
