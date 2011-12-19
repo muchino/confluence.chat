@@ -155,8 +155,6 @@ public class ChatManager {
                     && time.before(chatUser.getLastSeen())) {
                 onlineUserList.add(chatUser);
 
-            } else {
-                chatUser.setStatus(ChatStatus.OFFLINE);
             }
         }
         return onlineUserList;

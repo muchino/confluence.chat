@@ -28,10 +28,12 @@ public class ChatAction extends AbstractChatAction {
     }
 
     public final String start() throws Exception {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        HttpSession session = request.getSession();
-        chatBoxMap = chatManager.getOpenChats(session);
-        chatManager.setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
+        if (getRemoteUser() != null) {
+            HttpServletRequest request = ServletActionContext.getRequest();
+            HttpSession session = request.getSession();
+            chatBoxMap = chatManager.getOpenChats(session);
+            chatManager.setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
+        }
         return SUCCESS;
     }
 
