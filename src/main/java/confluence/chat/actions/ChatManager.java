@@ -175,15 +175,18 @@ public class ChatManager {
 
     }
 
+    public ChatUser getChatUser(String username) {
+        User user = userAccessor.getUser(username);
+        return getChatUser(user);
+    }
+
     public void setOnlineStatus(User user, ChatStatus status) {
         ChatUser chatUser = getChatUser(user);
         if (chatUser != null) {
             // change status
             if (status != null && status != ChatStatus.NO_CHANGE) {
                 chatUser.setStatus(status);
-                this.setPreferencesOfUser(chatUser.getUsername(), chatUser.getPreferences());
             }
-
 
             chatUser.setLastSeen(new Date());
             if (chatUser.getUserImage() == null) {

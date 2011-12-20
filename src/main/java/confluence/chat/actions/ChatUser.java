@@ -21,6 +21,7 @@ public class ChatUser {
     private static String LASTSEEN = "d";
     private static String USERIMAGE = "p";
     private Date lastSeen;
+    private ChatStatus status = null;
     private Map<String, String> jsonMap = new HashMap<String, String>();
     private ChatPreferences preferences;
 
@@ -28,6 +29,7 @@ public class ChatUser {
         jsonMap.put(USERNAME, username);
         this.lastSeen = new Date();
         this.preferences = preferences;
+        this.status = this.preferences.getChatStatus();
     }
 
     /**
@@ -48,14 +50,14 @@ public class ChatUser {
      * @return the status
      */
     public ChatStatus getStatus() {
-        return preferences.getChatStatus();
+        return this.status;
     }
 
     /**
      * @param status the status to set
      */
     public void setStatus(ChatStatus status) {
-        this.preferences.setChatStatus(status);
+        this.status = status;
     }
 
     @Override

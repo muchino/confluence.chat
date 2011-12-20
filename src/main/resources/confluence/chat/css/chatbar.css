@@ -31,32 +31,22 @@ body {
     display: none;
 }
 
-#chatbar-buttons #chatbar-button-online{
-    background-image:  url("images-chat/chat.png");
-    background-repeat: no-repeat;
-    padding-left: 32px;
-}
-
-#chatbar #chatbar-status.dnd #chatbar-button-online {
+#chatbar #chatbar-status.dnd #chatbar-button-config {
     background-image:  url("images-chat/chat-dnd.png");
 }
 
-#chatbar #chatbar-status.away #chatbar-button-online {
+#chatbar #chatbar-status.away #chatbar-button-config {
     background-image:  url("images-chat/chat-away.png");
 }
 
 #chatbar-buttons #chatbar-button-config{
-    background-image:  url("images-chat/config.png");
+    background-image:  url("images-chat/chat.png");
+    background-repeat: no-repeat;    
     background-repeat: no-repeat;
     background-position: center;
-    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
 }
 
-#chatbar .chatbar-title{
-    padding: 7px;
-    color: #FFFFFF;
-    background-color: #003366;
-}
 
 #chatbar .chatbar-box {
     bottom: 30px;
@@ -94,7 +84,7 @@ body {
 
 }
 .chat-user  img{
-    height: 30px;
+    height: 16px;
     float: left;
 }
 .chat-user a {
@@ -103,7 +93,7 @@ body {
 }
 
 .chat-user .chat-user-info{
-    margin-left: 35px;
+    margin-left: 20px;
 }
 .chat-user .chat-user-status {
     color: gray;

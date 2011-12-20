@@ -18,7 +18,7 @@ ChatBar.prototype.init = function(){
     this.bar = jQuery('#chatbar');
     this.onlineUsersBox =  this.bar.find('#chatbar-online-users');
     this.configurationBox =  this.bar.find('#chatbar-config');
-    this.bar.find('#chatbar-button-online, #chatbar-online-users-title').click(function(){
+    this.bar.find('#chatbar-button-online, #chatbar-online-users .chatboxoptions a').click(function(){
         if(!that.isOnline()){
             that.bar.find('#chatbar-button-config').click();
         } else {
@@ -27,14 +27,16 @@ ChatBar.prototype.init = function(){
             }
             that.onlineUsersBox.fadeToggle();
         }
+        return false;
         
         
     })
-    this.bar.find('#chatbar-button-config').click(function(){
+    this.bar.find('#chatbar-button-config ,#chatbar-config .chatboxoptions a').click(function(){
         if(!that.onlineUsersBox.is(':hidden')){
             that.onlineUsersBox.fadeOut();
         }
         that.configurationBox.fadeToggle();
+        return false;
     })
     this.configurationBox.find('.chatbar-box-content  select[name=status]').change(function(){
         var status = jQuery(this).val();
@@ -98,15 +100,17 @@ ChatBar.prototype.refreshUser = function(data){
     this.chatOnlineUserDiv.find('.chat-user').attr(tmpAttr, 'true');
     var ownUserInList = false;
     jQuery.each(data.users, function(j,user){
-        var username = AJS.escapeHtml(user.un);
+        var username = user.un;
+        var usernameMd5 = jQuery.md5(user.un);
         if( that.username != user.un){
-            var chatBox = that.chatOnlineUserDiv.find('.chat-user[username='+username+']');
+            var chatBox = that.chatOnlineUserDiv.find('.chat-user[usernameMd5='+usernameMd5+']');
             if(!chatBox.size()){
                 chatBox =  that.chatBox.clone(true);
                 chatBox.show();
+                chatBox.attr('usernameMd5', usernameMd5);
                 chatBox.attr('username', username);
                 chatBox.find('img').attr('src', user.p);
-                chatBox.find('.chat-user-info a').text(user.fn).attr('href', getBaseUrl()+'/display/~'+username);
+                chatBox.find('.chat-user-info span').text(user.fn);
                 chatBox.find('> div').attr('class', user.s);
                 chatBox.click(function(){
                     chatWith(chatBox.attr('username'));

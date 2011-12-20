@@ -4,8 +4,6 @@ import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.spring.container.ContainerManager;
 import com.opensymphony.webwork.ServletActionContext;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
@@ -28,7 +26,9 @@ public class SetStatusAction extends ConfluenceActionSupport implements Beanable
             } else if ("xa".equals(status)) {
                 chatStatus = ChatStatus.OFFLINE;
             }
-
+            ChatUser chatUser = chatManager.getChatUser(getRemoteUser());
+            chatUser.getPreferences().setChatStatus(chatStatus);
+            chatManager.setPreferencesOfUser(chatUser.getUsername(), chatUser.getPreferences());
             chatManager.setOnlineStatus(getRemoteUser(), chatStatus);
         }
         return SUCCESS;

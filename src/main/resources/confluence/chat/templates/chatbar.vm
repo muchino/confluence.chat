@@ -26,6 +26,7 @@ height	33.8px
 
         </fieldset>
         <div id="chatbar-buttons">
+            <div id="chatbar-button-config">&nbsp;</div>
             <div id="chatbar-button-online">
                 <div class="online">
                     Online Users (<span>$chatManager.getOnlineUsers().size()</span>)
@@ -34,24 +35,32 @@ height	33.8px
                     You are offline
                 </div>
             </div>
-            <div id="chatbar-button-config">&nbsp;</div>
+
         </div>
         <div id="chatbar-online-users" class="chatbar-box">
-            <div class="chatbar-title">Kontakte</div>
+            <div class="chatboxhead">
+                <div class="chatboxtitle">Kontakte</div>
+                <div class="chatboxoptions">
+                    <a  href="#">X</a></div>
+            </div>
             <div id="chatbar-online-users-list" class="chatbar-box-content">
                 <div class="chat-user" >
                     <div>
                         <img src="/images/icons/profilepics/default.gif" />
                         <div class="chat-user-info">
-                            <a href="$req.contextPath/display/~admin">admin</a>
-                            <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div>
+                            <span>admin</span>
+                            <!-- <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div id="chatbar-config" class="chatbar-box">
-            <div class="chatbar-title">Configuration </div>
+            <div class="chatboxhead">
+                <div class="chatboxtitle">Konfiguration</div>
+                <div class="chatboxoptions">
+                    <a  href="#">X</a></div>
+            </div>
             <div  class="chatbar-box-content">
                 <select name="status">
                     <option  value="chat" #if($status == "chat") selected="selected" #end >Online</option>

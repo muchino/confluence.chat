@@ -24,14 +24,14 @@ jQuery(document).ready(function(){
 function restructureChatBoxes() {
     var  align = 0;
     for (var x in chatBoxes) {
-        var chatboxtitle = chatBoxes[x];
+        var chatboxtitleMd5 = chatBoxes[x];
 
-        if (jQuery("#chatbox_"+chatboxtitle).css('display') != 'none') {
+        if (jQuery("#chatbox_"+chatboxtitleMd5).css('display') != 'none') {
             if (align == 0) {
-                jQuery("#chatbox_"+chatboxtitle).css('right', '250px');
+                jQuery("#chatbox_"+chatboxtitleMd5).css('right', '250px');
             } else {
                 var width = (align)*(225+7)+250;
-                jQuery("#chatbox_"+chatboxtitle).css('right', width+'px');
+                jQuery("#chatbox_"+chatboxtitleMd5).css('right', width+'px');
             }
             align++;
         }
@@ -39,26 +39,28 @@ function restructureChatBoxes() {
 }
 
 function chatWith(chatuser) {
-    createChatBox(chatuser);
-    jQuery("#chatbox_"+chatuser+" .chatboxtextarea").focus();
+    AJS.log(chatuser);
+    var chatuserMd5 = jQuery.md5(chatuser);
+    createChatBox(chatuserMd5  , chatuser);
+    jQuery("#chatbox_"+chatuserMd5+" .chatboxtextarea").focus();
 }
 
-function createChatBox(chatboxtitle,minimizeChatBox) {
-    if (jQuery("#chatbox_"+chatboxtitle).length > 0) {
-        if (jQuery("#chatbox_"+chatboxtitle).css('display') == 'none') {
-            jQuery("#chatbox_"+chatboxtitle).css('display','block');
+function createChatBox(chatboxtitleMd5, chatboxtitle , minimizeChatBox) {
+    if (jQuery("#chatbox_"+chatboxtitleMd5).length > 0) {
+        if (jQuery("#chatbox_"+chatboxtitleMd5).css('display') == 'none') {
+            jQuery("#chatbox_"+chatboxtitleMd5).css('display','block');
             restructureChatBoxes();
         }
-        jQuery("#chatbox_"+chatboxtitle+" .chatboxtextarea").focus();
+        jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxtextarea").focus();
         return;
     }
 
-    jQuery(" <div />" ).attr("id","chatbox_"+chatboxtitle)
+    jQuery(" <div />" ).attr("id","chatbox_"+chatboxtitleMd5)
     .addClass("chatbox")
-    .html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><a href="javascript:void(0)" onclick="javascript:toggleChatBoxGrowth(\''+chatboxtitle+'\')">-</a> <a href="javascript:void(0)" onclick="javascript:closeChatBox(\''+chatboxtitle+'\')">X</a></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea" onkeydown="javascript:return checkChatBoxInputKey(event,this,\''+chatboxtitle+'\');"></textarea></div>')
+    .html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><a href="javascript:void(0)" onclick="javascript:toggleChatBoxGrowth(\''+chatboxtitleMd5+'\')">-</a> <a href="javascript:void(0)" onclick="javascript:closeChatBox(\''+chatboxtitleMd5+'\')">X</a></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea" onkeydown="javascript:return checkChatBoxInputKey(event,this,\''+chatboxtitle+'\');"></textarea></div>')
     .appendTo(jQuery( "body" ));
 			   
-    jQuery("#chatbox_"+chatboxtitle).css('bottom', '0px');
+    jQuery("#chatbox_"+chatboxtitleMd5).css('bottom', '0px');
 	
     chatBoxeslength = 0;
 
@@ -69,13 +71,13 @@ function createChatBox(chatboxtitle,minimizeChatBox) {
     }
 
     if (chatBoxeslength == 0) {
-        jQuery("#chatbox_"+chatboxtitle).css('right', '250px');
+        jQuery("#chatbox_"+chatboxtitleMd5).css('right', '250px');
     } else {
         width = (chatBoxeslength)*(225+7)+250;
-        jQuery("#chatbox_"+chatboxtitle).css('right', width+'px');
+        jQuery("#chatbox_"+chatboxtitleMd5).css('right', width+'px');
     }
 	
-    chatBoxes.push(chatboxtitle);
+    chatBoxes.push(chatboxtitleMd5);
 
     if (minimizeChatBox == 1) {
         minimizedChatBoxes = new Array();
@@ -91,30 +93,30 @@ function createChatBox(chatboxtitle,minimizeChatBox) {
         }
 
         if (minimize == 1) {
-            jQuery('#chatbox_'+chatboxtitle+' .chatboxcontent').css('display','none');
-            jQuery('#chatbox_'+chatboxtitle+' .chatboxinput').css('display','none');
+            jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxcontent').css('display','none');
+            jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxinput').css('display','none');
         }
     }
 
-    chatboxFocus[chatboxtitle] = false;
+    chatboxFocus[chatboxtitleMd5] = false;
 
-    jQuery("#chatbox_"+chatboxtitle+" .chatboxtextarea").blur(function(){
-        chatboxFocus[chatboxtitle] = false;
-        jQuery("#chatbox_"+chatboxtitle+" .chatboxtextarea").removeClass('chatboxtextareaselected');
+    jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxtextarea").blur(function(){
+        chatboxFocus[chatboxtitleMd5] = false;
+        jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxtextarea").removeClass('chatboxtextareaselected');
     }).focus(function(){
-        chatboxFocus[chatboxtitle] = true;
-        newMessages[chatboxtitle] = false;
-        jQuery('#chatbox_'+chatboxtitle+' .chatboxhead').removeClass('chatboxblink');
-        jQuery("#chatbox_"+chatboxtitle+" .chatboxtextarea").addClass('chatboxtextareaselected');
+        chatboxFocus[chatboxtitleMd5] = true;
+        newMessages[chatboxtitleMd5] = false;
+        jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxhead').removeClass('chatboxblink');
+        jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxtextarea").addClass('chatboxtextareaselected');
     });
 
-    jQuery("#chatbox_"+chatboxtitle).click(function() {
-        if (jQuery('#chatbox_'+chatboxtitle+' .chatboxcontent').css('display') != 'none') {
-            jQuery("#chatbox_"+chatboxtitle+" .chatboxtextarea").focus();
+    jQuery("#chatbox_"+chatboxtitleMd5).click(function() {
+        if (jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxcontent').css('display') != 'none') {
+            jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxtextarea").focus();
         }
     });
 
-    jQuery("#chatbox_"+chatboxtitle).show();
+    jQuery("#chatbox_"+chatboxtitleMd5).show();
 }
 
 
@@ -173,22 +175,26 @@ function chatHeartbeat(){
         success: function(data) {
             if(typeof(data.chatboxes) != "undefined"){
                 jQuery.each(data.chatboxes, function(j,chatbox){
-                    var chatboxtitle = chatbox.un;
+                    var fullname = chatbox.un;
+                    var chatboxtitleMd5 = jQuery.md5(fullname);
+                    if(typeof(chatbox.f) != "undefined" && chatbox.f != ""){
+                        fullname = chatbox.f;
+                    }
                     if(typeof(chatbox.messages) != "undefined"){
                         jQuery.each(chatbox.messages, function(i,item){
                             if (item)	{ // fix strange ie bug
-                                if (jQuery("#chatbox_"+chatboxtitle).length <= 0) {
-                                    createChatBox(chatboxtitle);
+                                if (jQuery("#chatbox_"+chatboxtitleMd5).length <= 0) {
+                                    createChatBox(chatboxtitleMd5 , fullname);
                                 }
-                                if (jQuery("#chatbox_"+chatboxtitle).css('display') == 'none') {
-                                    jQuery("#chatbox_"+chatboxtitle).css('display','block');
+                                if (jQuery("#chatbox_"+chatboxtitleMd5).css('display') == 'none') {
+                                    jQuery("#chatbox_"+chatboxtitleMd5).css('display','block');
                                     restructureChatBoxes();
                                 }
-                                newMessages[chatboxtitle] = true;
-                                newMessagesWin[chatboxtitle] = true;
+                                newMessages[chatboxtitleMd5] = true;
+                                newMessagesWin[chatboxtitleMd5] = true;
                                 var message = replaceChatMessage(item.m);
-                                jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
-                                jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
+                                jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                                jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent")[0].scrollHeight);
                                 itemsfound += 1;
                             }
                         });
@@ -203,15 +209,14 @@ function chatHeartbeat(){
 function closeChatBox(chatboxtitle) {
     jQuery('#chatbox_'+chatboxtitle).css('display','none');
     restructureChatBoxes();
-
     jQuery.post(getBaseUrl()+"/chat/close.action", {
         close: chatboxtitle
     } );
 
 }
 
-function toggleChatBoxGrowth(chatboxtitle) {
-    if (jQuery('#chatbox_'+chatboxtitle+' .chatboxcontent').css('display') == 'none') {  
+function toggleChatBoxGrowth(chatboxtitleMd5) {
+    if (jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxcontent').css('display') == 'none') {  
 		
         var minimizedChatBoxes = new Array();
 		
@@ -222,8 +227,8 @@ function toggleChatBoxGrowth(chatboxtitle) {
         var newCookie = '';
 
         for (i=0;i<minimizedChatBoxes.length;i++) {
-            if (minimizedChatBoxes[i] != chatboxtitle) {
-                newCookie += chatboxtitle+'|';
+            if (minimizedChatBoxes[i] != chatboxtitleMd5) {
+                newCookie += chatboxtitleMd5+'|';
             }
         }
 
@@ -231,12 +236,12 @@ function toggleChatBoxGrowth(chatboxtitle) {
 
 
         AJS.Cookie.save('chatbox_minimized', newCookie);
-        jQuery('#chatbox_'+chatboxtitle+' .chatboxcontent').css('display','block');
-        jQuery('#chatbox_'+chatboxtitle+' .chatboxinput').css('display','block');
-        jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
+        jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxcontent').css('display','block');
+        jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxinput').css('display','block');
+        jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent")[0].scrollHeight);
     } else {
 		
-        var newCookie = chatboxtitle;
+        var newCookie = chatboxtitleMd5;
 
         if (AJS.Cookie.read('chatbox_minimized')) {
             newCookie += '|'+AJS.Cookie.read('chatbox_minimized');
@@ -244,13 +249,13 @@ function toggleChatBoxGrowth(chatboxtitle) {
 
 
         AJS.Cookie.save('chatbox_minimized',newCookie);
-        jQuery('#chatbox_'+chatboxtitle+' .chatboxcontent').css('display','none');
-        jQuery('#chatbox_'+chatboxtitle+' .chatboxinput').css('display','none');
+        jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxcontent').css('display','none');
+        jQuery('#chatbox_'+chatboxtitleMd5+' .chatboxinput').css('display','none');
     }
 	
 }
 
-function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
+function checkChatBoxInputKey(event,chatboxtextarea,username) {
 	 
     if(event.keyCode == 13 && event.shiftKey == 0)  {
         var message = AJS.escapeHtml(jQuery(chatboxtextarea).val());
@@ -262,27 +267,27 @@ function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
         jQuery(chatboxtextarea).css('height','44px');
         if (message != '') {
             jQuery.post(getBaseUrl()+"/chat/send.action", {
-                to: chatboxtitle, 
+                to: username, 
                 message: message
             } , function(data){
                 if(typeof(data.chatboxes) != "undefined"){
                     jQuery.each(data.chatboxes, function(j,chatbox){
-                        var chatboxtitle = chatbox.un;
+                        var chatboxtitleMd5 = jQuery.md5(chatbox.un);
                         if(typeof(chatbox.messages) != "undefined"){
                             jQuery.each(chatbox.messages, function(i,item){
                                 if (item)	{ // fix strange ie bug
-                                    if (jQuery("#chatbox_"+chatboxtitle).length <= 0) {
-                                        createChatBox(chatboxtitle);
+                                    if (jQuery("#chatbox_"+chatboxtitleMd5).length <= 0) {
+                                        createChatBox(chatboxtitleMd5 , chatbox.f);
                                     }
-                                    if (jQuery("#chatbox_"+chatboxtitle).css('display') == 'none') {
-                                        jQuery("#chatbox_"+chatboxtitle).css('display','block');
+                                    if (jQuery("#chatbox_"+chatboxtitleMd5).css('display') == 'none') {
+                                        jQuery("#chatbox_"+chatboxtitleMd5).css('display','block');
                                         restructureChatBoxes();
                                     }
                                     //                            newMessages[chatboxtitle] = true;
                                     //                            newMessagesWin[chatboxtitle] = true;
                                     var message = replaceChatMessage(item.m);
-                                    jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
-                                    jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
+                                    jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                                    jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent")[0].scrollHeight);
                                 //                            itemsfound += 1;
                                 }
                             });
@@ -318,24 +323,24 @@ function startChatSession(){
         success: function(data) {
             if(typeof(data.chatboxes) != "undefined"){
                 jQuery.each(data.chatboxes, function(j,chatbox){
-                    var chatboxtitle = chatbox.un;
+                    var chatboxtitleMd5 = jQuery.md5(chatbox.un);
                     if(typeof(chatbox.messages) != "undefined"){
                         jQuery.each(chatbox.messages, function(i,item){
                             if (item)	{ // fix strange ie bug
-                                if (jQuery("#chatbox_"+chatboxtitle).length <= 0) {
-                                    createChatBox(chatboxtitle,1);
+                                if (jQuery("#chatbox_"+chatboxtitleMd5).length <= 0) {
+                                    createChatBox(chatboxtitleMd5,chatbox.f , 1);
                                 }
                                 var message = replaceChatMessage(item.m);
-                                jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                                jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                             }
                         });
                     }
                 });
             }
             for (i=0;i<chatBoxes.length;i++) {
-                chatboxtitle = chatBoxes[i];
-                jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
-                setTimeout('jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
+                chatboxtitleMd5 = chatBoxes[i];
+                jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent")[0].scrollHeight);
+                setTimeout('jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent").scrollTop(jQuery("#chatbox_"+chatboxtitleMd5+" .chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
             }
 	
             setInterval(function(){

@@ -47,10 +47,10 @@
         </package>
     </xwork>
     <web-resource key="chat-files" name="Chat Files">
-        
+        <resource type="download" name="jquery.md5.js" location="confluence/chat/js/jquery.md5.js"/>
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
         <resource type="download" name="chatbar.js" location="confluence/chat/js/chatbar.js"/>
-        <resource type="download" name="chat.css" location="confluence/chat/css/chat.vm"/>
+        <resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
         <resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css">
             <param name="batch" value="false"/>    
@@ -71,6 +71,6 @@
         <description>Listen for the login or the logout an user, to set the chat status </description>
     </listener>
     
-     <velocity-context-item key="confluenceChatManager" name="Confluence Chat Manager" context-key="chatManager"  class="confluence.chat.actions.ChatManager" />
+    <velocity-context-item key="confluenceChatManager" name="Confluence Chat Manager" context-key="chatManager"  class="confluence.chat.actions.ChatManager" />
 
 </atlassian-plugin>
