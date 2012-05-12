@@ -15,28 +15,15 @@ import java.util.Map;
  */
 public class ChatBox {
 
-    private String usernameOfChatPartner = null;
+    private List<String> members = new ArrayList<String>();
     private ChatMessageList messages = new ChatMessageList();
 
-    ChatBox() {
+    ChatBox(ChatBoxId id) {
+        this.members = id.getMembers();
     }
 
-    ChatBox(String user) {
-        this.usernameOfChatPartner = user;
-    }
-
-    /**
-     * @return the usernameOfChatPartner
-     */
-    public String getUsernameOfChatPartner() {
-        return usernameOfChatPartner;
-    }
-
-    /**
-     * @param usernameOfChatPartner the usernameOfChatPartner to set
-     */
-    public void setUsernameOfChatPartner(String usernameOfChatPartner) {
-        this.usernameOfChatPartner = usernameOfChatPartner;
+    public ChatBoxId getId() {
+        return new ChatBoxId(getMembers());
     }
 
     public void addMessage(ChatMessage chatMessagesa) {
@@ -59,11 +46,7 @@ public class ChatBox {
 
     @Override
     public int hashCode() {
-        if (this.usernameOfChatPartner == null) {
-            return super.hashCode();
-        } else {
-            return usernameOfChatPartner.hashCode();
-        }
+        return this.getId().hashCode();
     }
 
     @Override
@@ -75,24 +58,36 @@ public class ChatBox {
             return false;
         }
         final ChatBox other = (ChatBox) obj;
-        if ((this.usernameOfChatPartner == null) ? (other.usernameOfChatPartner != null) : !this.usernameOfChatPartner.equals(other.usernameOfChatPartner)) {
-            return false;
-        }
-        return true;
+
+        return other.getId().equals(this.getId());
     }
 
-    public Map<String, Object> getJSONMap() {
+    public Map<String, Object> getJSONMap(ChatManager manager) {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
-        jsonMap.put("un", usernameOfChatPartner);
+        jsonMap.put("id", this.getId().toString());
+        jsonMap.put("un", this.getMembers());
         if (!this.messages.isEmpty()) {
             List<Map> messageList = new ArrayList<Map>();
             for (int i = 0; i < messages.size(); i++) {
-                messageList.add(messages.get(i).getJSONMap());
+                ChatMessage chatMessage = messages.get(i);
+                Map<String, Object> message = new HashMap<String, Object>();
+                message.put(ChatMessage.FROM, manager.getChatUser(chatMessage.getFrom()).getJSONMap());
+                message.put(ChatMessage.TO, manager.getChatUser(chatMessage.getTo()).getJSONMap());
+                message.put(ChatMessage.MESSAGE,chatMessage.getMessage());
+                message.put(ChatMessage.SENDDATE, chatMessage.getSenddate().getTime());
+                messageList.add(message);
             }
             jsonMap.put("messages", messageList);
         }
 
 
         return jsonMap;
+    }
+
+    /**
+     * @return the members
+     */
+    public List<String> getMembers() {
+        return members;
     }
 }

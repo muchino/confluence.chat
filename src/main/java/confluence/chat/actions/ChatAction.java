@@ -40,13 +40,13 @@ public class ChatAction extends AbstractChatAction {
     public final String close() throws Exception {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpSession session = request.getSession();
-        chatManager.closeChatWith(session, request.getParameter(PARAM_CLOSE));
+        chatManager.closeChatWith(session, new ChatBoxId(request.getParameter(PARAM_CLOSE)));
         return SUCCESS;
     }
 
     public final String heartbeat() throws Exception {
         if (getRemoteUser() != null) {
-            ChatUser chatUser = chatManager.getChatUser(getRemoteUser());
+            ChatUser chatUser = chatManager.getOnlineChatUser(getRemoteUser());
             // Keine senden, falls user offline
             if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())) {
                 this.chatBoxMap = chatManager.getNewChatBoxesOfUser(getRemoteUser().getName());
@@ -75,14 +75,14 @@ public class ChatAction extends AbstractChatAction {
 
         if (getRemoteUser() != null) {
             HttpServletRequest request = ServletActionContext.getRequest();
-            ChatUser chatUser = chatManager.getChatUser(getRemoteUser());
+            ChatUser chatUser = chatManager.getOnlineChatUser(getRemoteUser());
             bean.put("user", chatUser.getJSONMap());
             if (!chatBoxMap.isEmpty()) {
                 chatManager.saveOpenChats(request.getSession(), chatBoxMap);
                 List<Map> chatboxes = new ArrayList<Map>();
-                Iterator<String> iterator = chatBoxMap.keySet().iterator();
+                Iterator<ChatBoxId> iterator = chatBoxMap.keySet().iterator();
                 while (iterator.hasNext()) {
-                    chatboxes.add(chatBoxMap.get(iterator.next()).getJSONMap());
+                    chatboxes.add(chatBoxMap.get(iterator.next()).getJSONMap(chatManager));
                 }
                 bean.put("chatboxes", chatboxes);
             }

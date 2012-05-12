@@ -38,10 +38,12 @@ height	33.8px
 
         </div>
         <div id="chatbar-online-users" class="chatbar-box">
-            <div class="chatboxhead">
-                <div class="chatboxtitle">Kontakte</div>
-                <div class="chatboxoptions">
-                    <a  href="#">X</a></div>
+            <div class="cb-head">
+                <div class="cb-opt">
+                    <a  href="#">X</a>
+                </div>
+                <div class="cb-title">Kontakte</div>
+
             </div>
             <div id="chatbar-online-users-list" class="chatbar-box-content">
                 <div class="chat-user" >
@@ -56,10 +58,12 @@ height	33.8px
             </div>
         </div>
         <div id="chatbar-config" class="chatbar-box">
-            <div class="chatboxhead">
-                <div class="chatboxtitle">Konfiguration</div>
-                <div class="chatboxoptions">
-                    <a  href="#">X</a></div>
+            <div class="cb-head">
+                <div class="cb-opt">
+                    <a  href="#">X</a>
+                </div>
+                <div class="cb-title">Konfiguration</div>
+
             </div>
             <div  class="chatbar-box-content">
                 <select name="status">
@@ -68,6 +72,29 @@ height	33.8px
                     <option  value="dnd" #if($status == "dnd") selected="selected" #end >Do not disturb</option>
                     <option  value="xa" #if($status == "xa") selected="selected" #end>Offline</option>
                 </select>
+
+                <div class="aui-toolbar" >
+
+
+                    <ul class="toolbar-group">
+                        <li class="toolbar-item toolbar-dropdown">
+                            <div class="aui-dd-parent">
+                                <a href="#" id="rte-button-image" class="toolbar-trigger aui-dd-trigger">
+                                    <span class="dropdown-text">Old dropdown</span>
+                                    <span class="icon icon-dropdown"></span>
+                                </a>
+                                <ul class="aui-dropdown">
+                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                </div><!-- // .aui-toolbar -->                
             </div>   
         </div>
     </div>

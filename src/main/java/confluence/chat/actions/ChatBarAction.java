@@ -9,4 +9,9 @@ public class ChatBarAction extends ConfluenceActionSupport {
         return SUCCESS;
 
     }
+
+    public String chatbox() throws Exception {
+        
+        return SUCCESS;
+    }
 }

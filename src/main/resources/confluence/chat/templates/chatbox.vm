@@ -1,0 +1,16 @@
+<div id="chatbox_undefined" class="chatbox">
+    <div class="chatboxhead">
+        <div class="chatboxtitle">Testuser</div>
+        <div class="chatboxoptions">
+            <a  class="chatbox-min" href="javascript:void(0)">-</a>
+            <a  class="chatbox-close" href="javascript:void(0)">X</a>
+        </div>
+        <br clear="all">
+    </div>
+    <div class="chatboxcontent">
+
+    </div>
+    <div class="chatboxinput">
+        <textarea class="chatboxtextarea"></textarea>
+    </div>
+</div>

@@ -10,13 +10,20 @@ import java.util.HashMap;
  *
  * @author Dev
  */
-public class ChatBoxMap extends HashMap<String, ChatBox> {
-    
-    public ChatBox getChatBoxWithUser(String user){
-        if(!this.containsKey(user)){
-            this.put(user, new ChatBox(user));
-        }
-        return this.get(user);
+public class ChatBoxMap extends HashMap<ChatBoxId, ChatBox> {
+
+    public ChatBox getChatBoxWithUser(String user) {
+        
+        
+        ChatBoxId chatBoxId = new ChatBoxId(user);
+        return this.getChatBoxById(chatBoxId);
     }
- 
+
+    public ChatBox getChatBoxById(ChatBoxId chatBoxId) {
+
+        if (!this.containsKey(chatBoxId)) {
+            this.put(chatBoxId, new ChatBox(chatBoxId));
+        }
+        return this.get(chatBoxId);
+    }
 }

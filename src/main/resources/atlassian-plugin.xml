@@ -22,6 +22,9 @@
             <action name="chatbar" class="confluence.chat.actions.ChatBarAction" >
                 <result name="success" type="velocity">/confluence/chat/templates/chatbar.vm</result>
             </action>
+            <action name="chatbox" class="confluence.chat.actions.ChatBarAction"  method="chatbox">
+                <result name="success" type="velocity">/confluence/chat/templates/chatbox.vm</result>
+            </action>
         </package>
         
         <package name="ChatActions" extends="default"  namespace="/chat">
@@ -42,24 +45,20 @@
             </action>  
             <action name="setstatus" class="confluence.chat.actions.SetStatusAction" >
                 <result name="success" type="json" />
-            </action>             
+            </action>      
             
         </package>
     </xwork>
     <web-resource key="chat-files" name="Chat Files">
-        <resource type="download" name="jquery.md5.js" location="confluence/chat/js/jquery.md5.js"/>
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
-        <resource type="download" name="chatbar.js" location="confluence/chat/js/chatbar.js"/>
         <resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
-        <resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css">
-            <param name="batch" value="false"/>    
-        </resource>
+        <resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css" />
         <resource type="download" name="chatbar.css" location="confluence/chat/css/chatbar.css"/>
         <resource type="download" name="screen_ie.css" location="confluence/chat/css/screen_ie.css">
             <param name="ieonly" value="true"/>
         </resource>
-<!--        <context>main</context>-->
+        <context>main</context>
      
     </web-resource>
     

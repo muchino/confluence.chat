@@ -17,7 +17,7 @@ public class LoginLogoutListener implements EventListener {
     public void handleEvent(Event event) {
         if (event instanceof LoginEvent) {
             LoginEvent loginEvent = (LoginEvent) event;
-            ChatUser chatUser = chatManager.getChatUser(loginEvent.getUsername());
+            ChatUser chatUser = chatManager.getOnlineChatUser(loginEvent.getUsername());
             chatManager.setOnlineStatus(loginEvent.getUsername(), chatUser.getPreferences().getChatStatus());
         } else if (event instanceof LogoutEvent) {
             LogoutEvent logoutEvent = (LogoutEvent) event;

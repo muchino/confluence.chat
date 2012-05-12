@@ -20,6 +20,7 @@ public class ChatUser {
     private static String STATUSMESSAGE = "sm";
     private static String LASTSEEN = "d";
     private static String USERIMAGE = "p";
+    private static String ID = "id";
     private Date lastSeen;
     private ChatStatus status = null;
     private Map<String, String> jsonMap = new HashMap<String, String>();
@@ -27,6 +28,8 @@ public class ChatUser {
 
     public ChatUser(String username, ChatPreferences preferences) {
         jsonMap.put(USERNAME, username);
+        ChatBoxId chatBoxId = new ChatBoxId(username);
+        jsonMap.put(ID, chatBoxId.toString());
         this.lastSeen = new Date();
         this.preferences = preferences;
         this.status = this.preferences.getChatStatus();

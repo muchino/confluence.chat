@@ -15,7 +15,7 @@ import java.util.Map;
 public class ChatMessage {
 
     public static final String FROM = "f";
-    public static final String TO = "r";
+    public static final String TO = "to";
     public static final String MESSAGE = "m";
     public static final String SENDDATE = "t";
     private Date senddate = new Date();
@@ -82,8 +82,4 @@ public class ChatMessage {
         this.jsonMap.put(TO, to);
     }
 
-    public Map<String, Object> getJSONMap() {
-        this.jsonMap.put(SENDDATE, this.senddate.getTime());
-        return jsonMap;
-    }
 }

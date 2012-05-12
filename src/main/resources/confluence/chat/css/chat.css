@@ -1,11 +1,11 @@
 .chatbox {
     position: fixed;
     position:expression("absolute");
-    width: 225px;
+    width: 260px;
     display:none;
 }
 
-.chatboxhead {
+.cb-head {
     background-color: #003366;
     padding:7px;
     color: #ffffff;
@@ -15,29 +15,27 @@
     height: 17px;
 }
 
-.chatboxblink {
+.blink .cb-head {
     background-color: #176689;
     border-right:1px solid #176689;
     border-left:1px solid #176689;
 }
 
-.chatboxcontent {
+.cb-content {
     font-family: arial,sans-serif;
     font-size: 13px;
     color: #333333;
     height:200px;
-    width:209px;
     overflow-y:auto;
     overflow-x:auto;
-    padding:7px;
+    padding:0 5px;
     border-left:1px solid #cccccc;
     border-right:1px solid #cccccc;
     border-bottom:1px solid #eeeeee;
     background-color: #ffffff;
-    line-height: 1.3em;
 }
 
-.chatboxinput {
+.cb-input {
     padding: 5px;
     background-color: #ffffff;
     border-left:1px solid #cccccc;
@@ -45,49 +43,77 @@
     border-bottom:1px solid #cccccc;
 }
 
-.chatboxtextarea {
-    width: 206px;
+.cb-input textarea{
+    width: 100%;
     height:44px;
-    padding:3px 0pt 3px 3px;
     border: 1px solid #eeeeee;
-    margin: 1px;
     overflow:hidden;
-}
-
-.chatboxtextareaselected {
-    border: 2px solid #003366;
     margin:0;
 }
 
-.chatboxmessage {
+/*textarea selected*/
+.cb-ts {
+    border: 2px solid #003366;
+
+}
+/*message hoder*/
+.cb-m {
     margin-left:1em;
 }
-
-.chatboxinfo {
-    margin-left:-1em;
-    color:#666666;
-
-}
-
-.chatboxmessagefrom {
-    margin-left:-1em;
+/*user from*/
+.cb-f {
     font-weight: bold;
 }
 
-.chatboxmessagecontent {
+/*messsage content*/
+.cb-mc {
+    clear: both;
 }
 
-.chatboxoptions {
+/*messsage text*/
+.cb-mtext {
+    margin-bottom: 4px;
+}
+/*options*/
+.cb-opt {
     float: right;
+    width: 50px;
+    text-align: right;
 }
 
-.chatboxoptions a {
+.cb-opt a {
     text-decoration: none;
     color: white;
     font-weight:bold;
     font-family:Verdana,Arial,"Bitstream Vera Sans",sans-serif;
 }
 
-.chatboxtitle {
+.cb-title {
+/*    float: left;*/
+margin-right: 50px;
+}
+
+.chatbox .userLogoLink {
+
+
     float: left;
+}
+.chatbox .userLogoLink  img {
+    width: 40px;
+    height: 40px;
+}
+
+.chatbox .cb-mh{
+    margin-left: 45px;  
+}
+.chatbox .cb-mt{
+    text-align: right;
+    border-bottom: 1px solid #EEE;
+    margin-bottom: 5px;
+    padding-bottom:  5px;
+    color: #777777
+}
+
+.chatbox .cb-ut {
+    clear: both;
 }

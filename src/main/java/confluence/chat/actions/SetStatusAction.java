@@ -26,7 +26,7 @@ public class SetStatusAction extends ConfluenceActionSupport implements Beanable
             } else if ("xa".equals(status)) {
                 chatStatus = ChatStatus.OFFLINE;
             }
-            ChatUser chatUser = chatManager.getChatUser(getRemoteUser());
+            ChatUser chatUser = chatManager.getOnlineChatUser(getRemoteUser());
             chatUser.getPreferences().setChatStatus(chatStatus);
             chatManager.setPreferencesOfUser(chatUser.getUsername(), chatUser.getPreferences());
             chatManager.setOnlineStatus(getRemoteUser(), chatStatus);

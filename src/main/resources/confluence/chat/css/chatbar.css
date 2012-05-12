@@ -1,14 +1,10 @@
-body {
-    font-family: Arial,Helvetica,FreeSans,sans-serif;
-    font-size: 13px;
-}
 .chatbox,
 #chatbar {
 
     right:  20px;
     position: fixed;
     bottom:  0%;
-    z-index: 100000;
+    z-index: 3000;
 
 }
 #chatbar-buttons > div {
