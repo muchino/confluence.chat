@@ -22,6 +22,10 @@ public final class ChatBoxId {
         this.members = members;
     }
 
+    public ChatBoxId(ChatUser user) {
+        this.addMember(user.getUsername());
+    }
+
     public ChatBoxId(String username) {
         this.addMember(username);
     }
@@ -62,7 +66,7 @@ public final class ChatBoxId {
 
     @Override
     public String toString() {
-        
+
         return hashCode() + "";
     }
 

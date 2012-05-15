@@ -50,7 +50,7 @@ height	33.8px
                     <div>
                         <img src="/images/icons/profilepics/default.gif" />
                         <div class="chat-user-info">
-                            <span>admin</span>
+                            <span class="is">admin</span>
                             <!-- <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div> -->
                         </div>
                     </div>

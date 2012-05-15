@@ -10,6 +10,7 @@ import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.confluence.user.actions.ProfilePictureInfo;
 import com.atlassian.spring.container.ContainerManager;
 import com.atlassian.user.User;
+import com.opensymphony.webwork.ServletActionContext;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,8 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -26,34 +27,43 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ChatManager {
 
-    private static final String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
-    private static final String KEY_HISTORY_OLD = "confluence.chat.history.old";
-    private static final String KEY_HISTORY_NEW = "confluence.chat.history.new";
+    public static final String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
+    public static final String SESSION_LAST_REQUEST = "confluence.chat.time.last.message";
+    public static final String SESSION_SHOW_MESSAGES_SINCE = "confluence.chat.show.message.since.";
+//    public static final String KEY_HISTORY_OLD = "confluence.chat.history.old";
+//    public static final String KEY_HISTORY_NEW = "confluence.chat.history.new";
     private static final String KEY_PREFERENCES = "confluence.chat.preferences";
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     private BandanaManager bandanaManager = (BandanaManager) ContainerManager.getComponent("bandanaManager");
     private UserAccessor userAccessor = (UserAccessor) ContainerManager.getComponent("userAccessor");
-    private ConfluenceBandanaContext confluenceBandanaContextNewMessages = new ConfluenceBandanaContext(KEY_HISTORY_NEW);
+//    private ConfluenceBandanaContext confluenceBandanaContextNewMessages = new ConfluenceBandanaContext(KEY_HISTORY_NEW);
     private ConfluenceBandanaContext confluenceBandanaContextPreferences = new ConfluenceBandanaContext(KEY_PREFERENCES);
     private Map<String, ChatUser> onlineUsers = new HashMap<String, ChatUser>();
     private ChatUserList users = new ChatUserList();
-    private Map<String, ChatBoxMap> newChatBoxes = new HashMap<String, ChatBoxMap>();
+    private Map<String, ChatBoxMap> chatBoxes = new HashMap<String, ChatBoxMap>();
 
     public ChatManager() {
     }
 
-    public ChatBoxMap getNewChatBoxesOfUser(String username) {
+    public ChatBoxMap getChatBoxes(User user) {
+        return getChatBoxes(user.getName());
+    }
+    
+        public ChatBoxMap getNewMessageChatBoxes(User user) {
+        return getChatBoxes(user.getName());
+    }
+
+    private ChatBoxMap getChatBoxes(String username) {
 //        ChatBoxMap newMessages = null;
 //        try {
 //            newMessages = (ChatBoxMap) bandanaManager.getValue(confluenceBandanaContextNewMessages, username);
 //        } catch (Exception e) {
 //        }
-        if (!newChatBoxes.containsKey(username)) {
-            newChatBoxes.put(username, new ChatBoxMap());
-
+        if (!chatBoxes.containsKey(username)) {
+            chatBoxes.put(username, new ChatBoxMap());
         }
 
-        return newChatBoxes.get(username);
+        return chatBoxes.get(username);
     }
 
     public ChatPreferences getPreferencesOfUser(String username) {
@@ -79,76 +89,76 @@ public class ChatManager {
         chatMessage.setMessage(message);
 
 //        chatboxes of receiver
-        ChatBox chatBoxWithReceiver = this.getNewChatBoxesOfUser(receiver).getChatBoxWithUser(sender);
+        ChatBox chatBoxWithReceiver = this.getChatBoxes(receiver).getChatBoxWithUser(sender);
         chatBoxWithReceiver.addMessage(chatMessage);
-        this.saveChatBox(receiver, chatBoxWithReceiver);
+        chatBoxWithReceiver.open();
+//        this.saveChatBox(receiver, chatBoxWithReceiver);
 
 //        own chatboxes
-        ChatBox chatBoxSelf = this.getNewChatBoxesOfUser(sender).getChatBoxWithUser(receiver);
+        ChatBox chatBoxSelf = this.getChatBoxes(sender).getChatBoxWithUser(receiver);
         chatBoxSelf.addMessage(chatMessage);
-        this.saveChatBox(sender, chatBoxSelf);
+        chatBoxSelf.open();
+//        this.saveChatBox(sender, chatBoxSelf);
         return chatBoxSelf;
     }
 
-    private ChatBoxMap saveChatBox(String chatBoxOwner, ChatBox chatBox) {
-        ChatBoxMap newMessages = this.getNewChatBoxesOfUser(chatBoxOwner);
-        newMessages.put(chatBox.getId(), chatBox);
-//        bandanaManager.setValue(confluenceBandanaContextNewMessages, chatBoxOwner, newMessages);
-        return newMessages;
-    }
+//    private ChatBoxMap saveChatBox(String chatBoxOwner, ChatBox chatBox) {
+//        ChatBoxMap newMessages = this.getChatBoxes(chatBoxOwner);
+//        newMessages.put(chatBox.getId(), chatBox);
+////        bandanaManager.setValue(confluenceBandanaContextNewMessages, chatBoxOwner, newMessages);
+//        return newMessages;
+//    }
 
+    @Deprecated
     public void clearNewMessages(String username) {
 //        bandanaManager.removeValue(confluenceBandanaContextNewMessages, username);
-        newChatBoxes.remove(username);
+        chatBoxes.remove(username);
     }
 
-    public ChatBoxMap getOpenChats(HttpSession session) {
-        ChatBoxMap sessionChatBoxes = null;
-        try {
-            sessionChatBoxes = (ChatBoxMap) session.getAttribute(SESSION_OPEN_CHAT_KEY);
-
-        } catch (Exception e) {
-        }
-        if (sessionChatBoxes == null) {
-            sessionChatBoxes = new ChatBoxMap();
-        }
-        return sessionChatBoxes;
-    }
-
-    public void saveOpenChats(HttpSession session, ChatBoxMap newChatBoxes) {
-        ChatBoxMap sessionChatBoxes = this.getOpenChats(session);
-        ChatMessage chatMessage;
-        ChatMessageList newMessageList;
-        ChatMessageList sessionMessageList;
-        ChatBoxId chatBoxId;
-        Iterator<ChatBoxId> iterator = newChatBoxes.keySet().iterator();
-        while (iterator.hasNext()) {
-            chatBoxId = iterator.next();
-            newMessageList = newChatBoxes.getChatBoxById(chatBoxId).getMessages();
-            sessionMessageList = sessionChatBoxes.getChatBoxById(chatBoxId).getMessages();
-            for (int i = 0; i < newMessageList.size(); i++) {
-                chatMessage = newMessageList.get(i);
-                if (!sessionMessageList.contains(chatMessage)) {
-                    sessionMessageList.add(chatMessage);
-                }
-
-            }
-
-        }
-
-
-        session.setAttribute(SESSION_OPEN_CHAT_KEY, sessionChatBoxes);
-    }
-
-    public void closeChatWith(HttpSession session, ChatBoxId chatBoxId) {
-        if (chatBoxId != null) {
-            ChatBoxMap sessionChatBoxes = this.getOpenChats(session);
-            sessionChatBoxes.remove(chatBoxId);
-            session.setAttribute(SESSION_OPEN_CHAT_KEY, sessionChatBoxes);
-        }
-
-    }
-
+//    public ChatBoxMap getOpenChats(HttpSession session) {
+//        ChatBoxMap sessionChatBoxes = null;
+//        try {
+//            sessionChatBoxes = (ChatBoxMap) session.getAttribute(SESSION_OPEN_CHAT_KEY);
+//
+//        } catch (Exception e) {
+//        }
+//        if (sessionChatBoxes == null) {
+//            sessionChatBoxes = new ChatBoxMap();
+//        }
+//        return sessionChatBoxes;
+//    }
+//    public void saveOpenChats(HttpSession session, ChatBoxMap chatBoxmap) {
+//        ChatBoxMap sessionChatBoxes = this.getOpenChats(session);
+//        ChatMessage chatMessage;
+//        ChatMessageList newMessageList;
+//        ChatMessageList sessionMessageList;
+//        ChatBoxId chatBoxId;
+//        Iterator<ChatBoxId> iterator = chatBoxmap.keySet().iterator();
+//        while (iterator.hasNext()) {
+//            chatBoxId = iterator.next();
+//            newMessageList = chatBoxmap.getChatBoxById(chatBoxId).getMessages();
+//            sessionMessageList = sessionChatBoxes.getChatBoxById(chatBoxId).getMessages();
+//            for (int i = 0; i < newMessageList.size(); i++) {
+//                chatMessage = newMessageList.get(i);
+//                if (!sessionMessageList.contains(chatMessage)) {
+//                    sessionMessageList.add(chatMessage);
+//                }
+//
+//            }
+//
+//        }
+//
+//
+//        session.setAttribute(SESSION_OPEN_CHAT_KEY, sessionChatBoxes);
+//    }
+//    public void closeChatWith(HttpSession session, ChatBoxId chatBoxId) {
+//        if (chatBoxId != null) {
+//            ChatBoxMap sessionChatBoxes = this.getOpenChats(session);
+//            sessionChatBoxes.remove(chatBoxId);
+//            session.setAttribute(SESSION_OPEN_CHAT_KEY, sessionChatBoxes);
+//        }
+//
+//    }
     public List<ChatUser> getOnlineUsers() {
         List<ChatUser> onlineUserList = new ArrayList<ChatUser>();
         Calendar cal = Calendar.getInstance();
@@ -233,4 +243,5 @@ public class ChatManager {
             chatUser.setLastSeen(new Date());
         }
     }
+
 }

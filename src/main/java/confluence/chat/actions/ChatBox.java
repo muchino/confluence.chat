@@ -4,10 +4,8 @@
  */
 package confluence.chat.actions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -17,6 +15,8 @@ public class ChatBox {
 
     private List<String> members = new ArrayList<String>();
     private ChatMessageList messages = new ChatMessageList();
+    private Date lastMessage = new Date();
+    private Boolean open = true;
 
     ChatBox(ChatBoxId id) {
         this.members = id.getMembers();
@@ -26,8 +26,15 @@ public class ChatBox {
         return new ChatBoxId(getMembers());
     }
 
-    public void addMessage(ChatMessage chatMessagesa) {
-        this.messages.add(chatMessagesa);
+    public void addMessage(ChatMessage chatMessages) {
+        if (this.getLastMessage().before(chatMessages.getSenddate())) {
+            this.setLastMessage(chatMessages.getSenddate());
+        }
+        this.messages.add(chatMessages);
+    }
+
+    public Boolean hasMessageSince(Date date) {
+        return this.getLastMessage().after(date);
     }
 
     /**
@@ -66,6 +73,7 @@ public class ChatBox {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         jsonMap.put("id", this.getId().toString());
         jsonMap.put("un", this.getMembers());
+        jsonMap.put("lm", this.getLastMessage().getTime());
         if (!this.messages.isEmpty()) {
             List<Map> messageList = new ArrayList<Map>();
             for (int i = 0; i < messages.size(); i++) {
@@ -73,7 +81,7 @@ public class ChatBox {
                 Map<String, Object> message = new HashMap<String, Object>();
                 message.put(ChatMessage.FROM, manager.getChatUser(chatMessage.getFrom()).getJSONMap());
                 message.put(ChatMessage.TO, manager.getChatUser(chatMessage.getTo()).getJSONMap());
-                message.put(ChatMessage.MESSAGE,chatMessage.getMessage());
+                message.put(ChatMessage.MESSAGE, chatMessage.getMessage());
                 message.put(ChatMessage.SENDDATE, chatMessage.getSenddate().getTime());
                 messageList.add(message);
             }
@@ -89,5 +97,49 @@ public class ChatBox {
      */
     public List<String> getMembers() {
         return members;
+    }
+
+    public void close() {
+        this.open = false;
+    }
+
+    public void open() {
+        this.open = true;
+    }
+
+    public Boolean isOpen() {
+        return this.open;
+    }
+
+    /**
+     * Beim initialen Seitenrequest -> wieviele nachrichten zeigen
+     *
+     * @param session
+     * @return
+     */
+    public Date getInitMessagesShowSince(HttpSession session) {
+        String key = ChatManager.SESSION_SHOW_MESSAGES_SINCE + this.getId().toString();
+        Date date = (Date) session.getAttribute(key);
+        if (date == null) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -1);
+            date = cal.getTime();
+        }
+        session.setAttribute(key, date);
+        return date;
+    }
+
+    /**
+     * @return the lastMessage
+     */
+    public Date getLastMessage() {
+        return lastMessage;
+    }
+
+    /**
+     * @param lastMessage the lastMessage to set
+     */
+    public void setLastMessage(Date lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

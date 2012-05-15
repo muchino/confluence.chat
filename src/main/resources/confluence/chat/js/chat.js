@@ -1,8 +1,10 @@
 function ChatBar(){
     var that = this;
     this.chatBoxes = new Array();
+    this.heartBeatCount= 0;
     this.windowFocus = true;
     this.originalTitle = null;
+    this.lastHeartBeatServerdate = 0;
     that.startChatSession();
     jQuery(document).ready(function(){
         that.originalTitle = document.title;
@@ -19,7 +21,9 @@ function ChatBar(){
         }
     });    
 }
-
+ChatBar.prototype.getHeartbeatCount = function(){  
+    return this.heartBeatCount;
+}
 ChatBar.prototype.startChatSession = function(){  
     var that = this;
     jQuery(document).ready(function(){
@@ -31,12 +35,13 @@ ChatBar.prototype.startChatSession = function(){
                 cache: false,
                 dataType: "json",
                 success: function(data) {
+                    that.lastHeartBeatServerdate = data.lr;
                     if(typeof(data.chatboxes) != "undefined"){
                         that.retrieveChatMessages(data.chatboxes);
                     }
                     setInterval(function(){
                         that.chatHeartbeat();
-                    }, 1000);
+                    }, 650);
                 }
             });
             jQuery([window, document]).blur(function(){
@@ -51,6 +56,7 @@ ChatBar.prototype.startChatSession = function(){
 
 ChatBar.prototype.chatHeartbeat = function(){
     var that = this;
+    this.heartBeatCount++;
     
     if(typeof(chatBar) != "undefined"){
         if(!this.isOnline()){
@@ -58,54 +64,58 @@ ChatBar.prototype.chatHeartbeat = function(){
         }
     }
     
-    var itemsfound = 0;
-	
-    if (this.windowFocus == false) {
- 
-        var blinkNumber = 0;
-        var titleChanged = 0;
-        for (var x in newMessagesWin) {
-            if (newMessagesWin[x] == true) {
-                ++blinkNumber;
-                if (blinkNumber >= blinkOrder) {
-                    document.title = x+' says...';
-                    titleChanged = 1;
-                    break;	
-                }
-            }
-        }
-		
-        if (titleChanged == 0) {
-            document.title = this.originalTitle;
-            blinkOrder = 0;
-        } else {
-            ++blinkOrder;
-        }
+    //    var itemsfound = 0;
+    //	
+    //    if (this.windowFocus == false) {
+    // 
+    //        var blinkNumber = 0;
+    //        var titleChanged = 0;
+    //        for (var x in newMessagesWin) {
+    //            if (newMessagesWin[x] == true) {
+    //                ++blinkNumber;
+    //                if (blinkNumber >= blinkOrder) {
+    //                    document.title = x+' says...';
+    //                    titleChanged = 1;
+    //                    break;	
+    //                }
+    //            }
+    //        }
+    //		
+    //        if (titleChanged == 0) {
+    //            document.title = this.originalTitle;
+    //            blinkOrder = 0;
+    //        } else {
+    //            ++blinkOrder;
+    //        }
+    //
+    //    } else {
+    //        for (var x in newMessagesWin) {
+    //            newMessagesWin[x] = false;
+    //        }
+    //    }
 
-    } else {
-        for (var x in newMessagesWin) {
-            newMessagesWin[x] = false;
-        }
-    }
-
-    for (var x in newMessages) {
-        if (newMessages[x] == true) {
-            if (chatboxFocus[x] == false) {
-                //FIXME: add toggle all or none policy, otherwise it looks funny
-                jQuery('#chatbox_'+x+' .cb-head').toggleClass('chatboxblink');
-            }
-        }
-    }
+    //    for (var x in newMessages) {
+    //        if (newMessages[x] == true) {
+    //            if (chatboxFocus[x] == false) {
+    //                //FIXME: add toggle all or none policy, otherwise it looks funny
+    //                jQuery('#chatbox_'+x+' .cb-head').toggleClass('chatboxblink');
+    //            }
+    //        }
+    //    }
 	
     jQuery.ajax({
         url: getBaseUrl()+"/chat/heartbeat.action",
         cache: false,
         dataType: "json",
+        data: {
+            lr: this.lastHeartBeatServerdate
+        },
         success: function(data) {
+            
+            that.lastHeartBeatServerdate = data.lr;
             if(typeof(data.chatboxes) != "undefined"){
                 that.retrieveChatMessages(data.chatboxes);
             }
-       
         }
     });
 }
@@ -265,7 +275,7 @@ ChatBar.prototype.refreshUser = function(data){
                 chatUser.attr('chatBoxId', chatBoxId);
                 chatUser.attr('username', username);
                 chatUser.find('img').attr('src', user.p);
-                chatUser.find('.chat-user-info span').text(user.fn);
+                chatUser.find('.chat-user-info span').text(user.fn).addClass('user-hover-trigger').attr('data-username', username);
                 chatUser.find('> div').attr('class', user.s);
                 chatUser.click(function(){
                     that.chatWith({
@@ -275,6 +285,9 @@ ChatBar.prototype.refreshUser = function(data){
                     });
                 });
                 that.chatOnlineUserDiv.append(chatUser);
+                try{
+                    AJS.Confluence.Binder.userHover();
+                }catch(e){}
             } else {
                 chatUser.find('> div').attr('class', user.s);
                 var img = chatUser.find('img');
@@ -379,10 +392,13 @@ ChatBox.prototype.isMinimized = function(){
 
 ChatBox.prototype.focusChatBox = function(){
     this.maximize();
+    this.box.show();
 }
 ChatBox.prototype.startBlink = function(){
     if(!this.textarea.hasClass('cb-ts')
-        && this.blinkInterval == null){
+        && this.blinkInterval == null
+        && chatBar.getHeartbeatCount() > 0
+        ){
         var that = this
         this.blinkInterval = window.setInterval(function(){
             that.blink();
@@ -623,7 +639,7 @@ ChatBox.prototype.retrieveMessage = function(item){
         messageHolder =    userBox.find('.cb-mh') ;
     }
     //     nun einfach die nachricht noch drann
-    var messageItem = jQuery('<div/>').addClass('cb-mtext').text(message).attr('t',item.t);
+    var messageItem = jQuery('<div/>').addClass('cb-mtext').html(message).attr('t',item.t);
     messageItem.appendTo(messageHolder);
     
     content.scrollTop(content[0].scrollHeight);
@@ -665,7 +681,7 @@ ChatBox.prototype.replaceEmoticons =  function(text){
         '=)'  : 'happy',
         ':-*' : 'kiss',
         ':*' : 'kiss',
-        ';-)*' : 'winking',
+        ';-)' : 'winking',
         ';)' : 'winking',
         ':-P' : 'tongue',
         ':-p' : 'tongue',
