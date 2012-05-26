@@ -7,6 +7,7 @@ package confluence.chat.actions;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -20,6 +21,8 @@ public class ChatUser {
     private static String STATUSMESSAGE = "sm";
     private static String LASTSEEN = "d";
     private static String USERIMAGE = "p";
+    private static String CURRENT_SITE_URL = "su";
+    private static String CURRENT_SITE_TITLE = "st";
     private static String ID = "id";
     private Date lastSeen;
     private ChatStatus status = null;
@@ -124,6 +127,9 @@ public class ChatUser {
     public Map<String, String> getJSONMap() {
         jsonMap.put(STATUS, getStatus().toString());
 //        jsonMap.put(LASTSEEN, formatter.getFormatMessage(getLastSeen()).toString());
+        if (!this.getPreferences().getShowCurrentSite()) {
+            this.removeCurrentSite();
+        }
         return jsonMap;
     }
 
@@ -132,5 +138,21 @@ public class ChatUser {
      */
     public ChatPreferences getPreferences() {
         return preferences;
+    }
+
+    public void setCurrentSite(String currentUrl, String currentTitle) {
+        if (this.getPreferences().getShowCurrentSite()) {
+            if (StringUtils.isNotEmpty(currentTitle) && StringUtils.isNotEmpty(currentUrl)) {
+                this.jsonMap.put(CURRENT_SITE_TITLE, currentTitle);
+                this.jsonMap.put(CURRENT_SITE_URL, currentUrl);
+            }
+        } else {
+            this.removeCurrentSite();
+        }
+    }
+
+    private void removeCurrentSite() {
+        this.jsonMap.remove(CURRENT_SITE_TITLE);
+        this.jsonMap.remove(CURRENT_SITE_URL);
     }
 }

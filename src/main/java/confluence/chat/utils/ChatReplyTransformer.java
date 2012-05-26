@@ -4,13 +4,8 @@
  */
 package confluence.chat.utils;
 
-import com.atlassian.confluence.core.DateFormatter;
-import com.atlassian.user.User;
-import confluence.chat.actions.ChatBox;
-import confluence.chat.actions.ChatMessage;
 import confluence.chat.actions.ChatUser;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

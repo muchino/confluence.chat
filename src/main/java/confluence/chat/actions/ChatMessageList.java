@@ -4,11 +4,12 @@
  */
 package confluence.chat.actions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Dev
  */
-public class ChatMessageList extends ArrayList<ChatMessage> {
+public class ChatMessageList extends ArrayList<ChatMessage> implements Serializable{
 }

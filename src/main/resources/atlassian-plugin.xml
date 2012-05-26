@@ -1,5 +1,5 @@
 
-<atlassian-plugin name="${project.name}" key="${atlassian.plugin.key}">
+<atlassian-plugin name="${project.name}" key="${atlassian.plugin.key}" version="1">
     <plugin-info>
         <description>${project.description}</description>
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
@@ -61,6 +61,14 @@
         <context>main</context>
      
     </web-resource>
+    
+       <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
+        <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
+
+        <context>main</context>
+     
+    </web-resource>
+    
     
     <resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
         <param name="content-type" value="image/png"/>

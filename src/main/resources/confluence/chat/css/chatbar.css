@@ -91,8 +91,10 @@
 .chat-user .chat-user-info{
     margin-left: 20px;
 }
+.chat-user .chat-where span,
 .chat-user .chat-user-status {
     color: gray;
+    font-size: 11px;
 }
 
 #chatbar  .chat-user  .chat {
@@ -140,3 +142,15 @@
     padding: 10px;
     width: 200px;
 }
+
+#chatbar .chat-where {
+    display: block; 
+      padding-left: 18px;
+}
+#chatbar .chat-where a{ 
+    left: -20px;
+    margin-right: -16px;
+    position: relative;
+    top: 4px;
+}
+

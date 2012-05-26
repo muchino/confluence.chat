@@ -4,11 +4,13 @@
  */
 package confluence.chat.actions;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Dev
  */
-public enum ChatStatus {
+public enum ChatStatus implements Serializable{
 
     ONLINE, OFFLINE, AWAY, DO_NOT_DISTURB, NO_CHANGE;
 

@@ -15,11 +15,13 @@ public class ChatPreferences {
 
     private Map<String, Object> jsonMap = new HashMap<String, Object>();
     public static final String SHOW_CONTACTS = "contacts";
+    public static final String SHOW_CURRENTSITE = "scs";
     public static final String STATUS = "s";
     private ChatStatus chatStatus = ChatStatus.ONLINE;
 
     public ChatPreferences() {
         this.jsonMap.put(SHOW_CONTACTS, true);
+        this.jsonMap.put(SHOW_CURRENTSITE, true);
     }
 
     /**
@@ -36,6 +38,23 @@ public class ChatPreferences {
         this.jsonMap.put(SHOW_CONTACTS, showContacts);
     }
 
+        /**
+     * @return the showContacts
+     */
+    public Boolean getShowCurrentSite() {
+        if( this.jsonMap.get(SHOW_CURRENTSITE) == null){
+             this.setShowCurrentSite(Boolean.TRUE);
+        }
+        return (Boolean) this.jsonMap.get(SHOW_CURRENTSITE);
+    }
+
+    /**
+     * @param showContacts the showContacts to set
+     */
+    public void setShowCurrentSite(Boolean showCurrentSite) {
+        this.jsonMap.put(SHOW_CURRENTSITE, showCurrentSite);
+    }
+    
     /**
      * @return the chatStatus
      */
@@ -52,6 +71,7 @@ public class ChatPreferences {
 
     public Map<String, Object> getJSONMap() {
         jsonMap.put(STATUS, getChatStatus().toString());
+        jsonMap.put(SHOW_CURRENTSITE, getShowCurrentSite());
         return jsonMap;
     }
 }

@@ -4,6 +4,7 @@
  */
 package confluence.chat.actions;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Map;
  *
  * @author Dev
  */
-public class ChatMessage {
+public class ChatMessage implements Serializable{
 
     public static final String FROM = "f";
     public static final String TO = "to";

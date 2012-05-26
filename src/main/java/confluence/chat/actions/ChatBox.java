@@ -4,6 +4,7 @@
  */
 package confluence.chat.actions;
 
+import java.io.Serializable;
 import java.util.*;
 import javax.servlet.http.HttpSession;
 
@@ -11,14 +12,21 @@ import javax.servlet.http.HttpSession;
  *
  * @author Dev
  */
-public class ChatBox {
+public class ChatBox implements Serializable {
 
     private List<String> members = new ArrayList<String>();
     private ChatMessageList messages = new ChatMessageList();
     private Date lastMessage = new Date();
     private Boolean open = true;
 
-    ChatBox(ChatBoxId id) {
+    public ChatBox() {
+    }
+
+    public ChatBox(ChatBoxId id) {
+        this.members = id.getMembers();
+    }
+
+    public void setId(ChatBoxId id) {
         this.members = id.getMembers();
     }
 
@@ -73,6 +81,7 @@ public class ChatBox {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         jsonMap.put("id", this.getId().toString());
         jsonMap.put("un", this.getMembers());
+        jsonMap.put("open", this.isOpen());
         jsonMap.put("lm", this.getLastMessage().getTime());
         if (!this.messages.isEmpty()) {
             List<Map> messageList = new ArrayList<Map>();
@@ -141,5 +150,10 @@ public class ChatBox {
      */
     public void setLastMessage(Date lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatBox " + getId().toString();
     }
 }

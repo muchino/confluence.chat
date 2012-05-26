@@ -52,6 +52,7 @@ height	33.8px
                         <div class="chat-user-info">
                             <span class="is">admin</span>
                             <!-- <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div> -->
+                            <div class="chat-where"><a class="icon icon-page" href="#" ></a><span></span></div>
                         </div>
                     </div>
                 </div>
@@ -65,36 +66,37 @@ height	33.8px
                 <div class="cb-title">Konfiguration</div>
 
             </div>
-            <div  class="chatbar-box-content">
+            <div  class="chatbar-box-content chat-options">
                 <select name="status">
                     <option  value="chat" #if($status == "chat") selected="selected" #end >Online</option>
                     <option  value="away" #if($status == "away") selected="selected" #end >Away</option>
                     <option  value="dnd" #if($status == "dnd") selected="selected" #end >Do not disturb</option>
                     <option  value="xa" #if($status == "xa") selected="selected" #end>Offline</option>
                 </select>
-
-                <div class="aui-toolbar" >
-
-
-                    <ul class="toolbar-group">
-                        <li class="toolbar-item toolbar-dropdown">
-                            <div class="aui-dd-parent">
-                                <a href="#" id="rte-button-image" class="toolbar-trigger aui-dd-trigger">
-                                    <span class="dropdown-text">Old dropdown</span>
-                                    <span class="icon icon-dropdown"></span>
-                                </a>
-                                <ul class="aui-dropdown">
-                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-
-
-                </div><!-- // .aui-toolbar -->                
+                <br/>
+<!--                <label for="chat-site"><input id="chat-site" type="checkbox" value="1" />Show current site</label>-->
+                <!--                <div class="aui-toolbar" >
+                
+                
+                                    <ul class="toolbar-group">
+                                        <li class="toolbar-item toolbar-dropdown">
+                                            <div class="aui-dd-parent">
+                                                <a href="#" id="rte-button-image" class="toolbar-trigger aui-dd-trigger">
+                                                    <span class="dropdown-text">Old dropdown</span>
+                                                    <span class="icon icon-dropdown"></span>
+                                                </a>
+                                                <ul class="aui-dropdown">
+                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                
+                
+                                </div> // .aui-toolbar                 -->
             </div>   
         </div>
     </div>

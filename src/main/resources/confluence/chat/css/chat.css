@@ -2,17 +2,28 @@
     position: fixed;
     position:expression("absolute");
     width: 260px;
-    display:none;
+}
+
+.chatbox.min .cb-content ,  
+.chatbox.min .cb-input{
+    display: none;
+}
+.chatbox.closed {
+    display: none;
 }
 
 .cb-head {
     background-color: #003366;
     padding:7px;
     color: #ffffff;
-
     border-right:1px solid #003366;
     border-left:1px solid #003366;
-    height: 17px;
+    min-height: 17px;
+}
+.cb-head .chat-where a:link,
+.cb-head .chat-where a:active,
+.cb-head .chat-where a:visited{
+    color: #fff
 }
 
 .blink .cb-head {
@@ -25,7 +36,7 @@
     font-family: arial,sans-serif;
     font-size: 13px;
     color: #333333;
-    height:200px;
+    height:221px;
     overflow-y:auto;
     overflow-x:auto;
     padding:0 5px;
@@ -89,8 +100,8 @@
 }
 
 .cb-title {
-/*    float: left;*/
-margin-right: 50px;
+    /*    float: left;*/
+    margin-right: 50px;
 }
 
 .chatbox .userLogoLink {
@@ -116,4 +127,29 @@ margin-right: 50px;
 
 .chatbox .cb-ut {
     clear: both;
+}
+
+.chatbox.min .opt-min {
+    display: none;
+}
+.chatbox .cb-opt a {
+    margin-left: 5px;
+}
+
+.chatbox .opt-max {
+    display: none;
+}
+.chatbox.min .opt-max {
+    display: inline;
+}
+.chatbox .chat-where-text span{
+    font-size: 11px;
+}
+.chatbox .chat-where-text {
+    display: block; 
+    margin-left: 20px;
+}
+.chatbox .chat-where a.icon{
+    float: left;
+    margin-top: 1px;
 }

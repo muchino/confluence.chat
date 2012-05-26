@@ -5,8 +5,8 @@
 package confluence.chat.actions;
 
 import com.atlassian.user.User;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,9 +14,12 @@ import java.util.List;
  *
  * @author oli
  */
-public final class ChatBoxId {
+public final class ChatBoxId implements Serializable {
 
     private List<String> members = new ArrayList<String>();
+
+    public ChatBoxId() {
+    }
 
     public ChatBoxId(List<String> members) {
         this.members = members;

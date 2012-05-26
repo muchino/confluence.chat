@@ -36,11 +36,13 @@ public class ChatAction extends AbstractChatAction {
         HttpSession session = request.getSession();
         if (getRemoteUser() != null) {
             getChatManager().setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
-            ChatBoxMap chatBoxes = chatManager.getChatBoxes(getRemoteUser());
+            ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
+            chatUser.setCurrentSite(request.getParameter("currentUrl"), request.getParameter("currentTitle"));
+            ChatBoxMap chatBoxes = getChatManager().getChatBoxes(getRemoteUser());
 
-            Iterator<ChatBoxId> iterator = chatBoxes.keySet().iterator();
+            Iterator<String> iterator = chatBoxes.keySet().iterator();
             while (iterator.hasNext()) {
-                ChatBoxId chatBoxId = iterator.next();
+                String chatBoxId = iterator.next();
                 ChatBox chatBox = chatBoxes.get(chatBoxId);
                 Date initMessagesShowSince = chatBox.getInitMessagesShowSince(session);
                 this.addMessagesSince(chatBox, initMessagesShowSince);
@@ -49,9 +51,21 @@ public class ChatAction extends AbstractChatAction {
         return SUCCESS;
     }
 
+    /**
+     * Add all important messages from given box
+     *
+     * @param chatBox
+     * @param date
+     */
     private void addMessagesSince(ChatBox chatBox, Date date) {
-        if (chatBox.hasMessageSince(date) && chatBox.isOpen()) {
+        if (chatBox.hasMessageSince(date)) {
             chatBoxMap.getChatBoxById(chatBox.getId()).setLastMessage(chatBox.getLastMessage());
+            if (chatBox.isOpen()) {
+                chatBoxMap.getChatBoxById(chatBox.getId()).open();
+            } else {
+                chatBoxMap.getChatBoxById(chatBox.getId()).close();
+            }
+
             for (int j = chatBox.getMessages().size() - 1; j >= 0; j--) {
                 ChatMessage message = chatBox.getMessages().get(j);
                 if (message.getSenddate().after(date)) {
@@ -69,9 +83,7 @@ public class ChatAction extends AbstractChatAction {
         if (getRemoteUser() != null) {
             String parameter = request.getParameter(PARAM_CLOSE);
             if (StringUtils.isNotBlank(parameter)) {
-                ChatBoxId chatBoxId = new ChatBoxId(parameter);
-                ChatBoxMap chatBoxes = chatManager.getChatBoxes(getRemoteUser());
-                chatBoxes.getChatBoxById(chatBoxId).close();
+                getChatManager().closeChatBox(getRemoteUser(), new ChatBoxId(parameter));
             }
         }
         return SUCCESS;
@@ -79,16 +91,15 @@ public class ChatAction extends AbstractChatAction {
 
     public final String heartbeat() throws Exception {
         if (getRemoteUser() != null) {
-            ChatUser chatUser = getChatManager().getOnlineChatUser(getRemoteUser());
+            ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
             // Keine senden, falls user offline
             if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())) {
                 getChatManager().setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
-                ChatBoxMap chatBoxes = chatManager.getChatBoxes(getRemoteUser());
+                ChatBoxMap chatBoxes = getChatManager().getChatBoxes(getRemoteUser());
                 Date lastRequestDate = getLastRequestDate();
-                Iterator<ChatBoxId> iterator = chatBoxes.keySet().iterator();
+                Iterator<String> iterator = chatBoxes.keySet().iterator();
                 while (iterator.hasNext()) {
-                    ChatBoxId chatBoxId = iterator.next();
-                    ChatBox chatBox = chatBoxes.get(chatBoxId);
+                    ChatBox chatBox = chatBoxes.get(iterator.next());
                     this.addMessagesSince(chatBox, lastRequestDate);
                 }
             }
@@ -116,7 +127,7 @@ public class ChatAction extends AbstractChatAction {
 
             if (!getChatBoxMap().isEmpty()) {
                 List<Map> chatboxes = new ArrayList<Map>();
-                Iterator<ChatBoxId> iterator = getChatBoxMap().keySet().iterator();
+                Iterator<String> iterator = getChatBoxMap().keySet().iterator();
                 while (iterator.hasNext()) {
                     chatboxes.add(getChatBoxMap().get(iterator.next()).getJSONMap(getChatManager()));
                 }
