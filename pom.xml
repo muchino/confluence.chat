@@ -91,7 +91,14 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.atlassian.sal</groupId>
+            <artifactId>sal-api</artifactId>
+            <version>${sal.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <properties>
         <!-- Confluence version -->
         <atlassian.plugin.key>${project.artifactId}</atlassian.plugin.key>
@@ -101,6 +108,7 @@
         <atlassian.pdk.server.username>admin</atlassian.pdk.server.username>
         <atlassian.pdk.server.password>admin</atlassian.pdk.server.password>        
         <jdkLevel>1.6</jdkLevel>
+        <sal.version>2.0.11</sal.version>
     </properties>    
     <build>
         <plugins>

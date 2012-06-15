@@ -35,20 +35,20 @@ height	33.8px
                     You are offline
                 </div>
             </div>
-
+            <br style="clear: both; " />
         </div>
         <div id="chatbar-online-users" class="chatbar-box">
             <div class="cb-head">
                 <div class="cb-opt">
                     <a  href="#">X</a>
                 </div>
-                <div class="cb-title">Kontakte</div>
+                <div class="cb-title">Contacts</div>
 
             </div>
             <div id="chatbar-online-users-list" class="chatbar-box-content">
                 <div class="chat-user" >
                     <div>
-                        <img src="/images/icons/profilepics/default.gif" />
+<!--                        <img src="/images/icons/profilepics/default.gif" />-->
                         <div class="chat-user-info">
                             <span class="is">admin</span>
                             <!-- <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div> -->
@@ -63,7 +63,7 @@ height	33.8px
                 <div class="cb-opt">
                     <a  href="#">X</a>
                 </div>
-                <div class="cb-title">Konfiguration</div>
+                <div class="cb-title">Configuration</div>
 
             </div>
             <div  class="chatbar-box-content chat-options">
@@ -74,29 +74,6 @@ height	33.8px
                     <option  value="xa" #if($status == "xa") selected="selected" #end>Offline</option>
                 </select>
                 <br/>
-<!--                <label for="chat-site"><input id="chat-site" type="checkbox" value="1" />Show current site</label>-->
-                <!--                <div class="aui-toolbar" >
-                
-                
-                                    <ul class="toolbar-group">
-                                        <li class="toolbar-item toolbar-dropdown">
-                                            <div class="aui-dd-parent">
-                                                <a href="#" id="rte-button-image" class="toolbar-trigger aui-dd-trigger">
-                                                    <span class="dropdown-text">Old dropdown</span>
-                                                    <span class="icon icon-dropdown"></span>
-                                                </a>
-                                                <ul class="aui-dropdown">
-                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                                    <li class="dropdown-item"><a href="#" class="item-link">Dropdown item</a></li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                
-                
-                                </div> // .aui-toolbar                 -->
             </div>   
         </div>
     </div>

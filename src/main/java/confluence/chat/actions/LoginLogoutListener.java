@@ -4,14 +4,17 @@ import com.atlassian.confluence.event.events.security.LoginEvent;
 import com.atlassian.confluence.event.events.security.LogoutEvent;
 import com.atlassian.event.Event;
 import com.atlassian.event.EventListener;
-import com.atlassian.spring.container.ContainerManager;
 import org.apache.log4j.Logger;
 
 public class LoginLogoutListener implements EventListener {
 
     private static final Logger log = Logger.getLogger(LoginLogoutListener.class);
-    private ChatManager chatManager = (ChatManager) ContainerManager.getComponent("chatManager");
+    private final ChatManager chatManager;
     private Class[] handledClasses = new Class[]{LoginEvent.class, LogoutEvent.class};
+
+    public LoginLogoutListener(ChatManager chatManager) {
+        this.chatManager = chatManager;
+    }
 
     @Override
     public void handleEvent(Event event) {

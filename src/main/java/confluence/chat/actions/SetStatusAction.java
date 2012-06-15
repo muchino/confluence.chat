@@ -2,19 +2,21 @@ package confluence.chat.actions;
 
 import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
-import com.atlassian.spring.container.ContainerManager;
+import com.atlassian.sal.api.transaction.TransactionCallback;
+import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.opensymphony.webwork.ServletActionContext;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 
 public class SetStatusAction extends ConfluenceActionSupport implements Beanable {
 
-    private ChatManager chatManager = (ChatManager) ContainerManager.getComponent("chatManager");
-    private PlatformTransactionManager transactionManager = (PlatformTransactionManager) ContainerManager.getComponent("transactionManager");
+    private ChatManager chatManager;
+    private TransactionTemplate transactionTemplate;
+
+    public SetStatusAction(final ChatManager chatManager, final TransactionTemplate transactionTemplate) {
+        this.chatManager = chatManager;
+        this.transactionTemplate = transactionTemplate;
+    }
 
     @Override
     public final String execute() throws Exception {
@@ -33,16 +35,15 @@ public class SetStatusAction extends ConfluenceActionSupport implements Beanable
             }
 
             final ChatStatus saveChatStatus = chatStatus;
-            TransactionTemplate tt = new TransactionTemplate();
-            tt.setTransactionManager(transactionManager);
-            tt.execute(new TransactionCallbackWithoutResult() {
+            transactionTemplate.execute(new TransactionCallback() {
 
                 @Override
-                protected void doInTransactionWithoutResult(TransactionStatus ts) {
+                public String doInTransaction() {
                     ChatUser chatUser = chatManager.getChatUser(getRemoteUser());
                     chatUser.getPreferences().setChatStatus(saveChatStatus);
                     chatManager.setPreferencesOfUser(chatUser.getUsername(), chatUser.getPreferences());
                     chatManager.setOnlineStatus(getRemoteUser(), saveChatStatus);
+                    return SUCCESS;
                 }
             });
         }
@@ -52,5 +53,9 @@ public class SetStatusAction extends ConfluenceActionSupport implements Beanable
     @Override
     public Object getBean() {
         return true;
+    }
+
+    public void setSalTransactionTemplate(TransactionTemplate template) {
+        this.transactionTemplate = template;
     }
 }

@@ -24,6 +24,9 @@ function ChatBar(){
 ChatBar.prototype.getHeartbeatCount = function(){  
     return this.heartBeatCount;
 }
+ChatBar.prototype.getOriginalTitle = function(){  
+    return this.originalTitle;
+}
 ChatBar.prototype.startChatSession = function(){  
     var that = this;
     jQuery(document).ready(function(){
@@ -68,31 +71,6 @@ ChatBar.prototype.chatHeartbeat = function(){
         }
     }
     
-    //    var itemsfound = 0;
-    //	
-    //    if (this.windowFocus == false) {
-    // 
-    //        var blinkNumber = 0;
-    //        var titleChanged = 0;
-    //        for (var x in newMessagesWin) {
-    //            if (newMessagesWin[x] == true) {
-    //                ++blinkNumber;
-    //                if (blinkNumber >= blinkOrder) {
-    //                    document.title = x+' says...';
-    //                    titleChanged = 1;
-    //                    break;	
-    //                }
-    //            }
-    //        }
-    //		
-    //        if (titleChanged == 0) {
-    //            document.title = this.originalTitle;
-    //            blinkOrder = 0;
-    //        } else {
-    //            ++blinkOrder;
-    //        }
-    //
-   
     jQuery.ajax({
         url: getBaseUrl()+"/chat/heartbeat.action",
         cache: false,
@@ -137,9 +115,9 @@ ChatBar.prototype.init = function(){
             that.bar.find('#chatbar-button-config').click();
         } else {
             if(!that.configurationBox.is(':hidden')){
-                that.configurationBox.fadeOut();
+                that.configurationBox.slideUp();
             }
-            that.onlineUsersBox.fadeToggle();
+            that.onlineUsersBox.slideToggle();
         }
         return false;
         
@@ -147,9 +125,9 @@ ChatBar.prototype.init = function(){
     })
     this.bar.find('#chatbar-button-config ,#chatbar-config .cb-opt a').click(function(){
         if(!that.onlineUsersBox.is(':hidden')){
-            that.onlineUsersBox.fadeOut();
+            that.onlineUsersBox.slideUp();
         }
-        that.configurationBox.fadeToggle();
+        that.configurationBox.slideToggle();
         return false;
     })
     this.configurationBox.find('.chat-options select, .chat-options input ').change(function(){
@@ -254,6 +232,7 @@ ChatBar.prototype.refreshUser = function(data){
     var that = this;
     var tmpAttr = 'chatOfflineMeFlag-'+Math.round(Math.random() * 10000);
     this.chatOnlineUserDiv.find('.chat-user').attr(tmpAttr, 'true');
+    jQuery('.chatbox > div').addClass('unknown');
     var ownUserInList = false;
     jQuery.each(data.users, function(j,user){
         var username = user.un;
@@ -288,7 +267,9 @@ ChatBar.prototype.refreshUser = function(data){
             if(img.attr('src') != user.p){
                 img.attr('src', user.p);
             }
-            
+            /**
+             *wo befindet sich der user
+             */
             var userWhere = jQuery('.chat-where'+chatBoxId);
             
             if(typeof user.su != "undefined" && typeof user.st != "undefined" ){
@@ -310,11 +291,16 @@ ChatBar.prototype.refreshUser = function(data){
                 userWhere.hide();
             }
             
+            /**
+             *Userstatus
+             */
+            
+            jQuery('#chatbox_'+chatBoxId+' > div ').attr('class', user.s);
         }else {
             ownUserInList = true;
         }
     });
-    
+    jQuery('.chatbox > div.unknown').attr('class', '');
     this.chatOnlineUserDiv.find('.chat-user['+tmpAttr+']').remove();
     var count = data.users.length;
     if(count > 0 && ownUserInList){
@@ -339,10 +325,39 @@ ChatBar.prototype.retrieveChatMessages= function(chatboxes){
                 }
             });
         }else if (typeof(that.chatBoxes[chatbox.id]) == "undefined"){
+            var chatPartner =  chatbox.un[0];
+            var chatTitle = '';
+            // retrieve name
+            jQuery.each(chatbox.messages, function(i,item){
+                if (item){
+                    if (typeof(item.to) != "undefined"){
+                        if (typeof(item.to.un) != "undefined"){
+                            if (typeof(item.to.fn) != "undefined"){
+                                if (item.to.un == chatPartner){
+                                    chatTitle  = item.to.fn;
+                                }
+                            }
+                        }
+                    }
+                    if (typeof(item.f) != "undefined"){
+                        if (typeof(item.f.un) != "undefined"){
+                            if (typeof(item.f.fn) != "undefined"){
+                                if (item.f.un == chatPartner){
+                                    chatTitle  = item.f.fn;
+                                }
+                            }
+                        }
+                    }                    
+                }
+            });
+            if(chatTitle == ''){
+                chatTitle = chatPartner;
+            }
+            // create box
             that.chatWith({
                 chatBoxId: chatbox.id,
-                chatUserList : chatbox.un[0],
-                dispayTitle : chatbox.un[0],
+                chatUserList : chatPartner ,
+                dispayTitle : chatTitle,
                 open: chatbox.open,
                 messages : chatbox.messages
             });
@@ -352,20 +367,6 @@ ChatBar.prototype.retrieveChatMessages= function(chatboxes){
 
 var chatBar = new ChatBar();
 
-
-
-
-
-
-var blinkOrder = 0;
-
-var chatboxFocus = new Array();
-var newMessages = new Array();
-var newMessagesWin = new Array();
-
-
-
-
 /**
  * chatBoxId : chatboxid, 
  * chatUserList: chatUserList,
@@ -373,11 +374,6 @@ var newMessagesWin = new Array();
  *  messages: messages,
  *   dispayTitle: dispayTitle
  */
-
-   
-           
-            
-           
 function ChatBox(options){
     
     this.opt = jQuery.extend({
@@ -448,9 +444,15 @@ ChatBox.prototype.startBlink = function(){
 ChatBox.prototype.stopBlink = function(){
     window.clearInterval(this.blinkInterval);
     this.blinkInterval = null;
+    document.title = chatBar.getOriginalTitle();   
     this.box.removeClass('blink');
 }
 ChatBox.prototype.blink = function(){
+    if(this.box.hasClass('blink')){
+        document.title = this.opt.dispayTitle + ' says...';
+    }else {
+        document.title = chatBar.getOriginalTitle();    
+    }
     this.box.toggleClass('blink');
 }
 
@@ -459,8 +461,13 @@ ChatBox.prototype.init = function(){
     this.box = jQuery('<div/>');
     this.hide();
     this.box.addClass('chatbox').attr('id', 'chatbox_'+this.chatBoxId);
+    
+    
+    var box = jQuery('<div/>').appendTo(this.box);
+    
+    
     var header =  jQuery('<div/>').addClass('cb-head');
-    header.appendTo(this.box);
+    header.appendTo(box);
     var options = jQuery('<div/>').addClass('cb-opt');
     options.appendTo(header);
     jQuery('<a/>').attr('href', '#').text('+').addClass('opt-max').click(function(){
@@ -473,9 +480,11 @@ ChatBox.prototype.init = function(){
     .click(function(){
         that.closeChatBox();
     }).appendTo(options);
-    var titleBox =  jQuery('<div/>').addClass('cb-title').text(this.chatUserList);
+    var titleBox =  jQuery('<div/>').addClass('cb-title').text(this.opt.dispayTitle);
     titleBox.appendTo(header);
    
+
+    jQuery('<div/>').addClass('cb-content').appendTo(box);
     /**
      * Who ist der User gerade
      */
@@ -484,8 +493,8 @@ ChatBox.prototype.init = function(){
     jQuery('<span/>').appendTo(jQuery('<a/>').attr('href', '#').addClass('icon icon-page').text('').appendTo(chatWhere));
     jQuery('<span/>').appendTo(jQuery('<a/>').attr('href', '#').addClass('chat-where-text').text('').appendTo(chatWhere));
     
-    chatWhere.appendTo(header);
-    jQuery('<div/>').addClass('cb-content').appendTo(this.box);
+    chatWhere.appendTo(box);
+
     this.textarea= jQuery('<textarea/>');
     this.textarea.keydown(function(event) {
         if (event.keyCode == 13) {
@@ -495,13 +504,12 @@ ChatBox.prototype.init = function(){
     });
     
     this.textarea.blur(function(){
-        //        chatboxFocus[chatBoxId] = false;
         jQuery(this).removeClass('cb-ts');
     }).focus(function(){
         jQuery(this).addClass('cb-ts');
         that.stopBlink();
     });
-    jQuery('<div/>').addClass('cb-input').append(this.textarea).appendTo(this.box);
+    jQuery('<div/>').addClass('cb-input').append(this.textarea).appendTo(box);
     that.box.appendTo(jQuery( "body" ));
   
     if (this.minimizeChatBox == 1 || this.isMinimized()) {

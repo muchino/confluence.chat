@@ -1,23 +1,36 @@
 .chatbox,
 #chatbar {
 
-    right:  20px;
+    right:  0;
     position: fixed;
     bottom:  0%;
     z-index: 3000;
 
 }
+#chatbar-buttons {
+    background-color: #003366;
+}
+
+#chatbar #chatbar-button-online {
+    padding-left: 0;
+    text-align: left;
+    width: 186px;
+}
+
 #chatbar-buttons > div {
     float: left;
     font-size: 13px;
     min-width: 30px;
-    background-color: #003366;
     cursor: pointer;
     color: #FFFFFF;
     padding: 7px;
-
-
 }
+
+#chatbar-buttons > div:hover {
+    text-shadow: 0px 0px 2px #ccc;
+}
+
+
 #chatbar.online  .online,
 #chatbar.offline  .offline{
     display: block;
@@ -27,21 +40,6 @@
     display: none;
 }
 
-#chatbar #chatbar-status.dnd #chatbar-button-config {
-    background-image:  url("images-chat/chat-dnd.png");
-}
-
-#chatbar #chatbar-status.away #chatbar-button-config {
-    background-image:  url("images-chat/chat-away.png");
-}
-
-#chatbar-buttons #chatbar-button-config{
-    background-image:  url("images-chat/chat.png");
-    background-repeat: no-repeat;    
-    background-repeat: no-repeat;
-    background-position: center;
-    border-right: 1px solid #CCCCCC;
-}
 
 
 #chatbar .chatbar-box {
@@ -68,6 +66,10 @@
     cursor: pointer;
     padding: 5px;
 }
+
+#chatbar-online-users{
+    background: #ffffff;
+}
 #chatbar-online-users-list .chat-user:last-child{
     /*    border-bottom: none;*/
 }
@@ -89,53 +91,61 @@
 }
 
 .chat-user .chat-user-info{
-    margin-left: 20px;
+    padding-left: 17px;
 }
 .chat-user .chat-where span,
 .chat-user .chat-user-status {
     color: gray;
     font-size: 11px;
 }
-
-#chatbar  .chat-user  .chat {
-    background: #ffffff; /* Old browsers */
-    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSI0NSUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTFlODQyIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
-    background: -moz-linear-gradient(left,  #ffffff 45%, #91e842 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(45%,#ffffff), color-stop(100%,#91e842)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  #ffffff 45%,#91e842 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  #ffffff 45%,#91e842 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  #ffffff 45%,#91e842 100%); /* IE10+ */
-    background: linear-gradient(left,  #ffffff 45%,#91e842 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#91e842',GradientType=1 ); /* IE6-8 */
-
-}
-#chatbar  .chat-user  .away{ 
-    background: #ffffff; /* Old browsers */
-    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSI0NSUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmZmZjAwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
-    background: -moz-linear-gradient(left,  #ffffff 45%, #ffff00 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(45%,#ffffff), color-stop(100%,#ffff00)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  #ffffff 45%,#ffff00 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  #ffffff 45%,#ffff00 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  #ffffff 45%,#ffff00 100%); /* IE10+ */
-    background: linear-gradient(left,  #ffffff 45%,#ffff00 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffff00',GradientType=1 ); /* IE6-8 */
-}
-#chatbar  .chat-user .dnd {
-    background: #ffffff; /* Old browsers */
-    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSI0NSUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZmYwMDAwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
-    background: -moz-linear-gradient(left,  #ffffff 45%, #ff0000 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(45%,#ffffff), color-stop(100%,#ff0000)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left,  #ffffff 45%,#ff0000 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left,  #ffffff 45%,#ff0000 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left,  #ffffff 45%,#ff0000 100%); /* IE10+ */
-    background: linear-gradient(left,  #ffffff 45%,#ff0000 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ff0000',GradientType=1 ); /* IE6-8 */
+#chatbar #chatbar-status #chatbar-button-config{
+    background: url("images-chat/chat.png");
+    background-repeat: no-repeat;
+    background-position: 10px 11px;
+    width: 17px;
+    min-width: 17px;
 
 }
 
+.chatbox .dnd .cb-title,
+.chatbox .away .cb-title,
+.chatbox .chat .cb-title{
+    background: url("images-chat/chat.png");
+    background-repeat: no-repeat;
+    background-position: 0 4px;
+    padding-left: 15px;
+}
+
+
+#chatbar  .chat-user .dnd .chat-user-info,
+#chatbar  .chat-user .offline .chat-user-info,
+#chatbar  .chat-user  .away .chat-user-info ,
+#chatbar  .chat-user  .chat .chat-user-info {
+    background: url("images-chat/chat.png");
+    background-repeat: no-repeat;
+    background-position: 2px 4px;
+}
+
+.chatbox .away .cb-title,
+#chatbar #chatbar-status.away #chatbar-button-config,
+#chatbar  .chat-user  .away .chat-user-info { 
+    background-image:  url("images-chat/away.png") 
+}
+
+#chatbar  .chat-user .offline .chat-user-info  {
+    background-image:  url("images-chat/xa.png") 
+
+}
+
+.chatbox .dnd .cb-title,
+#chatbar #chatbar-status.dnd #chatbar-button-config,
+#chatbar  .chat-user .dnd .chat-user-info {
+    background-image:  url("images-chat/dnd.png") 
+}
+
+#chatbar #chatbar-status.xa #chatbar-button-config {
+    background-image: none;
+}
 
 #chatbar #chatbar-config select {
     margin: 10px;
@@ -145,7 +155,7 @@
 
 #chatbar .chat-where {
     display: block; 
-      padding-left: 18px;
+    padding-left: 18px;
 }
 #chatbar .chat-where a{ 
     left: -20px;

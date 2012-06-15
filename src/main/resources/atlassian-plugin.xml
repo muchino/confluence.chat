@@ -1,43 +1,42 @@
 
-<atlassian-plugin name="${project.name}" key="${atlassian.plugin.key}" version="1">
+<atlassian-plugin name="${project.name}" key="${atlassian.plugin.key}" plugins-version="2">
     <plugin-info>
         <description>${project.description}</description>
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
         <version>${project.version}</version>
     </plugin-info>
-    <resource name="i18n" type="i18n" location="confluence/chat/Chat" />
-    <component key="chatManager" name="chatManager" class="confluence.chat.actions.ChatManager"  />    
+    <resource name="i18n" type="i18n" location="confluence/chat/chat" />
+
+    <component key="chatManager" alias="chatManager"  public="true" name="chatManager" class="confluence.chat.actions.DefaultChatManager">
+        <description>The Manager to retrieve ansdeliver the chat messages</description>
+        <interface>confluence.chat.actions.ChatManager</interface>
+    </component>
+    <component-import key="transactionTemplate">
+        <description>Import the com.atlassian.sal.api.transaction.TransactionTemplate</description>
+        <interface>com.atlassian.sal.api.transaction.TransactionTemplate</interface>
+    </component-import>
     <resource name="images-chat/" type="download" location="confluence/chat/img/" />
     
-    
     <xwork name="Chat" key="confluence.chat">
-        <package name="Chat" extends="default" > 
-            <action name="chat" class="confluence.chat.actions.ChatPageAction" >
-                <result name="success" type="velocity">/confluence/chat/templates/chat.vm</result>
-            </action>
-            
-        </package>
-        
         <package name="Chat Templates" extends="default"  namespace="/ajax/chat">
+            <default-interceptor-ref name="defaultStack"/>
             <action name="chatbar" class="confluence.chat.actions.ChatBarAction" >
                 <result name="success" type="velocity">/confluence/chat/templates/chatbar.vm</result>
-            </action>
-            <action name="chatbox" class="confluence.chat.actions.ChatBarAction"  method="chatbox">
-                <result name="success" type="velocity">/confluence/chat/templates/chatbox.vm</result>
             </action>
         </package>
         
         <package name="ChatActions" extends="default"  namespace="/chat">
-            <action name="heartbeat" class="confluence.chat.actions.ChatAction" method="heartbeat">
+            <default-interceptor-ref name="defaultStack"/>
+            <action name="heartbeat" class="confluence.chat.actions.HeartbeatAction">
                 <result name="success" type="json" />
             </action>
-            <action name="start" class="confluence.chat.actions.ChatAction" method="start">
+            <action name="start" class="confluence.chat.actions.ChatStartAction" >
                 <result name="success" type="json" />
             </action>            
-            <action name="send" class="confluence.chat.actions.ChatAction" method="send">
+            <action name="send" class="confluence.chat.actions.SendAction" >
                 <result name="success" type="json" />
             </action>            
-            <action name="close" class="confluence.chat.actions.ChatAction" method="close">
+            <action name="close" class="confluence.chat.actions.ChatCloseAction">
                 <result name="success" type="json" />
             </action>  
             <action name="getonlineuser" class="confluence.chat.actions.GetOnlineUserAction" >
@@ -50,6 +49,9 @@
         </package>
     </xwork>
     <web-resource key="chat-files" name="Chat Files">
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>        
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
         <resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
@@ -62,7 +64,7 @@
      
     </web-resource>
     
-       <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
+    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
         <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
 
         <context>main</context>
@@ -74,10 +76,7 @@
         <param name="content-type" value="image/png"/>
     </resource>
     <listener name='Login Logout Listener' class='confluence.chat.actions.LoginLogoutListener'
-              key='guLoginListener'>
+              key='chatLoginListener'>
         <description>Listen for the login or the logout an user, to set the chat status </description>
     </listener>
-    
-    <velocity-context-item key="confluenceChatManager" name="Confluence Chat Manager" context-key="chatManager"  class="confluence.chat.actions.ChatManager" />
-
 </atlassian-plugin>

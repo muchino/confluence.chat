@@ -4,6 +4,7 @@
  */
 package confluence.chat.actions;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author Dev
  */
-public class ChatUser {
+public class ChatUser implements Serializable{
 
     private static String USERNAME = "un";
     private static String FULLNAME = "fn";
