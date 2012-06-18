@@ -6,6 +6,7 @@
 }
 
 .chatbox.min .cb-content ,  
+.chatbox.min .chat-where ,
 .chatbox.min .cb-input{
     display: none;
 }

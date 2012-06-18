@@ -518,12 +518,12 @@ ChatBox.prototype.init = function(){
 }
 ChatBox.prototype.show= function() {
     if(this.initialized){
-        this.box.find(".cb-content").scrollTop(this.box.find(".cb-content")[0].scrollHeight);
         if(this.isClosed()){
             this.box.removeClass('closed');
             chatBar.restructureChatBoxes();
         }
     }
+    this.box.find(".cb-content").scrollTop(this.box.find(".cb-content")[0].scrollHeight);
 }
 
 ChatBox.prototype.hide= function() {
@@ -636,8 +636,9 @@ ChatBox.prototype.retrieveMessage = function(item){
     var messageItem = jQuery('<div/>').addClass('cb-mtext').html(message).attr('t',item.t);
     messageItem.appendTo(messageHolder);
     
-    content.scrollTop(content[0].scrollHeight);
-   
+    content.scrollTop(content[0].scrollHeight);    
+    AJS.log('scroll');
+    
 }
 
 ChatBox.prototype.formatTime =  function(dt) {
