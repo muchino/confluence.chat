@@ -15,6 +15,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     private static String PARAM_TO = "to";
     private ChatBoxMap chatBoxMap = new ChatBoxMap();
     private ChatManager chatManager;
+    private Date newRequestDate = new Date();
 
     public AbstractChatAction(ChatManager chatManager) {
         this.chatManager = chatManager;
@@ -43,6 +44,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                 Date initMessagesShowSince = chatBox.getInitMessagesShowSince(session);
                 this.addMessagesSince(chatBox, initMessagesShowSince);
             }
+            setNewRequestDate();
         }
         return SUCCESS;
     }
@@ -98,6 +100,10 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                     ChatBox chatBox = chatBoxes.get(iterator.next());
                     this.addMessagesSince(chatBox, lastRequestDate);
                 }
+                /**
+                 * chat abgeholt => setzen
+                 */
+                setNewRequestDate();
             }
         }
         return SUCCESS;
@@ -110,16 +116,14 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
         if (StringUtils.isNotEmpty(to)) {
             chatManager.sendMessage(getRemoteUser().getName(), to, message);
         }
-//        return this.heartbeat();
         return SUCCESS;
     }
 
     @Override
     public Object getBean() {
-        Date requestDate = new Date();
         Map<String, Object> bean = new HashMap<String, Object>();
         if (getRemoteUser() != null) {
-            bean.put("lr", requestDate.getTime());
+            bean.put("lr", getNewRequestDate().getTime());
 
             if (!getChatBoxMap().isEmpty()) {
                 List<Map> chatboxes = new ArrayList<Map>();
@@ -159,5 +163,19 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             date = cal.getTime();
         }
         return date;
+    }
+
+    /**
+     * @return the newRequestDate
+     */
+    public Date getNewRequestDate() {
+        return newRequestDate;
+    }
+
+    /**
+     * @param newRequestDate the newRequestDate to set
+     */
+    public void setNewRequestDate() {
+        this.newRequestDate = new Date();
     }
 }

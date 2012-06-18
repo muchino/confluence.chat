@@ -19,4 +19,9 @@ public class ChatCloseAction extends AbstractChatAction {
         super.close();
         return SUCCESS;
     }
+
+    @Override
+    public Object getBean() {
+        return true;
+    }
 }

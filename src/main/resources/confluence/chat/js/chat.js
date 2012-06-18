@@ -250,7 +250,7 @@ ChatBar.prototype.refreshUser = function(data){
                     that.chatWith({
                         chatBoxId: jQuery(this).attr('chatBoxId'),
                         chatUserList : jQuery(this).attr('username'),
-                        dispayTitle : jQuery(this).find('.chat-user-info span').text(),
+                        dispayTitle : jQuery(this).find('.chat-user-info span.user-hover-trigger').text(),
                         focus: true
                     });
                 });
@@ -567,45 +567,24 @@ ChatBox.prototype.toggleChatBoxGrowth = function () {
 
 
 ChatBox.prototype.send = function() {
-    var that = this;
     var message = AJS.escapeHtml(this.textarea .val());
-    //        message = message.replace(/^\s+|\s+jQuery/g,"");
-
-
     this.textarea .val('').focus().css('height','44px');
     if (message != '') {
         jQuery.post(getBaseUrl()+"/chat/send.action", {
             to: this.chatUserList, 
             message: message
-        } , function(data){
-            if(typeof(data.chatboxes) != "undefined" ){
-                chatBar.retrieveChatMessages(data.chatboxes);
-            }
-        });
+        } );
     }
     return false;
-//   
-//
-//    var adjustedHeight = chatboxtextarea.clientHeight;
-//    var maxHeight = 94;
-//
-//    if (maxHeight > adjustedHeight) {
-//        adjustedHeight = Math.max(chatboxtextarea.scrollHeight, adjustedHeight);
-//        if (maxHeight)
-//            adjustedHeight = Math.min(maxHeight, adjustedHeight);
-//        if (adjustedHeight > chatboxtextarea.clientHeight)
-//            jQuery(chatboxtextarea).css('height',adjustedHeight+8 +'px');
-//    } else {
-//        jQuery(chatboxtextarea).css('overflow','auto');
-//    }
-	 
 }
 ChatBox.prototype.retrieveMessage = function(item){
     if(item == null){
         return;
     }
-    this.startBlink();
     
+    if(item.f.un != AJS.params.remoteUser){
+        this.startBlink();    
+    }
     
     if(this.isClosed() && this.initialized){
         this.show();

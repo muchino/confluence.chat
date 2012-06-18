@@ -19,4 +19,9 @@ public class SendAction extends AbstractChatAction {
         super.send();
         return SUCCESS;
     }
+
+    @Override
+    public Object getBean() {
+        return true;
+    }
 }
