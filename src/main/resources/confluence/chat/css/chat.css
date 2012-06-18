@@ -5,9 +5,7 @@
     background-color: #ffffff;
 }
 
-.chatbox.min .cb-content ,  
-.chatbox.min .chat-where ,
-.chatbox.min .cb-input{
+.chatbox.min .cb-content-hold {
     display: none;
 }
 .chatbox.closed {

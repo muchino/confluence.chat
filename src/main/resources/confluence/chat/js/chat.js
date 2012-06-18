@@ -483,8 +483,11 @@ ChatBox.prototype.init = function(){
     var titleBox =  jQuery('<div/>').addClass('cb-title').text(this.opt.dispayTitle);
     titleBox.appendTo(header);
    
+   
+    var contentHolder = jQuery('<div/>').addClass('cb-content-hold');
+    contentHolder.appendTo(box);
 
-    jQuery('<div/>').addClass('cb-content').appendTo(box);
+    jQuery('<div/>').addClass('cb-content').appendTo(contentHolder);
     /**
      * Who ist der User gerade
      */
@@ -493,7 +496,7 @@ ChatBox.prototype.init = function(){
     jQuery('<span/>').appendTo(jQuery('<a/>').attr('href', '#').addClass('icon icon-page').text('').appendTo(chatWhere));
     jQuery('<span/>').appendTo(jQuery('<a/>').attr('href', '#').addClass('chat-where-text').text('').appendTo(chatWhere));
     
-    chatWhere.appendTo(box);
+    chatWhere.appendTo(contentHolder);
 
     this.textarea= jQuery('<textarea/>');
     this.textarea.keydown(function(event) {
@@ -509,7 +512,7 @@ ChatBox.prototype.init = function(){
         jQuery(this).addClass('cb-ts');
         that.stopBlink();
     });
-    jQuery('<div/>').addClass('cb-input').append(this.textarea).appendTo(box);
+    jQuery('<div/>').addClass('cb-input').append(this.textarea).appendTo(contentHolder);
     that.box.appendTo(jQuery( "body" ));
   
     if (this.minimizeChatBox == 1 || this.isMinimized()) {
