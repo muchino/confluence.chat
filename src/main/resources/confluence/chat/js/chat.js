@@ -640,8 +640,6 @@ ChatBox.prototype.retrieveMessage = function(item){
     messageItem.appendTo(messageHolder);
     
     content.scrollTop(content[0].scrollHeight);    
-    AJS.log('scroll');
-    
 }
 
 ChatBox.prototype.formatTime =  function(dt) {

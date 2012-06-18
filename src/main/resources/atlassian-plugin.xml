@@ -49,9 +49,6 @@
         </package>
     </xwork>
     <web-resource key="chat-files" name="Chat Files">
-        <transformation extension="js">
-            <transformer key="jsI18n" />
-        </transformation>        
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
         <resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
@@ -66,9 +63,7 @@
     
     <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
         <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
-
         <context>main</context>
-     
     </web-resource>
     
     
