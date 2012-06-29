@@ -176,8 +176,6 @@ public final class DefaultChatManager implements ChatManager {
 
             }
         }
-        System.out.println("");
-        System.out.println("");
         return onlineUserList;
     }
 
