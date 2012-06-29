@@ -5,6 +5,7 @@
 package confluence.chat.actions;
 
 import com.atlassian.user.User;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -15,6 +16,7 @@ public class ChatUserList extends HashMap<String, ChatUser> {
 
     public ChatUser putUser(User user, ChatPreferences pref) {
         ChatUser chatuser = new ChatUser(user.getName(), pref);
+        chatuser.setLastMouseMove(new Date());
         chatuser.setFullName(user.getFullName());
         put(chatuser.getUsername(), chatuser);
         return chatuser;

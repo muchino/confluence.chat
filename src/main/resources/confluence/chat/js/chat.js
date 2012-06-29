@@ -5,6 +5,7 @@ function ChatBar(){
     this.windowFocus = true;
     this.originalTitle = null;
     this.lastHeartBeatServerdate = 0;
+    this.mousemove = false;
     that.startChatSession();
     jQuery(document).ready(function(){
         that.originalTitle = document.title;
@@ -76,7 +77,8 @@ ChatBar.prototype.chatHeartbeat = function(){
         cache: false,
         dataType: "json",
         data: {
-            lr: this.lastHeartBeatServerdate
+            lr: this.lastHeartBeatServerdate,
+            mm: this.mousemove 
         },
         success: function(data) {
             
@@ -86,6 +88,7 @@ ChatBar.prototype.chatHeartbeat = function(){
             }
         }
     });
+    this.mousemove = false;
 }
 
 
@@ -154,6 +157,10 @@ ChatBar.prototype.init = function(){
     this.intervall = setInterval(function(){
         that.getOnlineUsers();
     }, 5000);
+    
+    jQuery(window).mousemove(function(){
+        that.mousemove = true;
+    });
 }
 
 ChatBar.prototype.getChatBoxes = function(){

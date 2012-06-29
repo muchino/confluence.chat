@@ -6,7 +6,6 @@ package confluence.chat.actions;
 
 import com.atlassian.user.User;
 import java.util.List;
-import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  *
@@ -14,9 +13,11 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 public interface ChatManager {
 
-    String SESSION_LAST_REQUEST = "confluence.chat.time.last.message";
-    String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
-    String SESSION_SHOW_MESSAGES_SINCE = "confluence.chat.show.message.since.";
+    public static final String SESSION_LAST_REQUEST = "confluence.chat.time.last.message";
+    public static final String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
+    public static final String SESSION_SHOW_MESSAGES_SINCE = "confluence.chat.show.message.since.";
+    public static final Integer SECONDS_TO_BE_AWAY = 30;
+    public static final Integer SECONDS_TO_BE_OFFLINE = 60 * 10;
 
     void closeChatBox(final User user, final ChatBoxId chatBoxId);
 

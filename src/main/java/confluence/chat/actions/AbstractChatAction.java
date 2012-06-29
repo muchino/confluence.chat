@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 public abstract class AbstractChatAction extends ConfluenceActionSupport implements Beanable {
 
     private static String PARAM_MESSAGE = "message";
+    private static String PARAM_LAST_REQUEST = "lr";
+    private static String PARAM_MOUSE_MOVE = "mm";
     private static String PARAM_CLOSE = "close";
     private static String PARAM_TO = "to";
     private ChatBoxMap chatBoxMap = new ChatBoxMap();
@@ -90,6 +92,10 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     public final String heartbeat() throws Exception {
         if (getRemoteUser() != null) {
             ChatUser chatUser = chatManager.getChatUser(getRemoteUser());
+            if(isMouseMoved()){
+                chatUser.setLastMouseMove(new Date());
+            }
+            
             // Keine senden, falls user offline
             if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())) {
                 chatManager.setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
@@ -149,7 +155,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
 
     private Date getLastRequestDate() {
         HttpServletRequest request = ServletActionContext.getRequest();
-        String lr = request.getParameter("lr");
+        String lr = request.getParameter(PARAM_LAST_REQUEST);
         Date date = null;
         if (StringUtils.isNumeric(lr)) {
             try {
@@ -163,6 +169,11 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             date = cal.getTime();
         }
         return date;
+    }
+    
+        private Boolean isMouseMoved() {
+        HttpServletRequest request = ServletActionContext.getRequest();
+        return "true".equals(request.getParameter(PARAM_MOUSE_MOVE));
     }
 
     /**

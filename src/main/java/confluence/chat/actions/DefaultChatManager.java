@@ -165,11 +165,10 @@ public final class DefaultChatManager implements ChatManager {
     public List<ChatUser> getOnlineUsers() {
         List<ChatUser> onlineUserList = new ArrayList<ChatUser>();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, -30);
+        cal.add(Calendar.SECOND, -ChatManager.SECONDS_TO_BE_OFFLINE);
         Date time = cal.getTime();
         for (Map.Entry<String, ChatUser> user : users.entrySet()) {
             ChatUser chatUser = user.getValue();
-            System.out.println(chatUser.getUsername() + " " + chatUser.getStatus().toString());
 
             if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())
                     && time.before(chatUser.getLastSeen())) {

@@ -5,6 +5,7 @@
 package confluence.chat.actions;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class ChatUser implements Serializable {
     private static String CURRENT_SITE_TITLE = "st";
     private static String ID = "id";
     private Date lastSeen;
+    private Date lastMouseMove;
     private ChatStatus status = null;
     private Map<String, String> jsonMap = new HashMap<String, String>();
     private ChatPreferences preferences;
@@ -126,8 +128,15 @@ public class ChatUser implements Serializable {
     }
 
     public Map<String, String> getJSONMap() {
-        jsonMap.put(STATUS, getStatus().toString());
-//        jsonMap.put(LASTSEEN, formatter.getFormatMessage(getLastSeen()).toString());
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, -ChatManager.SECONDS_TO_BE_AWAY);
+        if (getStatus().equals(ChatStatus.ONLINE)
+                && cal.getTime().after(getLastMouseMove())) {
+
+            jsonMap.put(STATUS, ChatStatus.AWAY.toString());
+        } else {
+            jsonMap.put(STATUS, getStatus().toString());
+        }
         if (!this.getPreferences().getShowCurrentSite()) {
             this.removeCurrentSite();
         }
@@ -155,5 +164,19 @@ public class ChatUser implements Serializable {
     private void removeCurrentSite() {
         this.jsonMap.remove(CURRENT_SITE_TITLE);
         this.jsonMap.remove(CURRENT_SITE_URL);
+    }
+
+    /**
+     * @return the lastMouseMove
+     */
+    public Date getLastMouseMove() {
+        return lastMouseMove;
+    }
+
+    /**
+     * @param lastMouseMove the lastMouseMove to set
+     */
+    public void setLastMouseMove(Date lastMouseMove) {
+        this.lastMouseMove = lastMouseMove;
     }
 }
