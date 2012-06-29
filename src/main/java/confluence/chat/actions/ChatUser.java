@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author Dev
  */
-public class ChatUser implements Serializable{
+public class ChatUser implements Serializable {
 
     private static String USERNAME = "un";
     private static String FULLNAME = "fn";

@@ -10,7 +10,7 @@ height	33.8px
 
 #set($chatUser = $chatManager.getChatUser($remoteUser))
 #set($pref = $chatUser.getPreferences())
-#set($status = $pref.getChatStatus().toString())
+#set($status = $chatUser.getStatus().toString())
 
 
 #set($onlineOffline = "online")
