@@ -6,7 +6,6 @@ package confluence.chat.actions;
 
 import com.atlassian.bandana.BandanaManager;
 import com.atlassian.confluence.setup.bandana.ConfluenceBandanaContext;
-import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.confluence.user.actions.ProfilePictureInfo;
 import com.atlassian.sal.api.transaction.TransactionCallback;
@@ -26,18 +25,15 @@ public final class DefaultChatManager implements ChatManager {
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     private BandanaManager bandanaManager;
     private UserAccessor userAccessor;
-//    private final UserStatusManager userStatusManager;
     private ConfluenceBandanaContext confluenceBandanaContextPreferences = new ConfluenceBandanaContext(KEY_PREFERENCES);
     private ChatUserList users = new ChatUserList();
     private Map<String, ChatBoxMap> chatBoxes = new HashMap<String, ChatBoxMap>();
     private TransactionTemplate transactionTemplate;
-    private final Date startTime;
 
     public DefaultChatManager(final BandanaManager bandanaManager, final UserAccessor userAccessor, final TransactionTemplate transactionTemplate) {
         this.bandanaManager = bandanaManager;
         this.userAccessor = userAccessor;
         this.transactionTemplate = transactionTemplate;
-        this.startTime = new Date();
     }
 
     @Override
@@ -98,8 +94,7 @@ public final class DefaultChatManager implements ChatManager {
 
     }
 
-    @Override
-    public ChatPreferences getPreferencesOfUser(String username) {
+    private ChatPreferences getPreferencesOfUser(String username) {
         ChatPreferences preferences = null;
         try {
             preferences = (ChatPreferences) bandanaManager.getValue(confluenceBandanaContextPreferences, username);
@@ -203,8 +198,7 @@ public final class DefaultChatManager implements ChatManager {
         return getChatUser(user);
     }
 
-    @Override
-    public void setProfilPicture(User user, ChatUser chatUser) {
+    private void setProfilPicture(User user, ChatUser chatUser) {
         if (chatUser.getUserImage() == null) {
 
             ProfilePictureInfo picture = userAccessor.getUserProfilePicture(user);

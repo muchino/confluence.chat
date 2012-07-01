@@ -160,6 +160,11 @@ ChatBar.prototype.init = function(){
     
     jQuery(window).mousemove(function(){
         that.mousemove = true;
+        var chatStatus = that.bar.find('#chatbar-status');
+        if(jQuery.trim(chatStatus.attr('oldStatus')).length > 0){
+            chatStatus.attr('class',chatStatus.attr('oldStatus'));
+            chatStatus.removeAttr('oldStatus');
+        }
     });
 }
 
@@ -305,6 +310,11 @@ ChatBar.prototype.refreshUser = function(data){
             jQuery('#chatbox_'+chatBoxId+' > div ').attr('class', user.s);
         }else {
             ownUserInList = true;
+            var chatStatus = that.bar.find('#chatbar-status');
+            if(!chatStatus.hasClass(user.s)){
+                chatStatus.attr('oldStatus', chatStatus.attr('class'));
+                chatStatus.attr('class', user.s);
+            }
         }
     });
     jQuery('.chatbox > div.unknown').attr('class', '');

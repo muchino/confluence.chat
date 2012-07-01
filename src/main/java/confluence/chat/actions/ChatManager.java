@@ -21,25 +21,21 @@ public interface ChatManager {
 
     void closeChatBox(final User user, final ChatBoxId chatBoxId);
 
-    ChatBoxMap getChatBoxes(User user);
+    public ChatBoxMap getChatBoxes(User user);
 
-    ChatUser getChatUser(User user);
+    public ChatUser getChatUser(User user);
 
-    ChatUser getChatUser(String username);
+    public ChatUser getChatUser(String username);
 
-    ChatBoxMap getNewMessageChatBoxes(User user);
+    public ChatBoxMap getNewMessageChatBoxes(User user);
 
-    List<ChatUser> getOnlineUsers();
+    public List<ChatUser> getOnlineUsers();
 
-    ChatPreferences getPreferencesOfUser(String username);
+    public void sendMessage(final String sender, final String receiver, final String message);
 
-    void sendMessage(final String sender, final String receiver, final String message);
+    public void setOnlineStatus(String user, ChatStatus status);
 
-    void setOnlineStatus(String user, ChatStatus status);
+    public void setOnlineStatus(User user, ChatStatus status);
 
-    void setOnlineStatus(User user, ChatStatus status);
-
-    void setPreferencesOfUser(String username, ChatPreferences preferences);
-
-    void setProfilPicture(User user, ChatUser chatUser);
+    public void setPreferencesOfUser(String username, ChatPreferences preferences);
 }
