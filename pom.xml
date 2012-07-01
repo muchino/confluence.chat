@@ -13,8 +13,8 @@
     <groupId>confluence.chat</groupId>
     <artifactId>confluence.chat</artifactId>
     <packaging>atlassian-plugin</packaging>
-    <name>Confluence - Chat</name>
-    <description>A simple built in chat for confluence</description>
+    <name>Confluence Chat</name>
+    <description>A simple built-in chat for confluence</description>
     <version>1.0</version>
     <organization>
         <name>Oliver Straesser</name>
