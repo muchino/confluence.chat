@@ -14,7 +14,8 @@
     <artifactId>confluence.chat</artifactId>
     <packaging>atlassian-plugin</packaging>
     <name>Confluence - Chat</name>
-    <version>0.1-SNAPSHOT</version>
+    <description>A simple built in chat for confluence</description>
+    <version>1.0</version>
     <organization>
         <name>Oliver Straesser</name>
     </organization>

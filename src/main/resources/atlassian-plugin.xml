@@ -4,6 +4,8 @@
         <description>${project.description}</description>
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
         <version>${project.version}</version>
+        <param name="plugin-icon">confluence/chat/img/plugin-icon.png</param>
+        <param name="plugin-logo">confluence/chat/img/plugin-logo.png</param>
     </plugin-info>
     <resource name="i18n" type="i18n" location="confluence/chat/chat" />
 
@@ -61,10 +63,10 @@
      
     </web-resource>
     
-    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
+<!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
         <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
         <context>main</context>
-    </web-resource>
+    </web-resource>-->
     
     
     <resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
