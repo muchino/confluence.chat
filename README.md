@@ -26,3 +26,8 @@ the chat doesn't worked)
 ### 1.0 
 
 initial release
+
+## URLs
+
+* Atlassian Marketplace: https://marketplace.atlassian.com/manage/plugins/confluence.chat
+* GitHub Pages. http://muchino.github.com/confluence.chat/
