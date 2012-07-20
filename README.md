@@ -18,6 +18,7 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 ### 1.0.1 
 This release fixes the  important contextPath issue. If confluence is  running under a certain contextPath, like "/confluence" the chat doesn't work. Additional fixes:
 the chat doesn't worked)
+
 * Stop chat heartbeat when ajax url's are for more than three times unavaible (if chat is disabled or uninstalled by an admin)
 * encapsulated the javascript of the chat to avoid sideeffects
 * Usability: Stop chatbox flashing, after a chatbox mouseover or click into the chatbox
