@@ -1,0 +1,32 @@
+#downloads #view-on-marketplace {
+    background: url("../images/logo.png") no-repeat scroll 12px 5px transparent;
+    width: 160px;
+    background-color: #6D6D6D;
+    border: none;
+}
+#downloads #view-on-marketplace:hover{
+    -moz-box-shadow: 0 0 4px #6D6D6D;
+    -webkit-box-shadow: 0 0 4px #6D6D6D;
+    box-shadow: 0 0 4px #6D6D6D;
+}
+#downloads a:hover{
+    -moz-box-shadow: 0 0 4px #6D6D6D;
+    -webkit-box-shadow: 0 0 4px #6D6D6D;
+    box-shadow: 0 0 4px #6D6D6D;
+}
+
+#downloads a {
+    -webkit-border-radius: 0px;
+-moz-border-radius: 0px;
+border-radius: 0px;
+}
+h1 img {
+    padding-left: 10px;
+}
+
+
+.dsq-comment-flag,
+#dsq-global-toolbar,
+.dsq-brlink {
+    display: none;
+}
