@@ -106,7 +106,10 @@
     min-width: 17px;
 
 }
-
+.chatuser-link-holder .chat, 
+.chatuser-link-holder .away, 
+.chatuser-link-holder .chat, 
+.chatuser-link-holder .xa,
 .chatbox .dnd .cb-title,
 .chatbox .away .cb-title,
 .chatbox .chat .cb-title{
@@ -125,18 +128,18 @@
     background-repeat: no-repeat;
     background-position: 2px 4px;
 }
-
+.chatuser-link-holder .away,
 .chatbox .away .cb-title,
 #chatbar #chatbar-status.away #chatbar-button-config,
 #chatbar  .chat-user  .away .chat-user-info { 
     background-image:  url("images-chat/away.png") 
 }
-
+.chatuser-link-holder .xa,
 #chatbar  .chat-user .offline .chat-user-info  {
     background-image:  url("images-chat/xa.png") 
 
 }
-
+.chatuser-link-holder .dnd,
 .chatbox .dnd .cb-title,
 #chatbar #chatbar-status.dnd #chatbar-button-config,
 #chatbar  .chat-user .dnd .chat-user-info {

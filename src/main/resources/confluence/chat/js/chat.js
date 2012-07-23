@@ -1,3 +1,5 @@
+ConfluenceChatAPI = new Object();
+
 (function () {
     function ChatBar(){
         var that = this;
@@ -11,6 +13,7 @@
         this.mousemove = false;
         this.initCompatibility();
         that.startChatSession();
+        this.users = Object();
         jQuery(document).ready(function(){
             that.originalTitle = document.title;
             if(AJS.params.remoteUser && !this.chatDeactivated){
@@ -34,6 +37,17 @@
         this.requestFailed = 0;
     
     }
+    
+    
+    ChatBar.prototype.getStatusOfUser= function(username){  
+        if(username in this.users){
+            if('s' in this.users[username]){
+                return this.users[username].s;
+            }
+        }
+        return 'xa';
+    }
+    
     ChatBar.prototype.requestErrorHandler= function(){  
         this.requestFailed++;
         if(this.requestFailed >= 3){
@@ -204,6 +218,8 @@
                 chatStatus.removeAttr('oldStatus');
             }
         });
+        
+        this.bindChatWithLinks();
     }
 
     ChatBar.prototype.getChatBoxes = function(){
@@ -227,7 +243,7 @@
         this.bar.find('#chatbar-status').attr('class', status);
     
     }
-
+    
     ChatBar.prototype.getOnlineUsers = function() {
         if(this.isOnline()){
             var that = this;
@@ -282,15 +298,33 @@
     
     }
 
+
+    ChatBar.prototype.bindChatWithLinks = function(){
+        var that = this;
+        var links = jQuery('.chatuser-link:not([data-user-chat-bound=true])');
+        links .click(function(){
+            var link = jQuery(this);
+            that.chatWith({
+                chatBoxId: link.attr('chatboxid'),
+                chatUserList : link.attr('data-username'),
+                dispayTitle : link.text(),
+                focus: true
+            });
+            return false;
+        }).attr('data-user-chat-bound', true);
+    }
     ChatBar.prototype.refreshUser = function(data){
         var that = this;
         var tmpAttr = 'chatOfflineMeFlag-'+Math.round(Math.random() * 10000);
         this.chatOnlineUserDiv.find('.chat-user').attr(tmpAttr, 'true');
         jQuery('.chatbox > div').addClass('unknown');
+        this.users = Object();
         var ownUserInList = false;
+        jQuery('.chatuser-link-holder > span').attr('class', 'xa');
         jQuery.each(data.users, function(j,user){
             var username = user.un;
             var chatBoxId = user.id;
+            that.users[username] = user;
             if( that.username != user.un){
                 var chatUser = that.chatOnlineUserDiv.find('.chat-user[chatBoxId='+chatBoxId+']');
                 if(!chatUser.size()){
@@ -344,12 +378,6 @@
                     userWhere.find('span').text('');
                     userWhere.hide();
                 }
-            
-                /**
-                 *Userstatus
-                 */
-            
-                jQuery('#chatbox_'+chatBoxId+' > div ').attr('class', user.s);
             }else {
                 ownUserInList = true;
                 var chatStatus = that.bar.find('#chatbar-status');
@@ -358,6 +386,7 @@
                     chatStatus.attr('class', user.s);
                 }
             }
+            jQuery('#chatbox_'+chatBoxId+' > div , .chatuser-link-holder[chatboxid='+chatBoxId+"] > span").attr('class', user.s);
         });
         jQuery('.chatbox > div.unknown').attr('class', '');
         this.chatOnlineUserDiv.find('.chat-user['+tmpAttr+']').remove();
@@ -452,8 +481,6 @@
             }
         });
     }
-
-    var chatBar = new ChatBar();
 
     /**
          * chatBoxId : chatboxid, 
@@ -817,57 +844,65 @@
         }
     }
     
-//    
-//    function ChatHistory(options){
-//        this.opt = jQuery.extend({
-//            chatBoxId: null,
-//            chatUserList: null,
-//            open: true,
-//            dispayTitle: null,
-//            messages: new Array()
-//        }, options);
-//        this.chatBoxId = this.opt.chatBoxId;
-//        this.init();
-//    }
-//    
-//    ChatHistory.prototype.init=  function(){
-//        
-//        // create a dialog 860px wide x 530px high
-//        var dialog = new AJS.Dialog({
-//            width:860, 
-//            height:530, 
-//            id:"example-dialog", 
-//            closeOnOutsideClick: true
-//        });
-//
-//        // PAGE 0 (first page)
-//        // adds header for first page
-//        dialog.addHeader("Dialog - Page 0");
-//
-//        // add panel 1
-//        dialog.addPanel("Panel 1", "<p>Some content for panel 1. This has no padding.</p>", "panel-body");
-//        dialog.get("panel:0").setPadding(0);
-//
-//        dialog.addButton("Next", function (dialog) {
-//            
-//            });
-//
-//        dialog.addButton("Next", function (dialog) {
-//            
-//            });
-//        dialog.addButton("Cancel", function (dialog) {
-//            dialog.hide();
-//        });
-//
-//        
-//        dialog.addPage();
-//
-//        // Add events to dialog trigger elements
-//        
-//        dialog.gotoPage(0);
-//        dialog.gotoPanel(0);
-//        dialog.show();
-//    }
-//    
+    //    
+    //    function ChatHistory(options){
+    //        this.opt = jQuery.extend({
+    //            chatBoxId: null,
+    //            chatUserList: null,
+    //            open: true,
+    //            dispayTitle: null,
+    //            messages: new Array()
+    //        }, options);
+    //        this.chatBoxId = this.opt.chatBoxId;
+    //        this.init();
+    //    }
+    //    
+    //    ChatHistory.prototype.init=  function(){
+    //        
+    //        // create a dialog 860px wide x 530px high
+    //        var dialog = new AJS.Dialog({
+    //            width:860, 
+    //            height:530, 
+    //            id:"example-dialog", 
+    //            closeOnOutsideClick: true
+    //        });
+    //
+    //        // PAGE 0 (first page)
+    //        // adds header for first page
+    //        dialog.addHeader("Dialog - Page 0");
+    //
+    //        // add panel 1
+    //        dialog.addPanel("Panel 1", "<p>Some content for panel 1. This has no padding.</p>", "panel-body");
+    //        dialog.get("panel:0").setPadding(0);
+    //
+    //        dialog.addButton("Next", function (dialog) {
+    //            
+    //            });
+    //
+    //        dialog.addButton("Next", function (dialog) {
+    //            
+    //            });
+    //        dialog.addButton("Cancel", function (dialog) {
+    //            dialog.hide();
+    //        });
+    //
+    //        
+    //        dialog.addPage();
+    //
+    //        // Add events to dialog trigger elements
+    //        
+    //        dialog.gotoPage(0);
+    //        dialog.gotoPanel(0);
+    //        dialog.show();
+    //    }
+    //    
+    
+    var chatBar = new ChatBar();
+    ConfluenceChatAPI.isOnline = function(){
+        return chatBar.isOnline();
+    }
+    ConfluenceChatAPI.getStatusOfUser = function(username){
+        return chatBar.getStatusOfUser(username);
+    }
     
 }());

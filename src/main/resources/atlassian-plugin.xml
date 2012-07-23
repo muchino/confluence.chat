@@ -76,4 +76,14 @@
               key='chatLoginListener'>
         <description>Listen for the login or the logout an user, to set the chat status </description>
     </listener>
+    
+    <xhtml-macro name="chat-user-link"
+                 class="confluence.chat.macros.ChatUserLink"
+                 key="chat-user-link"
+                 icon="/download/resources/${atlassian.plugin.key}/images-chat/plugin-logo.png">
+        <category name="communication"/>
+        <parameters>
+            <parameter name="username" type="username" />
+        </parameters>
+    </xhtml-macro>
 </atlassian-plugin>
