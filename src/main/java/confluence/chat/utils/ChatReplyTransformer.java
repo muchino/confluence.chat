@@ -4,21 +4,16 @@
  */
 package confluence.chat.utils;
 
-import com.atlassian.confluence.core.ContentEntityManager;
 import com.atlassian.confluence.core.ContentEntityObject;
+import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.Permission;
 import com.atlassian.confluence.security.PermissionManager;
-import com.atlassian.confluence.util.GeneralUtil;
-
 import com.atlassian.user.User;
 import confluence.chat.actions.ChatUser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import org.apache.axis.soap.SOAP11Constants;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -27,11 +22,11 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ChatReplyTransformer {
 
-    private ContentEntityManager contentEntityManager;
+    private PageManager pageManager;
     private PermissionManager permissionManager;
 
-    public ChatReplyTransformer(ContentEntityManager contentEntityManager, PermissionManager permissionManager) {
-        this.contentEntityManager = contentEntityManager;
+    public ChatReplyTransformer(PageManager pageManager, PermissionManager permissionManager) {
+        this.pageManager = pageManager;
         this.permissionManager = permissionManager;
     }
 
@@ -44,7 +39,7 @@ public class ChatReplyTransformer {
             for (Map.Entry<String, String> entry : jsonMap.entrySet()) {
                 if (ChatUser.CURRENT_CONTENT_ID.equals(entry.getKey())) {
                     if (StringUtils.isNumeric(entry.getValue())) {
-                        ContentEntityObject cO = contentEntityManager.getById(new Long(entry.getValue()));
+                        ContentEntityObject cO = pageManager.getById(new Long(entry.getValue()));
                         if (cO != null) {
                             if (permissionManager.hasPermission(user, Permission.VIEW, cO)) {
                                 userMap.put(ChatUser.CURRENT_SITE_TITLE, cO.getTitle());

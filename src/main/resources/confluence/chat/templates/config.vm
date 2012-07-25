@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>$action.getText('chat.adon.name')</title>
+    </head>
+    <body>
+        #parse ( "/template/includes/actionerrors.vm" )
+        #parse ( "/template/includes/actionmessages.vm" )
+        <form method="POST" action="save.action" class="aui">
+            #form_xsrfToken()
+            #set($page =  $action.getPage($config.getContentId()))
+
+            #tag( "TextField" "label='chat.config.groups'" "name='ohb_syncPath'" "value=config.syncPath" "theme='aui'" )
+            #tag( "TextField" "label='ohb.contentId'" "name='contentId'" "value=config.contentId" "theme='aui'" )
+            #if($page)
+            <div class="field-group">
+                <label for="contentId" id="contentId-label">
+                    &nbsp;
+                </label>
+                <span class="icon-page icon"></span><a href="$page.getUrlPath()" target="_blank" >$page.title</a>
+            </div>            
+            #end
+
+
+
+            <div class="field-group">
+                <label for="ohb_doctype" id="ohb_doctype-label">
+                    $action.getText('ohb.dropdown.doctype') ($config.getDoctypes().size())
+                </label>
+                <textarea class="monospaceInput" style="" rows="8" cols="100" name="ohb_doctype" id="ohb_doctype">
+#foreach($doctype in $config.getDoctypes())
+$doctype.getValue();$doctype.getName()
+#end</textarea>
+            </div>
+            <div class="field-group">
+                <label for="ohb_department" id="ohb_department-label">
+                    $action.getText('ohb.dropdown.department') ($config.getDepartmens().size())
+                </label>
+                <textarea class="monospaceInput" style="" rows="8" cols="100" name="ohb_department" id="ohb_department">
+#foreach($doctype in $config.getDepartmens())
+$doctype.getValue();$doctype.getName()
+#end</textarea>
+            </div>            
+            #tag( "Textarea" "label='ohb.headerNavigation'" "rows=8" "cols=100" "name='ohb_headerNavigation'" "value=config.headerNavigation" "theme='aui'" )
+            #tag( "Textarea" "label='ohb.header'" "rows=8" "cols=100" "name='ohb_header'" "value=config.header" "theme='aui'" )
+            #tag( "Textarea" "label='ohb.footer'" "rows=8" "cols=100" "name='ohb_footer'" "value=config.footer" "theme='aui'" )
+
+            #tag( "TextField" "label='ohb.latestDocsMax'" "name='ohb_latestDocsMax'" "value=config.latestDocsMax" "theme='aui'" )
+            #tag( "TextField" "label='ohb.maxListHeight'" "name='ohb_maxListHeight'" "value=config.maxListHeight" "theme='aui'" )
+
+
+            #bodytag( "Submit" "theme='aui'" )
+            #param ("submitValue" "$action.getText('save.name')")
+            #param ("rows" 10)
+            #end
+        </form>
+    </body>
+</html>
+
+

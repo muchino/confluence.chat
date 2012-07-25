@@ -6,6 +6,7 @@
         <version>${project.version}</version>
         <param name="plugin-icon">confluence/chat/img/plugin-icon.png</param>
         <param name="plugin-logo">confluence/chat/img/plugin-logo.png</param>
+<!--        <param name="configure.url">/admin/plugins/${atlassian.plugin.key}/config.action</param>-->
     </plugin-info>
     <resource name="i18n" type="i18n" location="confluence/chat/chat" />
 
@@ -20,6 +21,15 @@
     <resource name="images-chat/" type="download" location="confluence/chat/img/" />
     
     <xwork name="Chat" key="confluence.chat">
+        
+        <package name="Chat Config" extends="default"  namespace="/admin/plugins/${atlassian.plugin.key}">
+            <default-interceptor-ref name="defaultStack"/>
+            <action name="config" class="confluence.chat.config.ConfigAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/config.vm</result>
+            </action>
+        </package>
+        
+        
         <package name="Chat Templates" extends="default"  namespace="/ajax/chat">
             <default-interceptor-ref name="defaultStack"/>
             <action name="chatbar" class="confluence.chat.actions.ChatBarAction" >
