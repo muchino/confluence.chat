@@ -17,20 +17,21 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ChatUser implements Serializable {
 
-    private static String USERNAME = "un";
-    private static String FULLNAME = "fn";
-    private static String STATUS = "s";
-    private static String STATUSMESSAGE = "sm";
-    private static String LASTSEEN = "d";
-    private static String USERIMAGE = "p";
-    private static String CURRENT_SITE_URL = "su";
-    private static String CURRENT_SITE_TITLE = "st";
     private static String ID = "id";
     private Date lastSeen;
     private Date lastMouseMove;
     private ChatStatus status = null;
     private Map<String, String> jsonMap = new HashMap<String, String>();
     private ChatPreferences preferences;
+    public static String USERNAME = "un";
+    public static String FULLNAME = "fn";
+    public static String STATUS = "s";
+    public static String STATUSMESSAGE = "sm";
+    public static String LASTSEEN = "d";
+    public static String USERIMAGE = "p";
+    public static String CURRENT_SITE_URL = "su";
+    public static String CURRENT_SITE_TITLE = "st";
+    public static String CURRENT_CONTENT_ID = "p";
 
     public ChatUser(String username, ChatPreferences preferences) {
         jsonMap.put(USERNAME, username);
@@ -150,20 +151,27 @@ public class ChatUser implements Serializable {
         return preferences;
     }
 
+    public void setCurrentSite(Long pageId) {
+        this.removeCurrentSite();
+        if (this.getPreferences().getShowCurrentSite()) {
+            this.jsonMap.put(CURRENT_CONTENT_ID, pageId + "");
+        }
+    }
+
     public void setCurrentSite(String currentUrl, String currentTitle) {
+        this.removeCurrentSite();
         if (this.getPreferences().getShowCurrentSite()) {
             if (StringUtils.isNotEmpty(currentTitle) && StringUtils.isNotEmpty(currentUrl)) {
                 this.jsonMap.put(CURRENT_SITE_TITLE, currentTitle);
                 this.jsonMap.put(CURRENT_SITE_URL, currentUrl);
             }
-        } else {
-            this.removeCurrentSite();
         }
     }
 
-    private void removeCurrentSite() {
+    public void removeCurrentSite() {
         this.jsonMap.remove(CURRENT_SITE_TITLE);
         this.jsonMap.remove(CURRENT_SITE_URL);
+        this.jsonMap.remove(CURRENT_CONTENT_ID);
     }
 
     /**

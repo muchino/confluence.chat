@@ -70,7 +70,10 @@ ConfluenceChatAPI = new Object();
     ChatBar.prototype.startChatSession = function(){  
         var that = this;
         jQuery(document).ready(function(){
-        
+            var pageId = null;
+            if(typeof(AJS.params.pageId) != "undefined"){
+                pageId = AJS.params.pageId;
+            }
             if(AJS.params.remoteUser && !this.chatDeactivated){
                 jQuery.ajax({
                     url: AJS.contextPath()+"/chat/start.action",
@@ -78,7 +81,8 @@ ConfluenceChatAPI = new Object();
                     dataType: "json",
                     data: {
                         currentUrl : window.location.href,
-                        currentTitle: document.title
+                        currentTitle: document.title,
+                        pageId: pageId
                     },
                     error: function(){
                         that.requestErrorHandler();

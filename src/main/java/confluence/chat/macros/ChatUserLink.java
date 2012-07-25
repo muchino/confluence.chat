@@ -14,7 +14,6 @@ import com.atlassian.user.UserManager;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.actions.ChatBoxId;
 import confluence.chat.actions.ChatManager;
-import confluence.chat.actions.ChatStatus;
 import confluence.chat.actions.ChatUser;
 import java.util.Map;
 import java.util.logging.Level;
@@ -45,11 +44,10 @@ public class ChatUserLink implements Macro {
             try {
                 User user = userManager.getUser(username);
                 if (user != null) {
-                    ChatStatus status = ChatStatus.OFFLINE;
+                    String status;
                     ChatUser chatUser = chatManager.getChatUser(user);
                     if (chatUser != null) {
-                        status = chatUser.getStatus();
-
+                        status = chatUser.getJSONMap().get(ChatUser.STATUS);
                         ChatBoxId chatBoxId = new ChatBoxId(chatUser);
                         builder.append("<span class=\"chatuser-link-holder\" chatboxId=\"");
                         builder.append(chatBoxId.toString());

@@ -4,14 +4,17 @@
  */
 package confluence.chat.actions;
 
+import com.atlassian.confluence.core.ContentEntityManager;
+import com.atlassian.confluence.security.PermissionManager;
+
 /**
  *
  * @author oli
  */
 public class ChatCloseAction extends AbstractChatAction {
 
-    public ChatCloseAction(ChatManager chatManager) {
-        super(chatManager);
+    public ChatCloseAction(ChatManager chatManager, ContentEntityManager contentEntityManager, PermissionManager permissionManager) {
+        super(chatManager, contentEntityManager, permissionManager);
     }
 
     @Override

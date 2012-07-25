@@ -4,10 +4,22 @@
  */
 package confluence.chat.utils;
 
+import com.atlassian.confluence.core.ContentEntityManager;
+import com.atlassian.confluence.core.ContentEntityObject;
+import com.atlassian.confluence.security.Permission;
+import com.atlassian.confluence.security.PermissionManager;
+import com.atlassian.confluence.util.GeneralUtil;
+
+import com.atlassian.user.User;
 import confluence.chat.actions.ChatUser;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import org.apache.axis.soap.SOAP11Constants;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -15,10 +27,36 @@ import java.util.Map;
  */
 public class ChatReplyTransformer {
 
-    public static List<Map> chatUserListToMap(List<ChatUser> chatusers) {
+    private ContentEntityManager contentEntityManager;
+    private PermissionManager permissionManager;
+
+    public ChatReplyTransformer(ContentEntityManager contentEntityManager, PermissionManager permissionManager) {
+        this.contentEntityManager = contentEntityManager;
+        this.permissionManager = permissionManager;
+    }
+
+    public List<Map> chatUserListToMap(User user, List<ChatUser> chatusers) {
         List<Map> list = new ArrayList<Map>();
         for (int i = 0; i < chatusers.size(); i++) {
-            list.add(chatusers.get(i).getJSONMap());
+            Map<String, String> userMap = new HashMap<String, String>();
+            Map<String, String> jsonMap = chatusers.get(i).getJSONMap();
+
+            for (Map.Entry<String, String> entry : jsonMap.entrySet()) {
+                if (ChatUser.CURRENT_CONTENT_ID.equals(entry.getKey())) {
+                    if (StringUtils.isNumeric(entry.getValue())) {
+                        ContentEntityObject cO = contentEntityManager.getById(new Long(entry.getValue()));
+                        if (cO != null) {
+                            if (permissionManager.hasPermission(user, Permission.VIEW, cO)) {
+                                userMap.put(ChatUser.CURRENT_SITE_TITLE, cO.getTitle());
+                                userMap.put(ChatUser.CURRENT_SITE_URL, cO.getUrlPath());
+                            }
+                        }
+                    }
+                } else {
+                    userMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+            list.add(userMap);
         }
         return list;
     }
