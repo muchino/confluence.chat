@@ -5,6 +5,7 @@ import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.confluence.core.ContentEntityManager;
 import com.atlassian.confluence.security.Permission;
 import com.atlassian.confluence.security.PermissionManager;
+import com.atlassian.user.GroupManager;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.utils.ChatReplyTransformer;
 import java.util.*;
@@ -30,7 +31,6 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
         this.chatManager = chatManager;
         this.contentEntityManager = contentEntityManager;
         this.permissionManager = permissionManager;
-        System.out.println("permissionManager " + permissionManager);
         chatReplyTransformer = new ChatReplyTransformer(contentEntityManager, permissionManager);
 
     }
@@ -55,8 +55,6 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                     Long pageId = new Long(parameterPageId);
                     if (getContentEntityManager().getById(pageId) != null) {
                         chatUser.setCurrentSite(pageId);
-
-                        System.out.println("permission " + permissionManager.hasPermission(getRemoteUser(), Permission.VIEW, getContentEntityManager().getById(pageId)));
                     }
                 } else {
                     chatUser.setCurrentSite(request.getParameter("currentUrl"), request.getParameter("currentTitle"));

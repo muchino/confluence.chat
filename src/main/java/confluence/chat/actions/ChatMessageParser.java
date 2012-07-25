@@ -63,7 +63,6 @@ public class ChatMessageParser {
         for (Map.Entry<String, String> smiley : smileys.entrySet()) {
             input = input.replaceAll(smiley.getKey(), smiley.getValue());
         }
-        System.out.println(input);
         return input;
     }
 }
