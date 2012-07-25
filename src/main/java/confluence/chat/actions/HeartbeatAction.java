@@ -4,7 +4,7 @@
  */
 package confluence.chat.actions;
 
-import com.atlassian.confluence.core.ContentEntityManager;
+import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
 
 /**
@@ -13,8 +13,8 @@ import com.atlassian.confluence.security.PermissionManager;
  */
 public class HeartbeatAction extends AbstractChatAction {
 
-    public HeartbeatAction(ChatManager chatManager, ContentEntityManager contentEntityManager, PermissionManager permissionManager) {
-        super(chatManager, contentEntityManager, permissionManager);
+    public HeartbeatAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
+        super(chatManager, pageManager, permissionManager);
     }
 
     @Override

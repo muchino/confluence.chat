@@ -2,10 +2,8 @@ package confluence.chat.actions;
 
 import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
-import com.atlassian.confluence.core.ContentEntityManager;
-import com.atlassian.confluence.security.Permission;
+import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
-import com.atlassian.user.GroupManager;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.utils.ChatReplyTransformer;
 import java.util.*;
@@ -22,16 +20,16 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     private static String PARAM_TO = "to";
     private ChatBoxMap chatBoxMap = new ChatBoxMap();
     private ChatManager chatManager;
-    private ContentEntityManager contentEntityManager;
+    private PageManager pageManager;
     private ChatReplyTransformer chatReplyTransformer;
     private PermissionManager permissionManager;
     private Date newRequestDate = new Date();
 
-    public AbstractChatAction(ChatManager chatManager, ContentEntityManager contentEntityManager, PermissionManager permissionManager) {
+    public AbstractChatAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
         this.chatManager = chatManager;
-        this.contentEntityManager = contentEntityManager;
+        this.pageManager = pageManager;
         this.permissionManager = permissionManager;
-        chatReplyTransformer = new ChatReplyTransformer(contentEntityManager, permissionManager);
+        chatReplyTransformer = new ChatReplyTransformer(pageManager, permissionManager);
 
     }
 
@@ -53,7 +51,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                 String parameterPageId = request.getParameter("pageId");
                 if (StringUtils.isNumeric(parameterPageId)) {
                     Long pageId = new Long(parameterPageId);
-                    if (getContentEntityManager().getById(pageId) != null) {
+                    if (getPageManager().getById(pageId) != null) {
                         chatUser.setCurrentSite(pageId);
                     }
                 } else {
@@ -225,10 +223,10 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     }
 
     /**
-     * @return the contentEntityManager
+     * @return the pageManager
      */
-    public ContentEntityManager getContentEntityManager() {
-        return contentEntityManager;
+    public PageManager getPageManager() {
+        return pageManager;
     }
 
     /**

@@ -31,7 +31,7 @@ public class ChatUser implements Serializable {
     public static String USERIMAGE = "p";
     public static String CURRENT_SITE_URL = "su";
     public static String CURRENT_SITE_TITLE = "st";
-    public static String CURRENT_CONTENT_ID = "p";
+    public static String CURRENT_CONTENT_ID = "pageId";
 
     public ChatUser(String username, ChatPreferences preferences) {
         jsonMap.put(USERNAME, username);
