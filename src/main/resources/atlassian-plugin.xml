@@ -6,7 +6,7 @@
         <version>${project.version}</version>
         <param name="plugin-icon">confluence/chat/img/plugin-icon.png</param>
         <param name="plugin-logo">confluence/chat/img/plugin-logo.png</param>
-<!--        <param name="configure.url">/admin/plugins/${atlassian.plugin.key}/config.action</param>-->
+        <!--        <param name="configure.url">/admin/plugins/${atlassian.plugin.key}/config.action</param>-->
     </plugin-info>
     <resource name="i18n" type="i18n" location="confluence/chat/chat" />
 
@@ -33,6 +33,7 @@
         <package name="Chat Templates" extends="default"  namespace="/ajax/chat">
             <default-interceptor-ref name="defaultStack"/>
             <action name="chatbar" class="confluence.chat.actions.ChatBarAction" >
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="velocity">/confluence/chat/templates/chatbar.vm</result>
             </action>
         </package>
@@ -40,21 +41,27 @@
         <package name="ChatActions" extends="default"  namespace="/chat">
             <default-interceptor-ref name="defaultStack"/>
             <action name="heartbeat" class="confluence.chat.actions.HeartbeatAction">
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>
             <action name="start" class="confluence.chat.actions.ChatStartAction" >
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>            
             <action name="send" class="confluence.chat.actions.SendAction" >
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>            
             <action name="close" class="confluence.chat.actions.ChatCloseAction">
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>  
             <action name="getonlineuser" class="confluence.chat.actions.GetOnlineUserAction" >
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>  
             <action name="setstatus" class="confluence.chat.actions.SetStatusAction" >
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>      
             
@@ -73,7 +80,7 @@
      
     </web-resource>
     
-<!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
+    <!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
         <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
         <context>main</context>
     </web-resource>-->
