@@ -50,11 +50,13 @@ public class ChatUseCondition {
                     }
                 }
             }
-            
+
             for (int i = 0; i < groups.size(); i++) {
                 try {
-                    if(groupManager.hasMembership(groups.get(i), user)){
-                        allowed = true;
+                    if (groups.get(i) != null) {
+                        if (groupManager.hasMembership(groups.get(i), user)) {
+                            allowed = true;
+                        }
                     }
                 } catch (EntityException ex) {
                     Logger.getLogger(ChatUseCondition.class.getName()).log(Level.SEVERE, null, ex);
