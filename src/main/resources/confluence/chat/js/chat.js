@@ -147,11 +147,24 @@ ConfluenceChatAPI = new Object();
     ChatBar.prototype.restructureChatBoxes = function() {
         var chatBoxesPos= 0;
         for (var x in this.chatBoxes) {
-            if (!this.chatBoxes[x].isClosed()) {
-                this.chatBoxes[x].position(chatBoxesPos);
-                chatBoxesPos++;
+            if(this.isChatBox(this.chatBoxes[x])){
+                if (!this.chatBoxes[x].isClosed()) {
+                    this.chatBoxes[x].position(chatBoxesPos);
+                    chatBoxesPos++;
+                }
+            }else {
+                this.log('restructureChatBoxes is no chatBox:');
+                this.log(this.chatBoxes[x]);
             }
         }
+    }
+    
+    ChatBar.prototype.log = function(msg){
+        AJS.log(msg);
+    }
+
+    ChatBar.prototype.isChatBox = function(obj){
+        return  obj instanceof ChatBox;
     }
 
     ChatBar.prototype.init = function(){
@@ -286,16 +299,24 @@ ConfluenceChatAPI = new Object();
         }, options);
 
         var chatBoxId = opts.chatBoxId;
+        this.log('Chat with:  '+ opts.dispayTitle + ' chatId: '+ opts.chatBoxId);
+        
         if(chatBoxId != null){
-            if(typeof(this.chatBoxes[chatBoxId]) == "undefined"){
+            if(!this.isChatBox(this.chatBoxes[chatBoxId])){
                 this.chatBoxes[chatBoxId] = new ChatBox(opts);
             }
-            if(opts.focus){
-                this.chatBoxes[chatBoxId].show(); 
-                this.chatBoxes[chatBoxId].focusChatBox(); 
-            }
+            if(this.isChatBox(this.chatBoxes[chatBoxId])){
+                if(opts.focus){
+                    this.chatBoxes[chatBoxId].show(); 
+                    this.chatBoxes[chatBoxId].focusChatBox(); 
+                }
         
-            this.restructureChatBoxes();
+                this.restructureChatBoxes();    
+            }else {
+                this.log('could not create chatBox for '+ opts.dispayTitle + ' chatId: '+ opts.chatBoxId);
+            }
+            
+            
         }else {
             AJS.log('ChatBar.prototype.chatWith: no chatBoxId given');
         }
@@ -439,13 +460,13 @@ ConfluenceChatAPI = new Object();
     ChatBar.prototype.retrieveChatMessages= function(chatboxes){
         var that = this;
         jQuery.each(chatboxes, function(j,chatbox){
-            if(typeof(chatbox.messages) != "undefined" && typeof(that.chatBoxes[chatbox.id]) != "undefined"){
+            if(typeof(chatbox.messages) != "undefined" && that.isChatBox(that.chatBoxes[chatbox.id])){
                 jQuery.each(chatbox.messages, function(i,item){
                     if (item)	{
                         that.chatBoxes[chatbox.id].retrieveMessage(item);      
                     }
                 });
-            }else if (typeof(that.chatBoxes[chatbox.id]) == "undefined"){
+            }else if (that.isChatBox(that.chatBoxes[chatbox.id])){
                 var chatPartner =  chatbox.un[0];
                 var chatTitle = '';
                 // retrieve name

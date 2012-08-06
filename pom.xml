@@ -101,13 +101,13 @@
         </dependency>
     </dependencies>
     <properties>
-        <!-- Confluence version -->
         <atlassian.plugin.key>${project.artifactId}</atlassian.plugin.key>
         <atlassian.product.version>4.0.5</atlassian.product.version>
         <atlassian.product.data.version>3.2</atlassian.product.data.version>
-        <atlassian.pdk.server.url>http://localhost:4000</atlassian.pdk.server.url>
+        <atlassian.pdk.server.url>http://localhost:8090</atlassian.pdk.server.url>
         <atlassian.pdk.server.username>admin</atlassian.pdk.server.username>
-        <atlassian.pdk.server.password>admin</atlassian.pdk.server.password>        
+        <atlassian.pdk.server.password>admin</atlassian.pdk.server.password>      
+        <amps.version>3.11</amps.version>  
         <jdkLevel>1.6</jdkLevel>
         <sal.version>2.0.11</sal.version>
     </properties>    
