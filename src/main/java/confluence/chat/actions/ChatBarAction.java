@@ -28,4 +28,8 @@ public class ChatBarAction extends ConfluenceActionSupport {
     public void setChatManager(ChatManager chatManager) {
         this.chatManager = chatManager;
     }
+
+    public Boolean hasChatAccess() {
+        return chatManager.hasChatAccess(getRemoteUser());
+    }
 }

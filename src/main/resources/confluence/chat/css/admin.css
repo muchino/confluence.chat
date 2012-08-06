@@ -1,0 +1,16 @@
+#chat-configuration .edit {
+    display: none;
+}
+
+#chat-configuration.editing .edit {
+    display: block;
+}
+
+#chat-configuration.editing .view {
+    display: none;
+}
+
+#chat-configuration .buttons-container {
+    padding-top: 10px;
+    margin: 10px;
+}

@@ -6,7 +6,7 @@
         <version>${project.version}</version>
         <param name="plugin-icon">confluence/chat/img/plugin-icon.png</param>
         <param name="plugin-logo">confluence/chat/img/plugin-logo.png</param>
-<!--        <param name="configure.url">/admin/plugins/${atlassian.plugin.key}/config.action</param>-->
+        <param name="configure.url">/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</param>
     </plugin-info>
     <resource name="i18n" type="i18n" location="confluence/chat/chat" />
 
@@ -24,9 +24,12 @@
         
         <package name="Chat Config" extends="default"  namespace="/admin/plugins/${atlassian.plugin.key}">
             <default-interceptor-ref name="defaultStack"/>
-            <action name="config" class="confluence.chat.config.ConfigAction" >
-                <result name="success" type="velocity">/confluence/chat/templates/config.vm</result>
+            <action name="viewconfiguration" class="confluence.chat.config.ViewConfigurationAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>
+            <action name="updateconfiguration" class="confluence.chat.config.UpdateConfigurationAction">
+                <result name="success" type="redirect">viewconfiguration.action</result>
+            </action>            
         </package>
         
         
@@ -72,6 +75,18 @@
         <context>main</context>
      
     </web-resource>
+    
+
+    <web-resource key="chat-files-admin" name="Confluence Chat Admin Javascript Resources">
+        <resource name="admin.js"  type="download" location="confluence/chat/js/admin.js"/>
+        <resource name="admin.css" type="download" location="confluence/chat/css/admin.css"/>
+    </web-resource>    
+    
+    <web-item key="confluence-chat-admin-menu" name="Confluence Chat" section="system.admin/configuration"  weight="41">
+        <label>Confluence Chat</label>
+        <link>/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</link>
+        <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
+    </web-item>
     
 <!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
         <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>

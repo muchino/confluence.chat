@@ -10,8 +10,11 @@ import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.confluence.user.actions.ProfilePictureInfo;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
+import com.atlassian.user.GroupManager;
 import com.atlassian.user.User;
 import com.thoughtworks.xstream.XStream;
+import confluence.chat.conditions.ChatUseCondition;
+import confluence.chat.config.ChatConfiguration;
 import java.util.*;
 
 /**
@@ -22,18 +25,25 @@ public final class DefaultChatManager implements ChatManager {
 
     private static final String KEY_HISTORY = "confluence.chat.history.";
     private static final String KEY_PREFERENCES = "confluence.chat.preferences";
+    private static final String KEY_GLOBAL_CONFIGURATION = "confluence.chat.configuration";
+    private static final String BANDANA_CHAT = "confluence.chat";
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     private BandanaManager bandanaManager;
     private UserAccessor userAccessor;
     private ConfluenceBandanaContext confluenceBandanaContextPreferences = new ConfluenceBandanaContext(KEY_PREFERENCES);
+    private ConfluenceBandanaContext confluenceBandanaContextChat = new ConfluenceBandanaContext(BANDANA_CHAT);
     private ChatUserList users = new ChatUserList();
     private Map<String, ChatBoxMap> chatBoxes = new HashMap<String, ChatBoxMap>();
     private TransactionTemplate transactionTemplate;
+    private GroupManager groupManager;
+    private ChatUseCondition chatUseCondition;
+    private ChatConfiguration chatConfiguration;
 
-    public DefaultChatManager(final BandanaManager bandanaManager, final UserAccessor userAccessor, final TransactionTemplate transactionTemplate) {
+    public DefaultChatManager(final BandanaManager bandanaManager, final UserAccessor userAccessor, final TransactionTemplate transactionTemplate, final GroupManager groupManager) {
         this.bandanaManager = bandanaManager;
         this.userAccessor = userAccessor;
         this.transactionTemplate = transactionTemplate;
+        this.groupManager = groupManager;
     }
 
     @Override
@@ -56,7 +66,7 @@ public final class DefaultChatManager implements ChatManager {
                 @Override
                 public ChatBoxMap doInTransaction() {
                     ChatBoxMap chatBoxMap = new ChatBoxMap();
-                    ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContext(username);
+                    ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(username);
                     Boolean validChatBox = true;
                     try {
 
@@ -153,7 +163,7 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     private void saveChatBox(String chatBoxOwner, ChatBox chatBox) {
-        bandanaManager.setValue(getConfluenceBandanaContext(chatBoxOwner), chatBox.getId().toString(), chatBox);
+        bandanaManager.setValue(getConfluenceBandanaContextHistory(chatBoxOwner), chatBox.getId().toString(), chatBox);
     }
 
     @Override
@@ -236,7 +246,46 @@ public final class DefaultChatManager implements ChatManager {
         }
     }
 
-    private ConfluenceBandanaContext getConfluenceBandanaContext(String username) {
+    private ConfluenceBandanaContext getConfluenceBandanaContextHistory(String username) {
         return new ConfluenceBandanaContext(KEY_HISTORY + username);
+    }
+
+    @Override
+    public ChatConfiguration getChatConfiguration() {
+        if (chatConfiguration == null) {
+            XStream xStream = new XStream();
+            xStream.setClassLoader(ChatConfiguration.class.getClassLoader());
+            xStream.alias("ChatConfiguration", ChatConfiguration.class);
+            try {
+                chatConfiguration = (ChatConfiguration) bandanaManager.getValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION);
+            } catch (Exception e) {
+                logger.warn(" error reading chat configuration");
+            }
+            if (chatConfiguration == null) {
+                chatConfiguration = new ChatConfiguration();
+            }
+        }
+        return chatConfiguration;
+    }
+
+    @Override
+    public void setChatConfiguration(ChatConfiguration config) {
+        if (config != null) {
+            bandanaManager.setValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION, config);
+            chatConfiguration = config;
+            chatUseCondition = null;
+        }
+    }
+
+    @Override
+    public Boolean hasChatAccess(User user) {
+        if (getChatConfiguration().getAllowAll()) {
+            return true;
+        } else {
+            if (chatUseCondition == null) {
+                chatUseCondition = new ChatUseCondition(this, groupManager);
+            }
+            return chatUseCondition.hasAccess(user);
+        }
     }
 }

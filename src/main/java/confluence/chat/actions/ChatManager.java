@@ -5,6 +5,7 @@
 package confluence.chat.actions;
 
 import com.atlassian.user.User;
+import confluence.chat.config.ChatConfiguration;
 import java.util.List;
 
 /**
@@ -38,4 +39,10 @@ public interface ChatManager {
     public void setOnlineStatus(User user, ChatStatus status);
 
     public void setPreferencesOfUser(String username, ChatPreferences preferences);
+    
+    public void setChatConfiguration(ChatConfiguration config);
+    
+    public ChatConfiguration getChatConfiguration();
+    
+    public Boolean hasChatAccess(User user);
 }

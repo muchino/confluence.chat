@@ -12,142 +12,39 @@ import java.util.List;
  *
  * @author osr
  */
-public class ChatConfiguration  implements Serializable{
+public class ChatConfiguration implements Serializable {
 
-    private String headerNavigation = "";
-    private String header = "";
-    private String footer = "";
-    private Integer latestDocsMax = 10;
-    private String maxListHeight = "300px";
-    private String syncPath = "";
-    
-    private long contentId;
-    private List<DropdownField> doctypes = new ArrayList<DropdownField>();
-    private List<DropdownField> departmens = new ArrayList<DropdownField>();
+    private List<String> groups = new ArrayList<String>();
+    private Boolean allowAll = true;
 
-    /**
-     * @return the headerNavigation
-     */
-    public String getHeaderNavigation() {
-        return headerNavigation;
+    public ChatConfiguration() {
     }
 
     /**
-     * @param headerNavigation the headerNavigation to set
+     * @return the groups
      */
-    public void setHeaderNavigation(String headerNavigation) {
-        this.headerNavigation = headerNavigation;
+    public List<String> getGroups() {
+        return groups;
     }
 
     /**
-     * @return the contentId
+     * @param groups the groups to set
      */
-    public long getContentId() {
-        return contentId;
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
     }
 
     /**
-     * @param contentId the contentId to set
+     * @return the allowAll
      */
-    public void setContentId(long contentId) {
-        this.contentId = contentId;
+    public Boolean getAllowAll() {
+        return allowAll;
     }
 
     /**
-     * @return the header
+     * @param allowAll the allowAll to set
      */
-    public String getHeader() {
-        return header;
-    }
-
-    /**
-     * @param header the header to set
-     */
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
-    /**
-     * @return the footer
-     */
-    public String getFooter() {
-        return footer;
-    }
-
-    /**
-     * @param footer the footer to set
-     */
-    public void setFooter(String footer) {
-        this.footer = footer;
-    }
-
-    /**
-     * @return the doctypes
-     */
-    public List<DropdownField> getDoctypes() {
-        return doctypes;
-    }
-
-    /**
-     * @param doctypes the doctypes to set
-     */
-    public void setDoctypes(List<DropdownField> doctypes) {
-        this.doctypes = doctypes;
-    }
-
-    /**
-     * @return the departmens
-     */
-    public List<DropdownField> getDepartmens() {
-        return departmens;
-    }
-
-    /**
-     * @param departmens the departmens to set
-     */
-    public void setDepartmens(List<DropdownField> departmens) {
-        this.departmens = departmens;
-    }
-
-    /**
-     * @return the latestDocsMax
-     */
-    public Integer getLatestDocsMax() {
-        return latestDocsMax;
-    }
-
-    /**
-     * @param latestDocsMax the latestDocsMax to set
-     */
-    public void setLatestDocsMax(Integer latestDocsMax) {
-        this.latestDocsMax = latestDocsMax;
-    }
-
-    /**
-     * @return the maxListHeight
-     */
-    public String getMaxListHeight() {
-        return maxListHeight;
-    }
-
-    /**
-     * @param maxListHeight the maxListHeight to set
-     */
-    public void setMaxListHeight(String maxListHeight) {
-        this.maxListHeight = maxListHeight;
-    }
-
-    /**
-     * @return the syncPath
-     */
-    public String getSyncPath() {
-        return syncPath;
-    }
-
-    /**
-     * @param syncPath the syncPath to set
-     */
-    public void setSyncPath(String syncPath) {
-        this.syncPath = syncPath;
+    public void setAllowAll(Boolean allowAll) {
+        this.allowAll = allowAll;
     }
 }

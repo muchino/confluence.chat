@@ -4,6 +4,7 @@ import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
+import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.utils.ChatReplyTransformer;
 import java.util.*;
@@ -41,9 +42,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
      * @throws Exception
      */
     public final String start() throws Exception {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        HttpSession session = request.getSession();
-        if (getRemoteUser() != null) {
+        if (hasChatAccess()) {
+            HttpServletRequest request = ServletActionContext.getRequest();
+            HttpSession session = request.getSession();
             getChatManager().setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
             ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
 
@@ -104,8 +105,8 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     }
 
     public final String close() throws Exception {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        if (getRemoteUser() != null) {
+        if (hasChatAccess()) {
+            HttpServletRequest request = ServletActionContext.getRequest();
             String parameter = request.getParameter(PARAM_CLOSE);
             if (StringUtils.isNotBlank(parameter)) {
                 getChatManager().closeChatBox(getRemoteUser(), new ChatBoxId(parameter));
@@ -115,7 +116,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     }
 
     public final String heartbeat() throws Exception {
-        if (getRemoteUser() != null) {
+        if (hasChatAccess()) {
             ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
             if (isMouseMoved()) {
                 chatUser.setLastMouseMove(new Date());
@@ -141,11 +142,13 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     }
 
     public final String send() throws Exception {
-        HttpServletRequest request = ServletActionContext.getRequest();
-        String message = request.getParameter(AbstractChatAction.PARAM_MESSAGE);
-        String to = request.getParameter(AbstractChatAction.PARAM_TO);
-        if (StringUtils.isNotEmpty(to)) {
-            getChatManager().sendMessage(getRemoteUser().getName(), to, message);
+        if (hasChatAccess()) {
+            HttpServletRequest request = ServletActionContext.getRequest();
+            String message = request.getParameter(AbstractChatAction.PARAM_MESSAGE);
+            String to = request.getParameter(AbstractChatAction.PARAM_TO);
+            if (StringUtils.isNotEmpty(to)) {
+                getChatManager().sendMessage(getRemoteUser().getName(), to, message);
+            }
         }
         return SUCCESS;
     }
@@ -153,7 +156,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     @Override
     public Object getBean() {
         Map<String, Object> bean = new HashMap<String, Object>();
-        if (getRemoteUser() != null) {
+        if (hasChatAccess()) {
             bean.put("lr", getNewRequestDate().getTime());
 
             if (!getChatBoxMap().isEmpty()) {
@@ -234,5 +237,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
      */
     public ChatReplyTransformer getChatReplyTransformer() {
         return chatReplyTransformer;
+    }
+
+    protected Boolean hasChatAccess() {
+        return chatManager.hasChatAccess(getRemoteUser());
     }
 }
