@@ -33,14 +33,10 @@ public class ChatUseCondition {
         if (user == null) {
             return false;
         }
-
-
-        System.out.println("cond " + chatManager.getChatConfiguration().getAllowAll());
         if (chatManager.getChatConfiguration().getAllowAll()) {
             return true;
         } else {
             boolean allowed = false || chatManager.getChatConfiguration().getGroups().isEmpty();
-            System.out.println("allowed " + allowed);
             if (groups == null) {
                 groups = new ArrayList<Group>();
                 List<String> groupsList = chatManager.getChatConfiguration().getGroups();
