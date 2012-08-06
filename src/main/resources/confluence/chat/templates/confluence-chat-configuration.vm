@@ -1,12 +1,12 @@
 <html>
-<head>
-#requireResource("confluence.chat:chat-files-admin")
-<title>Confluence Chat Configuration</title>
-</head>
-<body>
-    <h1>Confluence Chat  Configuration</h1>
-    <p>The following settings define who has access to the chat in the system.</p>
-    <form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
+    <head>
+        #requireResource("confluence.chat:chat-files-admin")
+        <title>Confluence Chat Configuration</title>
+    </head>
+    <body>
+        <h1>Confluence Chat  Configuration</h1>
+        <p>The following settings define who has access to the chat in the system.</p>
+        <form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
             <fieldset>
                 <h2>Chat Access</h2>
                 <div class="field-group">
@@ -16,14 +16,14 @@
                     </label>
                     <div class="edit">
                         <input class="checkbox" type="checkbox" id="chat-all-users-edit" name="allowAll" title="Allow all signed-in users to access chat" #if ($action.getAllowAllUsers()) checked="checked" #end>
-                        <div class="description">Allow all signed-in users to access chat. Should only be checked if this application is private and the entire user base is trusted.</div>
+                               <div class="description">Allow all signed-in users to access chat. Should only be checked if this application is private and the entire user base is trusted.</div>
                     </div>
                     <div class="view">
                         <div id="chat-all-users-view" class="field-value">
                             #if ($action.getAllowAllUsers())
-                                Yes
+                            Yes
                             #else
-                                No
+                            No
                             #end
                         </div>
                     </div>
@@ -41,6 +41,27 @@
                         <div id="chat-access-groups-view" class="field-value">$action.getAccessGroupsCSV()</div>
                     </div>
                 </div>
+
+                <h2>Chat Settings</h2>
+                <div class="field-group">
+                    <label for="chat-all-settings-edit">
+                        Show browsing location
+                        <span class="form-icon icon-required"></span>
+                    </label>
+                    <div class="edit">
+                        <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="showWhereIam" title="Show the browsed page of the signed-in users " #if ($action.getShowWhereIam()) checked="checked" #end>
+                               <div class="description">Show the browsed page of the signed-in users</div>
+                    </div>
+                    <div class="view">
+                        <div id="chat-all-location-view" class="field-value">
+                            #if ($action.getShowWhereIam())
+                            Yes
+                            #else
+                            No
+                            #end
+                        </div>
+                    </div>
+                </div>
             </fieldset>
             <div class="buttons-container">
                 <div class="buttons view">
@@ -48,10 +69,10 @@
                 </div>
                 <div class="buttons edit">
                     <input id="chat-save" class="button submit" type="submit" value="Save">
-                    <a href="viewconfiguration.action">Cancel</a>
+                        <a href="viewconfiguration.action">Cancel</a>
                 </div>
             </div>
         </form>
-    </form>
-</body>
+        </form>
+    </body>
 </html>

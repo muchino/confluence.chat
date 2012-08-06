@@ -48,7 +48,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             getChatManager().setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
             ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
 
-            if (chatUser.getPreferences().getShowCurrentSite()) {
+            if (chatUser.getPreferences().getShowCurrentSite() && chatManager.getChatConfiguration().getShowWhereIam()) {
                 String parameterPageId = request.getParameter("pageId");
                 if (StringUtils.isNumeric(parameterPageId)) {
                     Long pageId = new Long(parameterPageId);

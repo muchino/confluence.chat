@@ -32,6 +32,10 @@ public class ViewConfigurationAction extends ConfluenceActionSupport {
         return chatManager.getChatConfiguration().getAllowAll();
     }
 
+    public Boolean getShowWhereIam() {
+        return chatManager.getChatConfiguration().getShowWhereIam();
+    }
+
     public String getAccessGroupsLines() {
         return this.accessGroupsCSV.replaceAll(",", "\n");
     }

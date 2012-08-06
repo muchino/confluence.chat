@@ -21,6 +21,8 @@ public class UpdateConfigurationAction extends ConfluenceActionSupport {
         HttpServletRequest request = ServletActionContext.getRequest();
         ChatConfiguration chatConfiguration = ChatManager.getChatConfiguration();
         chatConfiguration.setAllowAll(StringUtils.isNotEmpty(request.getParameter("allowAll")));
+        chatConfiguration.setShowWhereIam(StringUtils.isNotEmpty(request.getParameter("showWhereIam")));
+        
         List<String> groups = chatConfiguration.getGroups();
         groups.clear();
         String groupsParam = request.getParameter("groups");

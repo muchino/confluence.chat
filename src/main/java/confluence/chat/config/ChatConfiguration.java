@@ -16,6 +16,7 @@ public class ChatConfiguration implements Serializable {
 
     private List<String> groups = new ArrayList<String>();
     private Boolean allowAll = true;
+    private Boolean showWhereIam = true;
 
     public ChatConfiguration() {
     }
@@ -46,5 +47,19 @@ public class ChatConfiguration implements Serializable {
      */
     public void setAllowAll(Boolean allowAll) {
         this.allowAll = allowAll;
+    }
+
+    /**
+     * @return the showWhereIam
+     */
+    public Boolean getShowWhereIam() {
+        return showWhereIam;
+    }
+
+    /**
+     * @param showWhereIam the showWhereIam to set
+     */
+    public void setShowWhereIam(Boolean showWhereIam) {
+        this.showWhereIam = showWhereIam;
     }
 }

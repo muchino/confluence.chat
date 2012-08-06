@@ -174,7 +174,9 @@ public final class DefaultChatManager implements ChatManager {
         Date time = cal.getTime();
         for (Map.Entry<String, ChatUser> user : users.entrySet()) {
             ChatUser chatUser = user.getValue();
-
+            if (!getChatConfiguration().getShowWhereIam()) {
+                chatUser.removeCurrentSite();
+            }
             if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())
                     && time.before(chatUser.getLastSeen())) {
                 onlineUserList.add(chatUser);
@@ -197,6 +199,9 @@ public final class DefaultChatManager implements ChatManager {
             this.setProfilPicture(user, chatUser);
         } else {
             chatUser = this.users.get(user.getName());
+        }
+        if (!getChatConfiguration().getShowWhereIam()) {
+            chatUser.removeCurrentSite();
         }
         return chatUser;
 
