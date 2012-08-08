@@ -3,6 +3,7 @@ ConfluenceChatAPI = new Object();
 (function () {
     function ChatBar(){
         var that = this;
+        this.debug = false;
         this.chatBoxes = new Array();
         this.heartBeatCount= 0;
         this.requestFailed= 0;
@@ -160,7 +161,9 @@ ConfluenceChatAPI = new Object();
     }
     
     ChatBar.prototype.log = function(msg){
-        AJS.log(msg);
+        if(this.debug){
+            AJS.log(msg);    
+        }
     }
 
     ChatBar.prototype.isChatBox = function(obj){
@@ -460,13 +463,18 @@ ConfluenceChatAPI = new Object();
     ChatBar.prototype.retrieveChatMessages= function(chatboxes){
         var that = this;
         jQuery.each(chatboxes, function(j,chatbox){
+            that.log(chatbox)
             if(typeof(chatbox.messages) != "undefined" && that.isChatBox(that.chatBoxes[chatbox.id])){
+                
+                chatBar.log("chatbox exists " + chatbox.id + " loop over messages");
+                
                 jQuery.each(chatbox.messages, function(i,item){
                     if (item)	{
                         that.chatBoxes[chatbox.id].retrieveMessage(item);      
                     }
                 });
-            }else if (that.isChatBox(that.chatBoxes[chatbox.id])){
+            }else{
+                chatBar.log("create chatbox " + chatbox.id);
                 var chatPartner =  chatbox.un[0];
                 var chatTitle = '';
                 // retrieve name
@@ -523,6 +531,9 @@ ConfluenceChatAPI = new Object();
             dispayTitle: null,
             messages: new Array()
         }, options);
+        
+        chatBar.log("create chatbox " + this.opt .chatBoxId);
+        
         this.chatBoxId = this.opt.chatBoxId;
         this.chatUserList = this.opt.chatUserList;
         this.box = null;
@@ -541,6 +552,8 @@ ConfluenceChatAPI = new Object();
         }else {
             this.hide();
         }
+        
+        chatBar.log("created chatbox init with " + len + " messages");
     }
     ChatBox.prototype.getId = function(){
         return this.chatBoxId;
