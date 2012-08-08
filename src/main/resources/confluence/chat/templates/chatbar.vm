@@ -25,7 +25,7 @@
     <div id="chatbar" class="$onlineOffline">
         <div id="chatbar-status" class="$status">
             <fieldset class="parameters hidden">
-
+                <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
             </fieldset>
             <div id="chatbar-buttons">
                 <div id="chatbar-button-config">&nbsp;</div>

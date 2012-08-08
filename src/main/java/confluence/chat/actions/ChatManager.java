@@ -47,4 +47,6 @@ public interface ChatManager {
     public Boolean hasChatAccess(User user);
 
     public void manageHistory(ChatBox chatBox , User owner);
+    
+    public String getVersion();
 }

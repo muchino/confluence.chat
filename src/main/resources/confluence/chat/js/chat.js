@@ -13,6 +13,7 @@ ConfluenceChatAPI = new Object();
         this.lastHeartBeatServerdate = 0;
         this.mousemove = false;
         this.initCompatibility();
+        this.version = "0";
         that.startChatSession();
         this.users = Object();
         jQuery(document).ready(function(){
@@ -172,9 +173,10 @@ ConfluenceChatAPI = new Object();
 
     ChatBar.prototype.init = function(){
         var that = this;
-
-        this.username = AJS.params.remoteUser;
         this.bar = jQuery('#chatbar');
+        this.version = this.getConfigParameter('chat-version');
+        AJS.log('Init Confluence Chat in version: ' + this.version);
+        this.username = AJS.params.remoteUser;
         this.bar.find('.aui-dd-parent').dropDown("Standard", {
             alignment: "left", 
             useDisabled: true
@@ -427,7 +429,7 @@ ConfluenceChatAPI = new Object();
 
 
     ChatBar.prototype.getConfigParameter= function(param){
-        return this.elem.find('.parameters input[name='+param+']').val();
+        return this.bar.find('.parameters input[name='+param+']').val();
     
     }
     
@@ -941,6 +943,10 @@ ConfluenceChatAPI = new Object();
     }
     ConfluenceChatAPI.getStatusOfUser = function(username){
         return chatBar.getStatusOfUser(username);
+    }
+    
+    ConfluenceChatAPI.getVersion = function(){
+        return chatBar.version;
     }
     
 }());

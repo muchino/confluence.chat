@@ -13,9 +13,12 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.user.GroupManager;
 import com.atlassian.user.User;
 import com.thoughtworks.xstream.XStream;
+import confluence.chat.ChatVersion;
+import confluence.chat.Version;
 import confluence.chat.conditions.ChatUseCondition;
 import confluence.chat.config.ChatConfiguration;
 import confluence.chat.utils.ChatUtils;
+import confluence.chat.utils.ChatVersionTransformer;
 import java.util.*;
 
 /**
@@ -40,12 +43,21 @@ public final class DefaultChatManager implements ChatManager {
     private GroupManager groupManager;
     private ChatUseCondition chatUseCondition;
     private ChatConfiguration chatConfiguration;
+    private ChatVersionTransformer chatVersionTransformer;
 
     public DefaultChatManager(final BandanaManager bandanaManager, final UserAccessor userAccessor, final TransactionTemplate transactionTemplate, final GroupManager groupManager) {
         this.bandanaManager = bandanaManager;
         this.userAccessor = userAccessor;
         this.transactionTemplate = transactionTemplate;
         this.groupManager = groupManager;
+        this.logger.debug("Init ChatManager in version " + getVersion());
+//        this.chatVersionTransformer = new ChatVersionTransformer(this);
+//        if (this.chatVersionTransformer.transformationNeeded()) {
+//            System.out.println("chat needs transform");
+//            this.chatVersionTransformer.transform();
+//            ChatVersion dummy = new ChatVersion("1.0");
+//            getChatConfiguration().setChatVersionPlain(dummy.getVersion());
+//        }
     }
 
     @Override
@@ -306,5 +318,14 @@ public final class DefaultChatManager implements ChatManager {
 //                this.saveChatBox(owner.getName(), chatBox);
             }
         }
+    }
+
+    /**
+     *
+     * @return The Version of the chat plugin
+     */
+    @Override
+    public String getVersion() {
+        return Version.VERSION;
     }
 }
