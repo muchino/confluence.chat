@@ -15,6 +15,7 @@ import com.atlassian.user.User;
 import com.thoughtworks.xstream.XStream;
 import confluence.chat.conditions.ChatUseCondition;
 import confluence.chat.config.ChatConfiguration;
+import confluence.chat.utils.ChatUtils;
 import java.util.*;
 
 /**
@@ -24,6 +25,7 @@ import java.util.*;
 public final class DefaultChatManager implements ChatManager {
 
     private static final String KEY_HISTORY = "confluence.chat.history.";
+    private static final String KEY_LIVEBOX = "confluence.chat.live.";
     private static final String KEY_PREFERENCES = "confluence.chat.preferences";
     private static final String KEY_GLOBAL_CONFIGURATION = "confluence.chat.configuration";
     private static final String BANDANA_CHAT = "confluence.chat";
@@ -291,6 +293,18 @@ public final class DefaultChatManager implements ChatManager {
                 chatUseCondition = new ChatUseCondition(this, groupManager);
             }
             return chatUseCondition.hasAccess(user);
+        }
+    }
+
+    @Override
+    public void manageHistory(ChatBox chatBox, User owner) {
+        if (owner != null && chatBox != null) {
+            ChatMessageList messagesBefore = chatBox.getMessagesBefore(ChatUtils.getYesterday());
+            if (!messagesBefore.isEmpty()) {
+//                chatBox.getMessages().removeAll(messagesBefore);
+//                this.logger.info("cleanup chat current box of user " + owner.getName() + " chatbox: " + chatBox.getId().toString());
+//                this.saveChatBox(owner.getName(), chatBox);
+            }
         }
     }
 }

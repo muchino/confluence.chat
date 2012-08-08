@@ -24,7 +24,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     private PageManager pageManager;
     private ChatReplyTransformer chatReplyTransformer;
     private PermissionManager permissionManager;
-    private Date newRequestDate = new Date();
+    private Date newRequestDate = null;
 
     public AbstractChatAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
         this.chatManager = chatManager;
@@ -72,7 +72,6 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                 Date initMessagesShowSince = chatBox.getInitMessagesShowSince(session);
                 this.addMessagesSince(chatBox, initMessagesShowSince);
             }
-            setNewRequestDate();
         }
         return SUCCESS;
     }
@@ -91,17 +90,16 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             } else {
                 chatBoxMap.getChatBoxById(chatBox.getId()).close();
             }
+            ChatMessageList messagesSince = chatBox.getMessagesSince(date);
+            Collections.reverse(messagesSince);
 
-            for (int j = chatBox.getMessages().size() - 1; j >= 0; j--) {
-                ChatMessage message = chatBox.getMessages().get(j);
-                if (message.getSenddate().after(date)) {
-                    chatBoxMap.getChatBoxById(chatBox.getId()).addMessage(message);
-                } else {
-                    break;
-                }
+            for (int i = 0; i < messagesSince.size(); i++) {
+                ChatMessage message = messagesSince.get(i);
+                this.setNewRequestDate(message.getSenddate());
+                chatBoxMap.getChatBoxById(chatBox.getId()).addMessage(message);
             }
-            Collections.reverse(chatBoxMap.getChatBoxById(chatBox.getId()).getMessages());
         }
+        chatManager.manageHistory(chatBox, AuthenticatedUserThreadLocal.getUser());
     }
 
     public final String close() throws Exception {
@@ -132,10 +130,6 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                     ChatBox chatBox = chatBoxes.get(iterator.next());
                     this.addMessagesSince(chatBox, lastRequestDate);
                 }
-                /**
-                 * chat abgeholt => setzen
-                 */
-                setNewRequestDate();
             }
         }
         return SUCCESS;
@@ -208,6 +202,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
      * @return the newRequestDate
      */
     public Date getNewRequestDate() {
+        if (this.newRequestDate == null) {
+            this.newRequestDate = this.getLastRequestDate();
+        }
         return newRequestDate;
     }
 
@@ -241,5 +238,11 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
 
     protected Boolean hasChatAccess() {
         return chatManager.hasChatAccess(getRemoteUser());
+    }
+
+    private void setNewRequestDate(Date senddate) {
+        if (senddate.after(getNewRequestDate())) {
+            this.newRequestDate = senddate;
+        }
     }
 }

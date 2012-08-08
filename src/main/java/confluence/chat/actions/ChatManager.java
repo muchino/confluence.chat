@@ -39,10 +39,12 @@ public interface ChatManager {
     public void setOnlineStatus(User user, ChatStatus status);
 
     public void setPreferencesOfUser(String username, ChatPreferences preferences);
-    
+
     public void setChatConfiguration(ChatConfiguration config);
-    
+
     public ChatConfiguration getChatConfiguration();
-    
+
     public Boolean hasChatAccess(User user);
+
+    public void manageHistory(ChatBox chatBox , User owner);
 }

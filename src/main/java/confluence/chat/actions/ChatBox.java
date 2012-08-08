@@ -4,6 +4,7 @@
  */
 package confluence.chat.actions;
 
+import confluence.chat.utils.ChatUtils;
 import java.io.Serializable;
 import java.util.*;
 import javax.servlet.http.HttpSession;
@@ -130,9 +131,7 @@ public class ChatBox implements Serializable {
         String key = ChatManager.SESSION_SHOW_MESSAGES_SINCE + this.getId().toString();
         Date date = (Date) session.getAttribute(key);
         if (date == null) {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DATE, -1);
-            date = cal.getTime();
+            date = ChatUtils.getYesterday();
         }
         session.setAttribute(key, date);
         return date;
@@ -156,4 +155,41 @@ public class ChatBox implements Serializable {
     public String toString() {
         return "ChatBox " + getId().toString();
     }
+
+    
+    /**
+     * 
+     * @param date
+     * @return eine chat nachrichten liste , die neuste nachricht ist ganz vorne
+     */
+    public ChatMessageList getMessagesSince(Date date) {
+        ChatMessageList list = new ChatMessageList();
+        for (int j = getMessages().size() - 1; j >= 0; j--) {
+            ChatMessage message = getMessages().get(j);
+            if (message.getSenddate().after(date)) {
+                list.add(message);
+            } else {
+                break;
+            }
+        }
+        return list;
+    }
+    
+    /**
+     * 
+     * @param date
+     * @return eine chat nachrichten liste , die älteste ist ganz vorne
+     */
+    public ChatMessageList getMessagesBefore(Date date) {
+        ChatMessageList list = new ChatMessageList();
+        for (int j = 0 ; j < getMessages().size(); j++) {
+            ChatMessage message = getMessages().get(j);
+            if (message.getSenddate().before(date)) {
+                list.add(message);
+            } else {
+                break;
+            }
+        }
+        return list;
+    }    
 }
