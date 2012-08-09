@@ -946,7 +946,6 @@ ConfluenceChatConfig = {
         }
 
         // build the regular expression and replace
-    
         return text.replace(new RegExp(patterns.join('|'),'g'), function (match) {
             return typeof emoticons[match] != 'undefined' ?
             '<img title="'+emoticons[match]+'" src="'+AJS.contextPath()+'/download/resources/confluence.chat/clear.png" class="smiley '+emoticons[match]+'"/>' :
