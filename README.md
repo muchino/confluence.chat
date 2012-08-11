@@ -15,6 +15,17 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 
+### 1.1.0
+Add a chat user link macro.
+Add Configuration of chat restriction (All or by groups)
+Add possibility to switch off the "where I am Info"
+New small Javascript API, to start chats from outside  "ConfluenceChatAPI" .
+
+Change window behaviour (close oldest, if there is not enough place)
+Improved request permission.
+Improved the js
+Added version number to js 
+
 ### 1.0.1 
 This release fixes the  important contextPath issue. If confluence is  running under a certain contextPath, like "/confluence" the chat doesn't work. Additional fixes:
 the chat doesn't worked)
