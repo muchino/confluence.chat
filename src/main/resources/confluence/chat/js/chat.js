@@ -702,12 +702,12 @@ ConfluenceChatConfig = {
         var header =  jQuery('<div/>').addClass('cb-head');
         header.appendTo(box);
         
-        var subheader =  jQuery('<div/>').addClass('cb-head-sub');
-        subheader.appendTo(box );
-        
-        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-history').click(function(){
-            new ChatHistory(that.opt);
-        }).appendTo(subheader );
+//        var subheader =  jQuery('<div/>').addClass('cb-head-sub');
+//        subheader.appendTo(box );
+//        
+//        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-history').click(function(){
+//            new ChatHistory(that.opt);
+//        }).appendTo(subheader );
         
         var options = jQuery('<div/>').addClass('cb-opt');
         options.appendTo(header);
@@ -1044,10 +1044,10 @@ ConfluenceChatConfig = {
         return chatBar.version;
     }
     
-    ConfluenceChatAPI.showHistory = function(username){
-        new ChatHistory({
-            displayTitle: username
-        });
-    }
+//    ConfluenceChatAPI.showHistory = function(username){
+//        new ChatHistory({
+//            displayTitle: username
+//        });
+//    }
     
 }());

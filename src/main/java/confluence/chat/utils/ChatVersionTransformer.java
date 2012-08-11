@@ -20,7 +20,6 @@ public class ChatVersionTransformer {
     public ChatVersionTransformer(ChatManager chatManager) {
         this.chatManager = chatManager;
         savedVersion = new ChatVersion(chatManager.getChatConfiguration().getChatVersionPlain());
-        System.out.println("Saved chat model has Version " + savedVersion.getVersion());
     }
 
     public  Boolean transformationNeeded() {
@@ -35,7 +34,6 @@ public class ChatVersionTransformer {
         
         
         if (savedVersion.compareTo(new ChatVersion("0")) <= 0) {
-            System.out.println("transform");
         }
         
         
