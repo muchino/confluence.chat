@@ -115,7 +115,7 @@
                  icon="/download/resources/${atlassian.plugin.key}/images-chat/plugin-logo.png">
         <category name="communication"/>
         <parameters>
-            <parameter name="username" type="username" />
+            <parameter name="username" type="username" required="true" />
         </parameters>
     </xhtml-macro>
 </atlassian-plugin>
