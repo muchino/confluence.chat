@@ -79,6 +79,11 @@ ConfluenceChatConfig = {
     ChatBar.prototype.getHeartbeatCount = function(){  
         return this.heartBeatCount;
     }
+    
+    ChatBar.prototype.setDebugMode = function(debug){  
+        this.debug = debug;
+    }
+    
     ChatBar.prototype.getOriginalTitle = function(){  
         return this.originalTitle;
     }
@@ -228,7 +233,7 @@ ConfluenceChatConfig = {
     }
     
     ChatBar.prototype.log = function(msg){
-        if(this.debug || this.version.search('SNAPSHOOT')){
+        if(this.debug || (this.version.search('SNAPSHOOT') > 0)){
             AJS.log(msg);    
         }
     }
@@ -702,12 +707,12 @@ ConfluenceChatConfig = {
         var header =  jQuery('<div/>').addClass('cb-head');
         header.appendTo(box);
         
-//        var subheader =  jQuery('<div/>').addClass('cb-head-sub');
-//        subheader.appendTo(box );
-//        
-//        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-history').click(function(){
-//            new ChatHistory(that.opt);
-//        }).appendTo(subheader );
+        //        var subheader =  jQuery('<div/>').addClass('cb-head-sub');
+        //        subheader.appendTo(box );
+        //        
+        //        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-history').click(function(){
+        //            new ChatHistory(that.opt);
+        //        }).appendTo(subheader );
         
         var options = jQuery('<div/>').addClass('cb-opt');
         options.appendTo(header);
@@ -1043,6 +1048,11 @@ ConfluenceChatConfig = {
     ConfluenceChatAPI.getVersion = function(){
         return chatBar.version;
     }
+    
+    ConfluenceChatAPI.enableDebugMode = function(){
+        return chatBar.setDebugMode(true);
+    }
+    
     
 //    ConfluenceChatAPI.showHistory = function(username){
 //        new ChatHistory({
