@@ -158,8 +158,8 @@ ConfluenceChatConfig = {
         this.mousemove = false;
     }
     /**
-      *
-      */
+     *
+     */
     ChatBar.prototype.closeOldestChatBox = function() {
         this.log('closeOldestChatBox ');
         var lastBox= null;
@@ -701,11 +701,22 @@ ConfluenceChatConfig = {
     
         var header =  jQuery('<div/>').addClass('cb-head');
         header.appendTo(box);
+        
+        var subheader =  jQuery('<div/>').addClass('cb-head-sub');
+        subheader.appendTo(box );
+        
+        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-history').click(function(){
+            new ChatHistory(that.opt);
+        }).appendTo(subheader );
+        
         var options = jQuery('<div/>').addClass('cb-opt');
         options.appendTo(header);
         jQuery('<a/>').attr('href', '#').text('+').addClass('opt-max').click(function(){
             that.toggleChatBoxGrowth();
         }).appendTo(options);
+        
+        
+        
         jQuery('<a/>').attr('href', '#').text('-').addClass('opt-min').click(function(){
             that.toggleChatBoxGrowth();
         }).appendTo(options);
@@ -714,6 +725,10 @@ ConfluenceChatConfig = {
             that.closeChatBox();
         }).appendTo(options);
         var titleBox =  jQuery('<div/>').addClass('cb-title').text(this.opt.dispayTitle);
+        
+        
+        
+        
         titleBox.appendTo(header);
    
    
@@ -964,58 +979,58 @@ ConfluenceChatConfig = {
         }
     }
     
-    //    
-    //    function ChatHistory(options){
-    //        this.opt = jQuery.extend({
-    //            chatBoxId: null,
-    //            chatUserList: null,
-    //            open: true,
-    //            dispayTitle: null,
-    //            messages: new Array()
-    //        }, options);
-    //        this.chatBoxId = this.opt.chatBoxId;
-    //        this.init();
-    //    }
-    //    
-    //    ChatHistory.prototype.init=  function(){
-    //        
-    //        // create a dialog 860px wide x 530px high
-    //        var dialog = new AJS.Dialog({
-    //            width:860, 
-    //            height:530, 
-    //            id:"example-dialog", 
-    //            closeOnOutsideClick: true
-    //        });
-    //
-    //        // PAGE 0 (first page)
-    //        // adds header for first page
-    //        dialog.addHeader("Dialog - Page 0");
-    //
-    //        // add panel 1
-    //        dialog.addPanel("Panel 1", "<p>Some content for panel 1. This has no padding.</p>", "panel-body");
-    //        dialog.get("panel:0").setPadding(0);
-    //
-    //        dialog.addButton("Next", function (dialog) {
-    //            
-    //            });
-    //
-    //        dialog.addButton("Next", function (dialog) {
-    //            
-    //            });
-    //        dialog.addButton("Cancel", function (dialog) {
-    //            dialog.hide();
-    //        });
-    //
-    //        
-    //        dialog.addPage();
-    //
-    //        // Add events to dialog trigger elements
-    //        
-    //        dialog.gotoPage(0);
-    //        dialog.gotoPanel(0);
-    //        dialog.show();
-    //    }
-    //    
+        
+    function ChatHistory(options){
+        this.opt = jQuery.extend({
+            chatBoxId: null,
+            chatUserList: null,
+            open: true,
+            dispayTitle: null,
+            messages: new Array()
+        }, options);
+        this.chatBoxId = this.opt.chatBoxId;
+        this.init();
+    }
+        
+    ChatHistory.prototype.init=  function(){
+            
+        //        create a dialog 860px wide x 530px high
+        var dialog = new AJS.Dialog({
+            width:860, 
+            height:530, 
+            id:"example-dialog", 
+            closeOnOutsideClick: true
+        });
+    
+        //        PAGE 0 (first page)
+        //        adds header for first page
+        dialog.addHeader("Dialog - Page 0");
+    
+        //        add panel 1
+        dialog.addPanel("Panel 1", "<p>Some content for panel 1. This has no padding.</p>", "panel-body");
+        dialog.get("panel:0").setPadding(0);
+    
+        dialog.addButton("Next", function (dialog) {
+                
+            });
+    
+        dialog.addButton("Next", function (dialog) {
+                
+            });
+        dialog.addButton("Cancel", function (dialog) {
+            dialog.hide();
+        });
+    
+            
+        dialog.addPage();
+    
+        //        Add events to dialog trigger elements
+            
+        dialog.gotoPage(0);
+        dialog.gotoPanel(0);
+        dialog.show();
+    }
+        
     
     var chatBar = new ChatBar();
     ConfluenceChatAPI.isOnline = function(){
@@ -1027,6 +1042,12 @@ ConfluenceChatConfig = {
     
     ConfluenceChatAPI.getVersion = function(){
         return chatBar.version;
+    }
+    
+    ConfluenceChatAPI.showHistory = function(username){
+        new ChatHistory({
+            displayTitle: username
+        });
     }
     
 }());
