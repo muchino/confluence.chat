@@ -26,6 +26,8 @@
         <div id="chatbar-status" class="$status">
             <fieldset class="parameters hidden">
                 <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
+                <input type="hidden" name="chat-debugMode" id="chat-version" value="$chatManager.getChatConfiguration().getDebugMode()" />
+                <input type="hidden" name="chat-hideInEditMode" id="chat-version" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
             </fieldset>
             <div id="chatbar-buttons">
                 <div id="chatbar-button-config">&nbsp;</div>

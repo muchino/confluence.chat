@@ -16,13 +16,13 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 ## Releases
 
 ### 1.1.0
-Add a chat user link macro.
+Add a chat user link macro
 Add Configuration of chat restriction (All or by groups)
 Add possibility to switch off the "where I am Info"
-New small Javascript API, to start chats from outside  "ConfluenceChatAPI" .
+New small Javascript API, to start chats from outside  "ConfluenceChatAPI"
 
-Change window behaviour (close oldest, if there is not enough place)
-Improved request permission.
+Change window behaviour (close oldest, if there is not enough space  - similar to gtalk))
+Improved request permission
 Improved the js
 Added version number to js 
 

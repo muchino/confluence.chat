@@ -32,6 +32,14 @@ public class ViewConfigurationAction extends ConfluenceActionSupport {
         return chatManager.getChatConfiguration().getAllowAll();
     }
 
+    public Boolean getDebugMode() {
+        return chatManager.getChatConfiguration().getDebugMode();
+    }
+
+    public Boolean getHideInEditMode() {
+        return chatManager.getChatConfiguration().getHideInEditMode();
+    }
+
     public Boolean getShowWhereIam() {
         return chatManager.getChatConfiguration().getShowWhereIam();
     }

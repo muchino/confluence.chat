@@ -8,6 +8,7 @@ import com.atlassian.confluence.core.ContentEntityObject;
 import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.Permission;
 import com.atlassian.confluence.security.PermissionManager;
+import com.atlassian.confluence.util.GeneralUtil;
 import com.atlassian.user.User;
 import confluence.chat.actions.ChatUser;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class ChatReplyTransformer {
 
     private PageManager pageManager;
     private PermissionManager permissionManager;
+    private String baseUrl = GeneralUtil.getGlobalSettings().getBaseUrl();
 
     public ChatReplyTransformer(PageManager pageManager, PermissionManager permissionManager) {
         this.pageManager = pageManager;
@@ -43,7 +45,7 @@ public class ChatReplyTransformer {
                         if (cO != null) {
                             if (permissionManager.hasPermission(user, Permission.VIEW, cO)) {
                                 userMap.put(ChatUser.CURRENT_SITE_TITLE, cO.getTitle());
-                                userMap.put(ChatUser.CURRENT_SITE_URL, cO.getUrlPath());
+                                userMap.put(ChatUser.CURRENT_SITE_URL, this.baseUrl + cO.getUrlPath());
                             }
                         }
                     }

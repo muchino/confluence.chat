@@ -233,7 +233,7 @@ ConfluenceChatConfig = {
     }
     
     ChatBar.prototype.log = function(msg){
-        if(this.debug || (this.version.search('SNAPSHOOT') > 0)){
+        if(this.debug){
             AJS.log(msg);    
         }
     }
@@ -243,7 +243,18 @@ ConfluenceChatConfig = {
         this.bar = jQuery('#chatbar');
         this.bar.width(ConfluenceChatConfig.barWidth);
         this.version = this.getConfigParameter('chat-version');
+        this.debug = "true" == this.getConfigParameter('chat-debugMode');
+        this.hideInEditMode = "true" == this.getConfigParameter('chat-hideInEditMode');
         AJS.log('Init Confluence Chat in version: ' + this.version);
+        if(this.hideInEditMode){
+            if(jQuery('body').hasClass('edit')){
+                this.log('Confluence Chat: Hide the bar in editor');
+                this.bar.hide();
+            }
+        }else {
+            this.log('Confluence Chat: Show the bar in editor');
+        }
+        
         this.username = AJS.params.remoteUser;
         //        this.bar.find('.aui-dd-parent').dropDown("Standard", {
         //            alignment: "left", 

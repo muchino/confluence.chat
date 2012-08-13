@@ -18,6 +18,8 @@ public class ChatConfiguration implements Serializable {
     private Boolean allowAll = true;
     private Boolean showWhereIam = true;
     private String chatVersionPlain = "0";
+    private Boolean hideInEditMode = false;
+    private Boolean debugMode = false;
 
     public ChatConfiguration() {
     }
@@ -77,4 +79,32 @@ public class ChatConfiguration implements Serializable {
     public void setChatVersionPlain(String chatVersionPlain) {
         this.chatVersionPlain = chatVersionPlain;
     }
+
+    /**
+     * @return the hideInEditMode
+     */
+    public Boolean getHideInEditMode() {
+        return hideInEditMode;
     }
+
+    /**
+     * @param hideInEditMode the hideInEditMode to set
+     */
+    public void setHideInEditMode(Boolean hideInEditMode) {
+        this.hideInEditMode = hideInEditMode;
+    }
+
+    /**
+     * @return the debugMode
+     */
+    public Boolean getDebugMode() {
+        return debugMode;
+    }
+
+    /**
+     * @param debugMode the debugMode to set
+     */
+    public void setDebugMode(Boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+}
