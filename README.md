@@ -14,17 +14,21 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 * Autoaway
 
 ## Releases
+### 1.1.1 
+* Add configuration to hide the configuration in edit mode. 
+* Add configuration to enable javascript debug mode.
+* At the "Where I am Info" Url parser, I had forgotten the contextPath
 
 ### 1.1.0
-Add a chat user link macro
-Add Configuration of chat restriction (All or by groups)
-Add possibility to switch off the "where I am Info"
-New small Javascript API, to start chats from outside  "ConfluenceChatAPI"
+* Add a chat user link macro
+* Add Configuration of chat restriction (All or by groups)
+* Add possibility to switch off the "where I am Info"
+* New small Javascript API, to start chats from outside  "ConfluenceChatAPI"
 
-Change window behaviour (close oldest, if there is not enough space  - similar to gtalk))
-Improved request permission
-Improved the js
-Added version number to js 
+* Change window behaviour (close oldest, if there is not enough space  - similar to gtalk))
+* Improved request permission
+* Improved the js
+* Added version number to js 
 
 ### 1.0.1 
 This release fixes the  important contextPath issue. If confluence is  running under a certain contextPath, like "/confluence" the chat doesn't work. Additional fixes:
