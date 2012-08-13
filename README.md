@@ -14,7 +14,11 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 * Autoaway
 
 ## Releases
-
+### 1.1.1 
+* Add configuration to hide the configuration in edit mode. 
+* Add configuration to enable javascript debug mode.
+* At the "Where I am Info" Url parser, I had forgotten the contextPath
+* 
 ### 1.1.0
 Add a chat user link macro
 Add Configuration of chat restriction (All or by groups)
