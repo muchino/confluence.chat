@@ -18,6 +18,7 @@
     <version>1.1.2-SNAPSHOOT</version>
     <organization>
         <name>Oliver Straesser</name>
+        <url>https://github.com/muchino/confluence.chat</url>
     </organization>
     <repositories>
                 <!--
