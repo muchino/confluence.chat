@@ -15,7 +15,7 @@
     <packaging>atlassian-plugin</packaging>
     <name>Confluence Chat</name>
     <description>A simple built-in chat for confluence</description>
-    <version>1.1.1</version>
+    <version>1.1.2-SNAPSHOOT</version>
     <organization>
         <name>Oliver Straesser</name>
     </organization>
@@ -70,7 +70,7 @@
 <!--        needed for org.twdata.maven:maven-cli-plugi-->
         <repository>
             <id>repository.jboss.org</id>
-            <url>http://repository.jboss.org/maven2/</url>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
             <releases>
                 <checksumPolicy>fail</checksumPolicy>
             </releases>
