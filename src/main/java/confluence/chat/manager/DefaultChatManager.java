@@ -143,6 +143,7 @@ public final class DefaultChatManager implements ChatManager {
         }
         if (preferences == null) {
             preferences = new ChatPreferences();
+            this.setPreferencesOfUser(username, preferences);
         }
         return preferences;
     }

@@ -776,7 +776,7 @@ ConfluenceChatConfig = {
             jQuery(this).addClass('cb-ts');
         });
         jQuery('<div/>').addClass('cb-input').append(this.textarea).appendTo(contentHolder);
-        that.box.appendTo(jQuery( "body" ));
+        this.box.appendTo(jQuery( "body" ));
   
         if (this.minimizeChatBox == 1 || this.isMinimized()) {
             this.minimize();
@@ -787,6 +787,8 @@ ConfluenceChatConfig = {
         }).mouseover(function(){
             that.stopBlink();
         });
+        this.box.find('textarea').chatAutogrow();
+        
     }
     ChatBox.prototype.show= function() {
         if(this.initialized){

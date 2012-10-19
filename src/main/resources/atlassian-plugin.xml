@@ -71,6 +71,7 @@
         </package>
     </xwork>
     <web-resource key="chat-files" name="Chat Files">
+        <resource type="download" name="jquery.autogrow-textarea.js" location="confluence/chat/js/jquery.autogrow-textarea.js"/>
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
         <resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
