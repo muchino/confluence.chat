@@ -2,7 +2,7 @@ package confluence.chat.config;
 
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.opensymphony.webwork.ServletActionContext;
-import confluence.chat.actions.ChatManager;
+import confluence.chat.manager.ChatManager;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;

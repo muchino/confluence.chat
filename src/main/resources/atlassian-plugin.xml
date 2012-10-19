@@ -10,9 +10,9 @@
     </plugin-info>
     <resource name="i18n" type="i18n" location="confluence/chat/chat" />
 
-    <component key="chatManager" alias="chatManager"  public="true" name="chatManager" class="confluence.chat.actions.DefaultChatManager">
+    <component key="chatManager" alias="chatManager"  public="true" name="chatManager" class="confluence.chat.manager.DefaultChatManager">
         <description>The Manager to retrieve ansdeliver the chat messages</description>
-        <interface>confluence.chat.actions.ChatManager</interface>
+        <interface>confluence.chat.manager.ChatManager</interface>
     </component>
     <component-import key="transactionTemplate">
         <description>Import the com.atlassian.sal.api.transaction.TransactionTemplate</description>

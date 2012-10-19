@@ -2,8 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package confluence.chat.actions;
+package confluence.chat.manager;
 
+import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatUserList;
+import confluence.chat.model.ChatPreferences;
+import confluence.chat.model.ChatStatus;
+import confluence.chat.model.ChatBoxId;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxMap;
+import confluence.chat.model.ChatMessageList;
+import confluence.chat.model.ChatMessage;
 import com.atlassian.bandana.BandanaManager;
 import com.atlassian.confluence.setup.bandana.ConfluenceBandanaContext;
 import com.atlassian.confluence.user.UserAccessor;
@@ -76,7 +85,6 @@ public final class DefaultChatManager implements ChatManager {
         if (!chatBoxes.containsKey(username)) {
 
             return (ChatBoxMap) transactionTemplate.execute(new TransactionCallback() {
-
                 @Override
                 public ChatBoxMap doInTransaction() {
                     ChatBoxMap chatBoxMap = new ChatBoxMap();
@@ -88,16 +96,25 @@ public final class DefaultChatManager implements ChatManager {
                         // Set the classloader to this class's class loader, which should be the plugin classloader
                         xStream.setClassLoader(ChatBox.class.getClassLoader());
                         xStream.alias("ChatBox", ChatBox.class);
-                        Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
-                        while (iterator.hasNext()) {
-                            String chatBoxId = iterator.next();
-                            try {
-                                ChatBox chatBox = (ChatBox) bandanaManager.getValue(confluenceBandanaContext, chatBoxId);
-                                chatBoxMap.put(chatBoxId, chatBox);
-                            } catch (Exception e) {
-                                logger.warn(" error bandanaManager.getValue for chat box  " + chatBoxId + " for user: " + username);
-                                validChatBox = false;
+                        try {
+                            Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
+                            while (iterator.hasNext()) {
+                                String chatBoxId = iterator.next();
+                                try {
+                                    ChatBox chatBox = (ChatBox) bandanaManager.getValue(confluenceBandanaContext, chatBoxId);
+                                    if (chatBox == null) {
+                                        bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
+
+                                    } else {
+                                        chatBoxMap.put(chatBoxId, chatBox);
+                                    }
+                                } catch (Exception e) {
+                                    logger.warn(" error bandanaManager.getValue for chat box  " + chatBoxId + " for user: " + username);
+                                    validChatBox = false;
+                                }
                             }
+                        } catch (Exception e) {
+                            logger.warn(" error getChatBoxes " + username, e);
                         }
                     } catch (Exception e) {
                         logger.warn(" error getChatBoxes " + username, e);
@@ -139,7 +156,6 @@ public final class DefaultChatManager implements ChatManager {
     public void sendMessage(final String sender, final String receiver, final String message) {
 
         transactionTemplate.execute(new TransactionCallback() {
-
             @Override
             public Boolean doInTransaction() {
                 ChatMessage chatMessage = new ChatMessage();
@@ -165,7 +181,6 @@ public final class DefaultChatManager implements ChatManager {
     @Override
     public void closeChatBox(final User user, final ChatBoxId chatBoxId) {
         transactionTemplate.execute(new TransactionCallback() {
-
             @Override
             public Boolean doInTransaction() {
                 ChatBox chatBoxById = getChatBoxes(user).getChatBoxById(chatBoxId);

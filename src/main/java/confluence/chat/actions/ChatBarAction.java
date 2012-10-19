@@ -1,5 +1,6 @@
 package confluence.chat.actions;
 
+import confluence.chat.manager.ChatManager;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 
 public class ChatBarAction extends ConfluenceActionSupport {

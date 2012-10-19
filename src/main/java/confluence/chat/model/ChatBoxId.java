@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package confluence.chat.actions;
+package confluence.chat.model;
 
 import com.atlassian.user.User;
 import java.io.Serializable;

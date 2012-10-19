@@ -5,7 +5,7 @@
 package confluence.chat.utils;
 
 import confluence.chat.ChatVersion;
-import confluence.chat.actions.ChatManager;
+import confluence.chat.manager.ChatManager;
 
 /**
  *

@@ -1,5 +1,8 @@
 package confluence.chat.actions;
 
+import confluence.chat.manager.ChatManager;
+import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatStatus;
 import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.sal.api.transaction.TransactionCallback;

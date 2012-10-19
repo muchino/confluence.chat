@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package confluence.chat.actions;
+package confluence.chat.model;
 
 import java.io.Serializable;
 import java.util.HashMap;

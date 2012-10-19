@@ -2,8 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package confluence.chat.actions;
+package confluence.chat.manager;
 
+import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatPreferences;
+import confluence.chat.model.ChatStatus;
+import confluence.chat.model.ChatBoxId;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxMap;
 import com.atlassian.user.User;
 import confluence.chat.config.ChatConfiguration;
 import java.util.List;

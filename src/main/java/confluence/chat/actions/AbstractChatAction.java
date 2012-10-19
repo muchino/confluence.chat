@@ -1,5 +1,13 @@
 package confluence.chat.actions;
 
+import confluence.chat.manager.ChatManager;
+import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatStatus;
+import confluence.chat.model.ChatBoxId;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxMap;
+import confluence.chat.model.ChatMessageList;
+import confluence.chat.model.ChatMessage;
 import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.confluence.pages.PageManager;

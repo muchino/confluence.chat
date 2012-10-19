@@ -8,7 +8,7 @@ import com.atlassian.user.EntityException;
 import com.atlassian.user.Group;
 import com.atlassian.user.GroupManager;
 import com.atlassian.user.User;
-import confluence.chat.actions.ChatManager;
+import confluence.chat.manager.ChatManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

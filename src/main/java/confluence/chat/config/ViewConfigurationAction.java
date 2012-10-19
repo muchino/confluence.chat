@@ -1,7 +1,7 @@
 package confluence.chat.config;
 
 import com.atlassian.confluence.core.ConfluenceActionSupport;
-import confluence.chat.actions.ChatManager;
+import confluence.chat.manager.ChatManager;
 import java.util.List;
 
 public class ViewConfigurationAction extends ConfluenceActionSupport {

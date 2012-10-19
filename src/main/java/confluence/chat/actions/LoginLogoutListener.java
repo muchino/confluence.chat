@@ -1,5 +1,8 @@
 package confluence.chat.actions;
 
+import confluence.chat.manager.ChatManager;
+import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatStatus;
 import com.atlassian.confluence.event.events.security.LoginEvent;
 import com.atlassian.confluence.event.events.security.LogoutEvent;
 import com.atlassian.event.Event;

@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package confluence.chat.actions;
+package confluence.chat.model;
 
+import confluence.chat.manager.ChatManager;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;

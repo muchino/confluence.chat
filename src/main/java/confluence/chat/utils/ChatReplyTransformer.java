@@ -10,7 +10,7 @@ import com.atlassian.confluence.security.Permission;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.util.GeneralUtil;
 import com.atlassian.user.User;
-import confluence.chat.actions.ChatUser;
+import confluence.chat.model.ChatUser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
