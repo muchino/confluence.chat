@@ -1,10 +1,9 @@
 package confluence.chat.actions;
 
-import confluence.chat.manager.ChatManager;
 import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
+import confluence.chat.manager.ChatManager;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GetOnlineUserAction extends AbstractChatAction {
@@ -21,9 +20,7 @@ public class GetOnlineUserAction extends AbstractChatAction {
     @Override
     public Object getBean() {
         Map<String, Object> bean = new HashMap<String, Object>();
-        
-        List<Map> chatUserListToMap = getChatReplyTransformer().chatUserListToMap(getRemoteUser() , getChatManager().getOnlineUsers());
-        bean.put("users", chatUserListToMap);
+        bean.put("users", getChatReplyTransformer().chatUserListToMap(getRemoteUser(), getChatManager().getOnlineUsers()));
         return bean;
     }
 }

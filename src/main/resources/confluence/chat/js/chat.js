@@ -424,6 +424,26 @@ ConfluenceChatConfig = {
             return false;
         }).attr('data-user-chat-bound', true);
     }
+    ChatBar.prototype.reorderUser = function(){
+        var sortByFullname = function (a,b){
+            var val = $(a).find('.user-hover-trigger').text().toLowerCase() > $(b).find('.user-hover-trigger').text().toLowerCase();
+            if(val) {
+                return 1
+            }else {
+                return -1
+            }
+        }
+        var that = this;
+        var reorderEl = function (el){
+            var container = that.chatOnlineUserDiv;
+            container.empty();
+            el.each(function(){
+                $(this).appendTo(container);
+            });
+        }
+        reorderEl(this.chatOnlineUserDiv.find('.chat-user').sort(sortByFullname));
+        
+    }
     ChatBar.prototype.refreshUser = function(data){
         var that = this;
         var tmpAttr = 'chatOfflineMeFlag-'+Math.round(Math.random() * 10000);
@@ -454,6 +474,7 @@ ConfluenceChatConfig = {
                         });
                     });
                     that.chatOnlineUserDiv.append(chatUser);
+                    that.reorderUser();
                     try{
                         AJS.Confluence.Binder.userHover();
                     }catch(e){}

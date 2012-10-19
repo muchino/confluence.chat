@@ -10,9 +10,11 @@ import com.atlassian.confluence.security.Permission;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.util.GeneralUtil;
 import com.atlassian.user.User;
+import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatUserMapComparable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
@@ -32,10 +34,10 @@ public class ChatReplyTransformer {
         this.permissionManager = permissionManager;
     }
 
-    public List<Map> chatUserListToMap(User user, List<ChatUser> chatusers) {
-        List<Map> list = new ArrayList<Map>();
+    public List<ChatUserMapComparable> chatUserListToMap(User user, List<ChatUser> chatusers) {
+        List<ChatUserMapComparable> list = new ArrayList<ChatUserMapComparable>();
         for (int i = 0; i < chatusers.size(); i++) {
-            Map<String, String> userMap = new HashMap<String, String>();
+            ChatUserMapComparable userMap = new ChatUserMapComparable();
             Map<String, String> jsonMap = chatusers.get(i).getJSONMap();
 
             for (Map.Entry<String, String> entry : jsonMap.entrySet()) {
