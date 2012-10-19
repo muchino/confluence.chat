@@ -42,7 +42,6 @@ ConfluenceChatConfig = {
                         jQuery('body').append(html);
                         that.requestSuccessHandler();
                         that.init();
-                    
                     }
                 });
             }
@@ -53,7 +52,18 @@ ConfluenceChatConfig = {
     
     }
     
+    ChatBar.prototype.isSound= function(){  
+        return !jQuery('#chatbar .csound').hasClass('csound-off');
+    }
     
+    ChatBar.prototype.deactivateSound= function(){  
+        jQuery('#chatbar .csound').addClass('csound-off');
+        AJS.Cookie.save("chatsoundoff", "true");
+    }
+    ChatBar.prototype.activateSound= function(){  
+        jQuery('#chatbar .csound').removeClass('csound-off');
+        AJS.Cookie.erase("chatsoundoff");
+    }        
     ChatBar.prototype.getStatusOfUser= function(username){  
         if(username in this.users){
             if('s' in this.users[username]){
@@ -163,8 +173,8 @@ ConfluenceChatConfig = {
         this.mousemove = false;
     }
     /**
-     *
-     */
+         *
+         */
     ChatBar.prototype.closeOldestChatBox = function() {
         this.log('closeOldestChatBox ');
         var lastBox= null;
@@ -262,7 +272,7 @@ ConfluenceChatConfig = {
         //        });
         this.onlineUsersBox =  this.bar.find('#chatbar-online-users');
         this.configurationBox =  this.bar.find('#chatbar-config');
-        this.bar.find('#chatbar-button-online, #chatbar-online-users .cb-opt a').click(function(){
+        this.bar.find('#chatbar-button-online .online,#chatbar-button-online .offline, #chatbar-online-users .cb-opt a').click(function(){
             if(that.chatDeactivated){
                 return false;
             }
@@ -300,7 +310,23 @@ ConfluenceChatConfig = {
                     that.setStatus(status);
                 }
             });
-        })
+        });
+        
+        var soundDeactivated = AJS.Cookie.read("chatsoundoff");
+        if(soundDeactivated  == "true"){
+            that.deactivateSound(); 
+        }else {
+            that.activateSound(); 
+        }
+        
+        this.bar.find('.csound').click(function(){
+            console.log('sound chamge');
+            if(that.isSound()){
+                that.deactivateSound();       
+            }else {
+                that.activateSound()
+            }
+        });
    
     
         this.chatOnlineUserDiv = this.onlineUsersBox.find('#chatbar-online-users-list');
@@ -367,12 +393,12 @@ ConfluenceChatConfig = {
 
 
     /**
-     *  optjext like: 
-     *  chatboxid: ''
-     *  chatuserList: ''
-     *  dispayTitle: ''
-     *  message
-     */
+         *  optjext like: 
+         *  chatboxid: ''
+         *  chatuserList: ''
+         *  dispayTitle: ''
+         *  message
+         */
     ChatBar.prototype.chatWith = function(options){
         var opts= jQuery.extend({
             chatBoxId: null,
@@ -443,6 +469,16 @@ ConfluenceChatConfig = {
         }
         reorderEl(this.chatOnlineUserDiv.find('.chat-user').sort(sortByFullname));
         
+        this.chatOnlineUserDiv.find('.chat-user').click(function(){
+            that.chatWith({
+                chatBoxId: jQuery(this).attr('chatBoxId'),
+                chatUserList : jQuery(this).attr('username'),
+                dispayTitle : jQuery(this).find('.chat-user-info span.user-hover-trigger').text(),
+                focus: true
+            });
+        });
+        
+        
     }
     ChatBar.prototype.refreshUser = function(data){
         var that = this;
@@ -465,14 +501,6 @@ ConfluenceChatConfig = {
                     chatUser.attr('username', username);
                     chatUser.find('.chat-user-info .is').text(user.fn).addClass('user-hover-trigger').attr('data-username', username);
                     chatUser.find('.chat-where').addClass('chat-where'+chatBoxId);
-                    chatUser.click(function(){
-                        that.chatWith({
-                            chatBoxId: jQuery(this).attr('chatBoxId'),
-                            chatUserList : jQuery(this).attr('username'),
-                            dispayTitle : jQuery(this).find('.chat-user-info span.user-hover-trigger').text(),
-                            focus: true
-                        });
-                    });
                     that.chatOnlineUserDiv.append(chatUser);
                     that.reorderUser();
                     try{
@@ -488,8 +516,8 @@ ConfluenceChatConfig = {
                     img.attr('src', user.p);
                 }
                 /**
-                 *wo befindet sich der user
-                 */
+                     *wo befindet sich der user
+                     */
                 var userWhere = jQuery('.chat-where'+chatBoxId);
             
                 if(typeof user.su != "undefined" && typeof user.st != "undefined" ){
@@ -537,9 +565,9 @@ ConfluenceChatConfig = {
     
     ChatBar.prototype.initCompatibility= function(){
         /**
-         * Compatibility with Task List
-         * The task list elements flickers
-         */
+             * Compatibility with Task List
+             * The task list elements flickers
+             */
         jQuery(document).ready(function(){
             // aus confluence.extra.dynamictasklist2:web-resources.js
             var S="input.taskname-text, button.add-button, button.uncheck-all, select.sort-select, button.sort-order, "
@@ -620,12 +648,12 @@ ConfluenceChatConfig = {
     }
 
     /**
-     * chatBoxId : chatboxid, 
-     * chatUserList: chatUserList,
-     *  minimizeChatBox: false,
-     *  messages: messages,
-     *   dispayTitle: dispayTitle
-     */
+         * chatBoxId : chatboxid, 
+         * chatUserList: chatUserList,
+         *  minimizeChatBox: false,
+         *  messages: messages,
+         *   dispayTitle: dispayTitle
+         */
     function ChatBox(options){
     
         this.opt = jQuery.extend({
@@ -707,7 +735,15 @@ ConfluenceChatConfig = {
             this.blinkInterval = window.setInterval(function(){
                 that.blink();
             }, 1000);
-        
+            try{
+                if(chatBar.isSound()){
+                    var audio = document.getElementById('chatsound');
+                    audio.play();
+                }
+            }
+            catch(err){
+                chatBar.log("Error playing sound");
+            }
         }
     }
     ChatBox.prototype.stopBlink = function(){
@@ -774,8 +810,8 @@ ConfluenceChatConfig = {
 
         jQuery('<div/>').addClass('cb-content').appendTo(contentHolder);
         /**
-         * Who ist der User gerade
-         */
+             * Who ist der User gerade
+             */
     
         var chatWhere = jQuery('<div/>').addClass('chat-where chat-where'+this.chatBoxId).hide();
         jQuery('<span/>').appendTo(jQuery('<a/>').attr('href', '#').addClass('icon icon-page').text('').appendTo(chatWhere));

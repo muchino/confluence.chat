@@ -20,6 +20,25 @@
     </component-import>
     <resource name="images-chat/" type="download" location="confluence/chat/img/" />
     
+    
+    
+    
+    <resource type="download" name="button-9.m4a" location="confluence/chat/assets/button-9.m4a">
+        <property key="content-type" value="audio/x-aac"/>
+        <param name="content-type" value="audio/x-aac"/>
+    </resource>
+    <resource type="download" name="button-9.mp3" location="confluence/chat/assets/button-9.mp3">
+        <property key="content-type" value="audio/mpeg"/>
+        <param name="content-type" value="audio/mpeg"/>
+    </resource>
+    <resource type="download" name="button-9.ogg" location="confluence/chat/assets/button-9.ogg">
+        <property key="content-type" value="audio/ogg"/>
+        <param name="content-type" value="audio/ogg"/>
+    </resource>
+    
+            
+    
+    
     <xwork name="Chat" key="confluence.chat">
         
         <package name="Chat Config" extends="default"  namespace="/admin/plugins/${atlassian.plugin.key}">
@@ -96,7 +115,7 @@
         <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
     </web-item>
     
-<!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
+    <!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
         <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
         <context>main</context>
     </web-resource>-->

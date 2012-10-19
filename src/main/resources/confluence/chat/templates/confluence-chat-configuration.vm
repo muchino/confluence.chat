@@ -16,7 +16,7 @@
                     </label>
                     <div class="edit">
                         <input class="checkbox" type="checkbox" id="chat-all-users-edit" name="allowAll" title="Allow all signed-in users to access chat" #if ($action.getAllowAllUsers()) checked="checked" #end>
-                               <div class="description">Allow all signed-in users to access chat. Should only be checked if this application is private and the entire user base is trusted.</div>
+                            <div class="description">Allow all signed-in users to access chat. Should only be checked if this application is private and the entire user base is trusted.</div>
                     </div>
                     <div class="view">
                         <div id="chat-all-users-view" class="field-value">
@@ -50,7 +50,7 @@
                     </label>
                     <div class="edit">
                         <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="showWhereIam"  autocomplete="off"  title="Show the browsed page of the signed-in users " #if ($action.getShowWhereIam()) checked="checked" #end>
-                               <div class="description">Show the browsed page of the signed-in users</div>
+                            <div class="description">Show the browsed page of the signed-in users</div>
                     </div>
                     <div class="view">
                         <div id="chat-all-location-view" class="field-value">
@@ -63,13 +63,32 @@
                     </div>
                 </div>
                 <div class="field-group">
+                    <label for="chat-all-settings-edit">
+                        Play sound
+                        <span class="form-icon icon-required"></span>
+                    </label>
+                    <div class="edit">
+                        <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="playSound"  autocomplete="off"  title="plays a sound when a chat message arrives" #if ($action.getPlaySound()) checked="checked" #end>
+                            <div class="description">plays a sound when a chat message arrives</div>
+                    </div>
+                    <div class="view">
+                        <div class="field-value">
+                            #if ($action.getPlaySound())
+                            Yes
+                            #else
+                            No
+                            #end
+                        </div>
+                    </div>
+                </div>                
+                <div class="field-group">
                     <label for="chat-hideInEditMode">
                         Hide in editor
                         <span class="form-icon icon-required"></span>
                     </label>
                     <div class="edit">
                         <input class="checkbox" type="checkbox" id="chat-hideInEditMode" name="hideInEditMode"  autocomplete="off"  title="Hide the chatbar in the page editor " #if ($action.getHideInEditMode()) checked="checked" #end>
-                               <div class="description">Hide the chatbar in the page editor (the chat boxes are visible)</div>
+                            <div class="description">Hide the chatbar in the page editor (the chat boxes are visible)</div>
                     </div>
                     <div class="view">
                         <div id="chat-hideInEditMode" class="field-value">
@@ -88,7 +107,7 @@
                     </label>
                     <div class="edit">
                         <input class="checkbox" type="checkbox" id="chat-debugMode" name="debugMode" autocomplete="off" title="Extended js logging " #if ($action.getDebugMode()) checked="checked" #end>
-                               <div class="description">Activate the extended js logging</div>
+                            <div class="description">Activate the extended js logging</div>
                     </div>
                     <div class="view">
                         <div id="chat-debugMode" class="field-value">

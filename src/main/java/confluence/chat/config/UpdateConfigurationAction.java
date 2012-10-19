@@ -25,6 +25,7 @@ public class UpdateConfigurationAction extends ConfluenceActionSupport {
         
         chatConfiguration.setDebugMode(StringUtils.isNotEmpty(request.getParameter("debugMode")));
         chatConfiguration.setHideInEditMode(StringUtils.isNotEmpty(request.getParameter("hideInEditMode")));
+        chatConfiguration.setPlaySound(StringUtils.isNotEmpty(request.getParameter("playSound")));
         
         List<String> groups = chatConfiguration.getGroups();
         groups.clear();

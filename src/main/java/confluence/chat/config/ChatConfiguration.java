@@ -17,6 +17,7 @@ public class ChatConfiguration implements Serializable {
     private List<String> groups = new ArrayList<String>();
     private Boolean allowAll = true;
     private Boolean showWhereIam = true;
+    private Boolean playSound = true;
     private String chatVersionPlain = "0";
     private Boolean hideInEditMode = false;
     private Boolean debugMode = false;
@@ -106,5 +107,19 @@ public class ChatConfiguration implements Serializable {
      */
     public void setDebugMode(Boolean debugMode) {
         this.debugMode = debugMode;
+    }
+
+    /**
+     * @return the playSound
+     */
+    public Boolean getPlaySound() {
+        return playSound;
+    }
+
+    /**
+     * @param playSound the playSound to set
+     */
+    public void setPlaySound(Boolean playSound) {
+        this.playSound = playSound;
     }
 }
