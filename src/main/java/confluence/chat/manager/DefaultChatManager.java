@@ -4,15 +4,6 @@
  */
 package confluence.chat.manager;
 
-import confluence.chat.model.ChatUser;
-import confluence.chat.model.ChatUserList;
-import confluence.chat.model.ChatPreferences;
-import confluence.chat.model.ChatStatus;
-import confluence.chat.model.ChatBoxId;
-import confluence.chat.model.ChatBox;
-import confluence.chat.model.ChatBoxMap;
-import confluence.chat.model.ChatMessageList;
-import confluence.chat.model.ChatMessage;
 import com.atlassian.bandana.BandanaManager;
 import com.atlassian.confluence.setup.bandana.ConfluenceBandanaContext;
 import com.atlassian.confluence.user.UserAccessor;
@@ -22,10 +13,18 @@ import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.user.GroupManager;
 import com.atlassian.user.User;
 import com.thoughtworks.xstream.XStream;
-import confluence.chat.ChatVersion;
 import confluence.chat.Version;
 import confluence.chat.conditions.ChatUseCondition;
 import confluence.chat.config.ChatConfiguration;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxId;
+import confluence.chat.model.ChatBoxMap;
+import confluence.chat.model.ChatMessage;
+import confluence.chat.model.ChatMessageList;
+import confluence.chat.model.ChatPreferences;
+import confluence.chat.model.ChatStatus;
+import confluence.chat.model.ChatUser;
+import confluence.chat.model.ChatUserList;
 import confluence.chat.utils.ChatUtils;
 import confluence.chat.utils.ChatVersionTransformer;
 import java.util.*;
@@ -79,6 +78,35 @@ public final class DefaultChatManager implements ChatManager {
         return getChatBoxes(user.getName());
     }
 
+    /**
+     * Returns how many chatboxes a user have
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    public Integer countChatBoxes(final String username) {
+        return (Integer) transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Integer doInTransaction() {
+                ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(username);
+                int count = 0;
+                Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
+                while (iterator.hasNext()) {
+                    iterator.next();
+                    count++;
+                }
+                return count;
+            }
+        });
+    }
+
+    /**
+     * Returns all chatboxes of an user
+     *
+     * @param username
+     * @return
+     */
     private ChatBoxMap getChatBoxes(final String username) {
 
 
@@ -187,6 +215,20 @@ public final class DefaultChatManager implements ChatManager {
                 ChatBox chatBoxById = getChatBoxes(user).getChatBoxById(chatBoxId);
                 chatBoxById.close();
                 saveChatBox(user.getName(), chatBoxById);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void deleteChatBox(final User user, final ChatBoxId chatBoxId) {
+        transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Boolean doInTransaction() {
+                getChatBoxes(user).remove(chatBoxId);
+                ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(user.getName());
+                bandanaManager.removeValue(confluenceBandanaContext, chatBoxId.toString());
+
                 return true;
             }
         });

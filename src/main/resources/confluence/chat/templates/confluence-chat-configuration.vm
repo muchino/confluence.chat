@@ -1,135 +1,163 @@
+#putMetadata('activeTab', $action.getActiveTab())
 <html>
     <head>
         #requireResource("confluence.chat:chat-files-admin")
         <title>Confluence Chat Configuration</title>
     </head>
     <body>
-        <h1>Confluence Chat  Configuration</h1>
-        <p>The following settings define who has access to the chat in the system.</p>
-        <form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
-            <fieldset>
-                <h2>Chat Access</h2>
-                <div class="field-group">
-                    <label for="chat-all-users-edit">
-                        Allow all
-                        <span class="form-icon icon-required"></span>
-                    </label>
-                    <div class="edit">
-                        <input class="checkbox" type="checkbox" id="chat-all-users-edit" name="allowAll" title="Allow all signed-in users to access chat" #if ($action.getAllowAllUsers()) checked="checked" #end>
-                            <div class="description">Allow all signed-in users to access chat. Should only be checked if this application is private and the entire user base is trusted.</div>
-                    </div>
-                    <div class="view">
-                        <div id="chat-all-users-view" class="field-value">
-                            #if ($action.getAllowAllUsers())
-                            Yes
-                            #else
-                            No
-                            #end
-                        </div>
-                    </div>
-                </div>
-                <div class="field-group" id="chat-access-groups">
-                    <label for="chat-access-groups-edit">
-                        Restrict to groups
-                        <span class="form-icon icon-required"></span>
-                    </label>
-                    <div class="edit">
-                        <textarea id="chat-access-groups-edit" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off">$action.getAccessGroupsLines()</textarea>
-                        <div class="description">Groups allowed to access the chat, one per line. Only used if <em>Allow all</em> is unchecked.</div>
-                    </div>
-                    <div class="view">
-                        <div id="chat-access-groups-view" class="field-value">$action.getAccessGroupsCSV()</div>
-                    </div>
-                </div>
+        <div class="aui-tabs horizontal-tabs">
+            <ul class="tabs-menu">
+                <li class="menu-item active-tab">
+                    <a href="#chatconfig"><strong>Chat Configuration</strong></a>
+                </li>
+                <li class="menu-item">
+                    <a href="#history"><strong>Histories</strong></a>
+                </li>
+            </ul>
+            <div id="chatconfig" class="tabs-pane active-pane">
 
-                <h2>Chat Settings</h2>
-                <div class="field-group">
-                    <label for="chat-all-settings-edit">
-                        Show browsing location
-                        <span class="form-icon icon-required"></span>
-                    </label>
-                    <div class="edit">
-                        <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="showWhereIam"  autocomplete="off"  title="Show the browsed page of the signed-in users " #if ($action.getShowWhereIam()) checked="checked" #end>
-                            <div class="description">Show the browsed page of the signed-in users</div>
-                    </div>
-                    <div class="view">
-                        <div id="chat-all-location-view" class="field-value">
-                            #if ($action.getShowWhereIam())
-                            Yes
-                            #else
-                            No
-                            #end
+                <p>The following settings define who has access to the chat in the system.</p>
+                <form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
+                    <fieldset>
+                        <h2>Chat Access</h2>
+                        <div class="field-group">
+                            <label for="chat-all-users-edit">
+                                Allow all
+                                <span class="form-icon icon-required"></span>
+                            </label>
+                            <div class="edit">
+                                <input class="checkbox" type="checkbox" id="chat-all-users-edit" name="allowAll" title="Allow all signed-in users to access chat" #if ($action.getAllowAllUsers()) checked="checked" #end>
+                                    <div class="description">Allow all signed-in users to access chat. Should only be checked if this application is private and the entire user base is trusted.</div>
+                            </div>
+                            <div class="view">
+                                <div id="chat-all-users-view" class="field-value">
+                                    #if ($action.getAllowAllUsers())
+                                    Yes
+                                    #else
+                                    No
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group" id="chat-access-groups">
+                            <label for="chat-access-groups-edit">
+                                Restrict to groups
+                                <span class="form-icon icon-required"></span>
+                            </label>
+                            <div class="edit">
+                                <textarea id="chat-access-groups-edit" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off">$action.getAccessGroupsLines()</textarea>
+                                <div class="description">Groups allowed to access the chat, one per line. Only used if <em>Allow all</em> is unchecked.</div>
+                            </div>
+                            <div class="view">
+                                <div id="chat-access-groups-view" class="field-value">$action.getAccessGroupsCSV()</div>
+                            </div>
+                        </div>
+
+                        <h2>Chat Settings</h2>
+                        <div class="field-group">
+                            <label for="chat-all-settings-edit">
+                                Show browsing location
+                                <span class="form-icon icon-required"></span>
+                            </label>
+                            <div class="edit">
+                                <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="showWhereIam"  autocomplete="off"  title="Show the browsed page of the signed-in users " #if ($action.getShowWhereIam()) checked="checked" #end>
+                                    <div class="description">Show the browsed page of the signed-in users</div>
+                            </div>
+                            <div class="view">
+                                <div id="chat-all-location-view" class="field-value">
+                                    #if ($action.getShowWhereIam())
+                                    Yes
+                                    #else
+                                    No
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label for="chat-all-settings-edit">
+                                Play sound
+                                <span class="form-icon icon-required"></span>
+                            </label>
+                            <div class="edit">
+                                <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="playSound"  autocomplete="off"  title="plays a sound when a chat message arrives" #if ($action.getPlaySound()) checked="checked" #end>
+                                    <div class="description">plays a sound when a chat message arrives</div>
+                            </div>
+                            <div class="view">
+                                <div class="field-value">
+                                    #if ($action.getPlaySound())
+                                    Yes
+                                    #else
+                                    No
+                                    #end
+                                </div>
+                            </div>
+                        </div>                
+                        <div class="field-group">
+                            <label for="chat-hideInEditMode">
+                                Hide in editor
+                                <span class="form-icon icon-required"></span>
+                            </label>
+                            <div class="edit">
+                                <input class="checkbox" type="checkbox" id="chat-hideInEditMode" name="hideInEditMode"  autocomplete="off"  title="Hide the chatbar in the page editor " #if ($action.getHideInEditMode()) checked="checked" #end>
+                                    <div class="description">Hide the chatbar in the page editor (the chat boxes are visible)</div>
+                            </div>
+                            <div class="view">
+                                <div id="chat-hideInEditMode" class="field-value">
+                                    #if ($action.getHideInEditMode())
+                                    Yes
+                                    #else
+                                    No
+                                    #end
+                                </div>
+                            </div>
+                        </div>                
+                        <div class="field-group">
+                            <label for="chat-debugMode">
+                                Debug Mode
+                                <span class="form-icon icon-required"></span>
+                            </label>
+                            <div class="edit">
+                                <input class="checkbox" type="checkbox" id="chat-debugMode" name="debugMode" autocomplete="off" title="Extended js logging " #if ($action.getDebugMode()) checked="checked" #end>
+                                    <div class="description">Activate the extended js logging</div>
+                            </div>
+                            <div class="view">
+                                <div id="chat-debugMode" class="field-value">
+                                    #if ($action.getDebugMode())
+                                    Yes
+                                    #else
+                                    No
+                                    #end
+                                </div>
+                            </div>
+                        </div>                    
+                    </fieldset>
+                    <div class="buttons-container">
+                        <div class="buttons view">
+                            <a id="chat-edit" class="view" href="#edit">Edit</a>
+                        </div>
+                        <div class="buttons edit">
+                            <input id="chat-save" class="button submit" type="submit" value="Save">
+                                <a href="viewconfiguration.action">Cancel</a>
                         </div>
                     </div>
-                </div>
-                <div class="field-group">
-                    <label for="chat-all-settings-edit">
-                        Play sound
-                        <span class="form-icon icon-required"></span>
-                    </label>
-                    <div class="edit">
-                        <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="playSound"  autocomplete="off"  title="plays a sound when a chat message arrives" #if ($action.getPlaySound()) checked="checked" #end>
-                            <div class="description">plays a sound when a chat message arrives</div>
-                    </div>
-                    <div class="view">
-                        <div class="field-value">
-                            #if ($action.getPlaySound())
-                            Yes
-                            #else
-                            No
-                            #end
-                        </div>
-                    </div>
-                </div>                
-                <div class="field-group">
-                    <label for="chat-hideInEditMode">
-                        Hide in editor
-                        <span class="form-icon icon-required"></span>
-                    </label>
-                    <div class="edit">
-                        <input class="checkbox" type="checkbox" id="chat-hideInEditMode" name="hideInEditMode"  autocomplete="off"  title="Hide the chatbar in the page editor " #if ($action.getHideInEditMode()) checked="checked" #end>
-                            <div class="description">Hide the chatbar in the page editor (the chat boxes are visible)</div>
-                    </div>
-                    <div class="view">
-                        <div id="chat-hideInEditMode" class="field-value">
-                            #if ($action.getHideInEditMode())
-                            Yes
-                            #else
-                            No
-                            #end
-                        </div>
-                    </div>
-                </div>                
-                <div class="field-group">
-                    <label for="chat-debugMode">
-                        Debug Mode
-                        <span class="form-icon icon-required"></span>
-                    </label>
-                    <div class="edit">
-                        <input class="checkbox" type="checkbox" id="chat-debugMode" name="debugMode" autocomplete="off" title="Extended js logging " #if ($action.getDebugMode()) checked="checked" #end>
-                            <div class="description">Activate the extended js logging</div>
-                    </div>
-                    <div class="view">
-                        <div id="chat-debugMode" class="field-value">
-                            #if ($action.getDebugMode())
-                            Yes
-                            #else
-                            No
-                            #end
-                        </div>
-                    </div>
-                </div>                    
-            </fieldset>
-            <div class="buttons-container">
-                <div class="buttons view">
-                    <a id="chat-edit" class="view" href="#edit">Edit</a>
-                </div>
-                <div class="buttons edit">
-                    <input id="chat-save" class="button submit" type="submit" value="Save">
-                        <a href="viewconfiguration.action">Cancel</a>
-                </div>
+                </form>
             </div>
-        </form>
-        </form>
+            <div id="history" class="tabs-pane">
+                <table width="100%" class="grid">
+                    <tbody><tr>
+                            <th>User</th>
+                            <th>Boxes</th>
+                            <th></th>
+                        </tr>
+                        #foreach ($mapEntry in $action.getChatBoxes().entrySet())
+                                <td  align="left"><label class="label">$mapEntry.key</label></td>
+                                <td >$mapEntry.value</td>
+                                <td><a href="editchathistory.action?username=$mapEntry.key">Remove</a></td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>                
+            </div>
+        </div>
     </body>
 </html>

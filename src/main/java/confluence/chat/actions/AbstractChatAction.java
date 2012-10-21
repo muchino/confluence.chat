@@ -26,6 +26,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     private static String PARAM_LAST_REQUEST = "lr";
     private static String PARAM_MOUSE_MOVE = "mm";
     private static String PARAM_CLOSE = "close";
+    private static String PARAM_DELETE = "delete";
     private static String PARAM_TO = "to";
     private ChatBoxMap chatBoxMap = new ChatBoxMap();
     private ChatManager chatManager;
@@ -116,6 +117,17 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             String parameter = request.getParameter(PARAM_CLOSE);
             if (StringUtils.isNotBlank(parameter)) {
                 getChatManager().closeChatBox(getRemoteUser(), new ChatBoxId(parameter));
+            }
+        }
+        return SUCCESS;
+    }
+
+    public final String delete() throws Exception {
+        if (hasChatAccess()) {
+            HttpServletRequest request = ServletActionContext.getRequest();
+            String parameter = request.getParameter(PARAM_DELETE);
+            if (StringUtils.isNotBlank(parameter)) {
+                getChatManager().deleteChatBox(getRemoteUser(), new ChatBoxId(parameter));
             }
         }
         return SUCCESS;

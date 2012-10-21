@@ -47,8 +47,12 @@
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>
             <action name="updateconfiguration" class="confluence.chat.config.UpdateConfigurationAction">
-                <result name="success" type="redirect">viewconfiguration.action</result>
-            </action>            
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+            </action>
+            <action name="editchathistory" class="confluence.chat.config.RemoveChatHistoryAction">
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+            </action>                
+            
         </package>
         
         
@@ -66,6 +70,10 @@
                 <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />
             </action>
+            <action name="delete" class="confluence.chat.actions.ChatDeleteHistoryAction" >
+                <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
+                <result name="success" type="json" />
+            </action>            
             <action name="start" class="confluence.chat.actions.ChatStartAction" >
                 <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="json" />

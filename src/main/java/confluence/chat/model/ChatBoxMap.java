@@ -27,4 +27,8 @@ public class ChatBoxMap extends HashMap<String, ChatBox> implements Serializable
         }
         return this.get(chatBoxId.toString());
     }
+    public ChatBox remove(ChatBoxId id){
+        return this.remove(id.toString());
+    }
+    
 }

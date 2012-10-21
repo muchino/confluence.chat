@@ -27,6 +27,8 @@ public interface ChatManager {
     public static final Integer SECONDS_TO_BE_OFFLINE = 30;
 
     void closeChatBox(final User user, final ChatBoxId chatBoxId);
+    
+    void deleteChatBox(final User user, final ChatBoxId chatBoxId);
 
     public ChatBoxMap getChatBoxes(User user);
 
@@ -55,4 +57,6 @@ public interface ChatManager {
     public void manageHistory(ChatBox chatBox , User owner);
     
     public String getVersion();
+    
+    public Integer countChatBoxes(final String username);
 }
