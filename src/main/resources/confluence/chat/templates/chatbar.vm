@@ -96,6 +96,4 @@ height	33.8px
         </div>
     </div>
 </div>
-#else
-not allowed for chat
 #end
