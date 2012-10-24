@@ -14,6 +14,15 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 * Autoaway
 
 ## Releases
+
+### 1.2.0
+Because of a restructuring the old messages are deleted. It may appear warnings in the log file.
+
+* the height of the textarea is now dynamic (like gtalk or facebook)
+* play sound when new message arrives (could be gloabl disabled by an administrator or by an user for his self )
+* alphabetical sorting of the users
+* ability to delete the chat data. The data could be deleted selectively by an admin or in the new dopmenu of the chatbox 
+
 ### 1.1.1 
 * Add configuration to hide the configuration in edit mode. 
 * Add configuration to enable javascript debug mode.

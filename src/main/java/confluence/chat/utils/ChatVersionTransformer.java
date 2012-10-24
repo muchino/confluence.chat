@@ -22,20 +22,37 @@ public class ChatVersionTransformer {
         savedVersion = new ChatVersion(chatManager.getChatConfiguration().getChatVersionPlain());
     }
 
-    public  Boolean transformationNeeded() {
+    public Boolean transformationNeeded() {
         return savedVersion.compareTo(currentChatVersion) < 0;
     }
-    
-    
+
     public final void transform() {
         /**
          * savedVersion ist kleiner gleich der übergebenen
          */
-        
-        
-        if (savedVersion.compareTo(new ChatVersion("0")) <= 0) {
+        if (isOlderThan("1.2.0")) {
+            System.out.println("ja ich muss was machen");
         }
-        
-        
+
+
+        /*
+         *  es ist ein downgrade passiert
+         */
+        if (isNewerThan(currentChatVersion.getVersion())) {
+        }
+
+        /**
+         * Setze chatversion zum schluss
+         */
+        chatManager.getChatConfiguration().setChatVersionPlain(currentChatVersion.getVersion());
+
+    }
+
+    private boolean isOlderThan(String versionNumber) {
+        return savedVersion.compareTo(new ChatVersion(versionNumber)) <= 0;
+    }
+
+    private boolean isNewerThan(String versionNumber) {
+        return savedVersion.compareTo(new ChatVersion(versionNumber)) > 0;
     }
 }

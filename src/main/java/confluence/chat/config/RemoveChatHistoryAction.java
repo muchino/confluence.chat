@@ -29,23 +29,10 @@ public class RemoveChatHistoryAction extends AbstractChatConfigAction {
         if (StringUtils.isNotBlank(username)) {
             User user = userAccessor.getUser(username);
             if (user != null) {
-                this.deleteChatBoxesOfUser(user);
+                chatManager.deleteChatBoxesOfUser(user);
             }
         }
         return SUCCESS;
-    }
-
-    private void deleteChatBoxesOfUser(User user) {
-        List<ChatBoxId> removeableIds = new ArrayList<ChatBoxId>();
-        ChatBoxMap chatBoxes = chatManager.getChatBoxes(user);
-        Iterator<String> iterator = chatBoxes.keySet().iterator();
-        while (iterator.hasNext()) {
-            ChatBox get = chatBoxes.get(iterator.next());
-            removeableIds.add(get.getId());
-        }
-        for (int i = 0; i < removeableIds.size(); i++) {
-            chatManager.deleteChatBox(user, removeableIds.get(i));
-        }
     }
 
     @Override

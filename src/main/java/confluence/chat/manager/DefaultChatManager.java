@@ -12,6 +12,7 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.user.GroupManager;
 import com.atlassian.user.User;
+import com.atlassian.user.search.page.Pager;
 import com.thoughtworks.xstream.XStream;
 import confluence.chat.Version;
 import confluence.chat.conditions.ChatUseCondition;
@@ -51,7 +52,7 @@ public final class DefaultChatManager implements ChatManager {
     private GroupManager groupManager;
     private ChatUseCondition chatUseCondition;
     private ChatConfiguration chatConfiguration;
-    private ChatVersionTransformer chatVersionTransformer;
+//    private ChatVersionTransformer chatVersionTransformer;
 
     public DefaultChatManager(final BandanaManager bandanaManager, final UserAccessor userAccessor, final TransactionTemplate transactionTemplate, final GroupManager groupManager) {
         this.bandanaManager = bandanaManager;
@@ -227,7 +228,6 @@ public final class DefaultChatManager implements ChatManager {
             public Boolean doInTransaction() {
                 getChatBoxes(user).remove(chatBoxId);
                 ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(user.getName());
-                System.out.println(chatBoxId.toString());
                 bandanaManager.removeValue(confluenceBandanaContext, chatBoxId.toString());
                 return true;
             }
@@ -339,7 +339,7 @@ public final class DefaultChatManager implements ChatManager {
                 logger.warn(" error reading chat configuration");
             }
             if (chatConfiguration == null) {
-                chatConfiguration = new ChatConfiguration();
+                chatConfiguration = createConfig();
             }
         }
         return chatConfiguration;
@@ -385,5 +385,36 @@ public final class DefaultChatManager implements ChatManager {
     @Override
     public String getVersion() {
         return Version.VERSION;
+    }
+
+    @Override
+    public void deleteAllMessages() {
+        Iterator<User> iterator = userAccessor.getUsers().iterator();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            deleteChatBoxesOfUser(user);
+        }
+
+    }
+
+    @Override
+    public ChatConfiguration createConfig() {
+        ChatConfiguration config = new ChatConfiguration();
+        setChatConfiguration(config);
+        return config;
+    }
+
+    @Override
+    public void deleteChatBoxesOfUser(User user) {
+        List<ChatBoxId> removeableIds = new ArrayList<ChatBoxId>();
+        ChatBoxMap deleteChatBoxes = this.getChatBoxes(user);
+        Iterator<String> iterator = deleteChatBoxes.keySet().iterator();
+        while (iterator.hasNext()) {
+            ChatBox get = deleteChatBoxes.get(iterator.next());
+            removeableIds.add(get.getId());
+        }
+        for (int i = 0; i < removeableIds.size(); i++) {
+            this.deleteChatBox(user, removeableIds.get(i));
+        }
     }
 }

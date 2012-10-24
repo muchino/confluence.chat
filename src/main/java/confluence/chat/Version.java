@@ -1,4 +1,4 @@
 package confluence.chat;
 public final class Version {
- public static String VERSION="1.1.2-SNAPSHOOT";
+ public static String VERSION="1.1.2";
 }
