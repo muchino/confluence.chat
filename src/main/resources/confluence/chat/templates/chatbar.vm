@@ -42,16 +42,16 @@ height	33.8px
             <div id="chatbar-button-config">&nbsp;</div>
             <div id="chatbar-button-online">
                 #if($chatManager.getChatConfiguration().getPlaySound())
-                        <div class="csound"></div>
+                <div class="csound"></div>
                 #end
                 <div class="online">
                     Online Users (<span>$chatManager.getOnlineUsers().size()</span>)
-                    
+
                 </div>
                 <div class="offline">
                     You are offline
                 </div>
-                
+
             </div>
             <br style="clear: both; " />
         </div>

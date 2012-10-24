@@ -227,8 +227,8 @@ public final class DefaultChatManager implements ChatManager {
             public Boolean doInTransaction() {
                 getChatBoxes(user).remove(chatBoxId);
                 ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(user.getName());
+                System.out.println(chatBoxId.toString());
                 bandanaManager.removeValue(confluenceBandanaContext, chatBoxId.toString());
-
                 return true;
             }
         });

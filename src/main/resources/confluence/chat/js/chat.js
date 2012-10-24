@@ -328,7 +328,7 @@ ConfluenceChatConfig = {
             }
         });
    
-    
+
         this.chatOnlineUserDiv = this.onlineUsersBox.find('#chatbar-online-users-list');
         this.chatBox = this.chatOnlineUserDiv.find('.chat-user').clone(true);
         this.chatOnlineUserDiv.empty();
@@ -784,6 +784,34 @@ ConfluenceChatConfig = {
         
         var options = jQuery('<div/>').addClass('cb-opt');
         options.appendTo(header);
+      
+    
+        
+        var dropdownHolder = jQuery('<div/>').addClass('cb-actions-more')
+        var dropdown = jQuery('<ul/>').addClass('cb-dropdown');
+        dropdown.appendTo(dropdownHolder);
+        var parent= jQuery('<li/>').addClass('aui-dd-parent');
+        parent.appendTo(dropdown);
+        var trigger =  jQuery('<a/>').attr('href', '#').addClass('aui-dd-trigger');
+        trigger.appendTo(parent);
+        
+        
+        var dropdownList = jQuery('<ul/>').addClass('aui-dropdown');
+        dropdownList.appendTo(parent);
+        var dropdownItem= jQuery('<li/>').addClass('dropdown-item');
+        dropdownItem.appendTo(dropdownList);
+        var dropdownItemLink =  jQuery('<a/>').attr('href', '#').text('Delete History').addClass('item-link').click(function(e){
+            that.deleteHistory();
+            return true;
+        })
+        dropdownItemLink.appendTo(dropdownItem);
+        
+        dropdownHolder.appendTo(options);
+  
+        dropdown.dropDown("Standard", {
+            alignment : 'right'
+        });
+
         jQuery('<a/>').attr('href', '#').text('+').addClass('opt-max').click(function(){
             that.toggleChatBoxGrowth();
         }).appendTo(options);
@@ -793,14 +821,12 @@ ConfluenceChatConfig = {
         jQuery('<a/>').attr('href', '#').text('-').addClass('opt-min').click(function(){
             that.toggleChatBoxGrowth();
         }).appendTo(options);
+        
         jQuery('<a/>').attr('href', '#').text('X')
         .click(function(){
             that.closeChatBox();
         }).appendTo(options);
         var titleBox =  jQuery('<div/>').addClass('cb-title').text(this.opt.dispayTitle);
-        
-        
-        
         
         titleBox.appendTo(header);
    
@@ -874,6 +900,17 @@ ConfluenceChatConfig = {
             close: this.chatUserList
         } );
     }
+    
+    ChatBox.prototype.deleteHistory= function () {
+        var that = this;
+        jQuery.post(AJS.contextPath()+"/chat/delete.action", {
+            deleteBox: this.chatUserList
+        } , function(){
+                that.box.find('.cb-content').empty();
+            });
+        
+    }
+    
     ChatBox.prototype.minimize = function () {
     
         var cookie = 'cb-min'+this.chatBoxId;
