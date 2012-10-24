@@ -903,12 +903,13 @@ ConfluenceChatConfig = {
     
     ChatBox.prototype.deleteHistory= function () {
         var that = this;
-        jQuery.post(AJS.contextPath()+"/chat/delete.action", {
-            deleteBox: this.chatUserList
-        } , function(){
+        if(confirm('Delete this history?')){
+            jQuery.post(AJS.contextPath()+"/chat/delete.action", {
+                deleteBox: this.chatUserList
+            } , function(){
                 that.box.find('.cb-content').empty();
             });
-        
+        }
     }
     
     ChatBox.prototype.minimize = function () {
