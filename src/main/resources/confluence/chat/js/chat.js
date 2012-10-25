@@ -104,7 +104,7 @@ ConfluenceChatConfig = {
             if(typeof(AJS.params.pageId) != "undefined"){
                 pageId = AJS.params.pageId;
             }
-            if(AJS.params.remoteUser && !this.chatDeactivated){
+            if(AJS.params.remoteUser && !that.chatDeactivated){
                 jQuery.ajax({
                     url: AJS.contextPath()+"/chat/start.action",
                     cache: false,
@@ -257,7 +257,8 @@ ConfluenceChatConfig = {
         this.hideInEditMode = "true" == this.getConfigParameter('chat-hideInEditMode');
         AJS.log('Init Confluence Chat in version: ' + this.version);
         if(this.hideInEditMode){
-            if(jQuery('body').hasClass('edit')){
+            this.chatDeactivated = this.chatDeactivated  || jQuery('body').hasClass('edit') || jQuery('body').hasClass('create');
+            if(this.chatDeactivated ){
                 this.log('Confluence Chat: Hide the bar in editor');
                 this.bar.hide();
             }
@@ -312,47 +313,48 @@ ConfluenceChatConfig = {
             });
         });
         
-        
-        
-        
-        var soundDeactivated = AJS.Cookie.read("chatsoundoff");
-        if(soundDeactivated  == "true"  || (jQuery('html.audio').size() == 0)){
-            that.deactivateSound(); 
-        }else {
-            that.activateSound(); 
-        }
-        if(jQuery('html.audio').size() == 0){
-            this.bar.find('.csound').hide();
-        }else {
-            this.bar.find('.csound').click(function(){
-                if(that.isSound()){
-                    that.deactivateSound();       
-                }else {
-                    that.activateSound()
-                }
-            });
-        }
-
         this.chatOnlineUserDiv = this.onlineUsersBox.find('#chatbar-online-users-list');
         this.chatBox = this.chatOnlineUserDiv.find('.chat-user').clone(true);
         this.chatOnlineUserDiv.empty();
-        this.getOnlineUsers();  
-        this.intervall = setInterval(function(){
-            that.getOnlineUsers();
-        }, 5000);
-    
-        jQuery(window).mousemove(function(){
-            that.mousemove = true;
-            var chatStatus = that.bar.find('#chatbar-status');
-            if(jQuery.trim(chatStatus.attr('oldStatus')).length > 0){
-                chatStatus.attr('class',chatStatus.attr('oldStatus'));
-                chatStatus.removeAttr('oldStatus');
-            }
-        }).resize(function(){
-            that.restructureChatBoxes();
-        });
         
-        this.bindChatWithLinks();
+        
+        if(!this.chatDeactivated ){
+            var soundDeactivated = AJS.Cookie.read("chatsoundoff");
+            if(soundDeactivated  == "true"  || (jQuery('html.audio').size() == 0)){
+                that.deactivateSound(); 
+            }else {
+                that.activateSound(); 
+            }
+            if(jQuery('html.audio').size() == 0){
+                this.bar.find('.csound').hide();
+            }else {
+                this.bar.find('.csound').click(function(){
+                    if(that.isSound()){
+                        that.deactivateSound();       
+                    }else {
+                        that.activateSound()
+                    }
+                });
+            }
+       
+            this.getOnlineUsers();  
+            this.intervall = setInterval(function(){
+                that.getOnlineUsers();
+            }, 5000);
+    
+            jQuery(window).mousemove(function(){
+                that.mousemove = true;
+                var chatStatus = that.bar.find('#chatbar-status');
+                if(jQuery.trim(chatStatus.attr('oldStatus')).length > 0){
+                    chatStatus.attr('class',chatStatus.attr('oldStatus'));
+                    chatStatus.removeAttr('oldStatus');
+                }
+            }).resize(function(){
+                that.restructureChatBoxes();
+            });
+        
+            this.bindChatWithLinks();
+        }
     }
 
     ChatBar.prototype.getChatBoxes = function(){
