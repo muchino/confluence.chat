@@ -6,7 +6,7 @@ ConfluenceChatConfig = {
     barWidth : 224
 };
 
-(function () {
+(function($) {
     
     function isChatBox(obj){
         return  obj instanceof ChatBox;
@@ -312,22 +312,26 @@ ConfluenceChatConfig = {
             });
         });
         
+        
+        
+        
         var soundDeactivated = AJS.Cookie.read("chatsoundoff");
-        if(soundDeactivated  == "true"){
+        if(soundDeactivated  == "true"  || (jQuery('html.audio').size() == 0)){
             that.deactivateSound(); 
         }else {
             that.activateSound(); 
         }
-        
-        this.bar.find('.csound').click(function(){
-            console.log('sound chamge');
-            if(that.isSound()){
-                that.deactivateSound();       
-            }else {
-                that.activateSound()
-            }
-        });
-   
+        if(jQuery('html.audio').size() == 0){
+            this.bar.find('.csound').hide();
+        }else {
+            this.bar.find('.csound').click(function(){
+                if(that.isSound()){
+                    that.deactivateSound();       
+                }else {
+                    that.activateSound()
+                }
+            });
+        }
 
         this.chatOnlineUserDiv = this.onlineUsersBox.find('#chatbar-online-users-list');
         this.chatBox = this.chatOnlineUserDiv.find('.chat-user').clone(true);
@@ -452,7 +456,7 @@ ConfluenceChatConfig = {
     }
     ChatBar.prototype.reorderUser = function(){
         var sortByFullname = function (a,b){
-            var val = $(a).find('.user-hover-trigger').text().toLowerCase() > $(b).find('.user-hover-trigger').text().toLowerCase();
+            var val = jQuery(a).find('.user-hover-trigger').text().toLowerCase() > jQuery(b).find('.user-hover-trigger').text().toLowerCase();
             if(val) {
                 return 1
             }else {
@@ -464,7 +468,7 @@ ConfluenceChatConfig = {
             var container = that.chatOnlineUserDiv;
             container.empty();
             el.each(function(){
-                $(this).appendTo(container);
+                jQuery(this).appendTo(container);
             });
         }
         reorderEl(this.chatOnlineUserDiv.find('.chat-user').sort(sortByFullname));
@@ -1168,4 +1172,4 @@ ConfluenceChatConfig = {
 //        });
 //    }
     
-}());
+})(jQuery);

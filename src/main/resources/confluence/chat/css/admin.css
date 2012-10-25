@@ -14,3 +14,11 @@
     padding-top: 10px;
     margin: 10px;
 }
+
+#chat-configuration .no-audio {
+    display: block;
+}
+.audio  #chat-configuration .no-audio {
+    display: none;
+
+}

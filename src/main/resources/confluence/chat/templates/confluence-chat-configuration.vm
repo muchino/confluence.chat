@@ -81,6 +81,7 @@
                             <div class="edit">
                                 <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="playSound"  autocomplete="off"  title="plays a sound when a chat message arrives" #if ($action.getPlaySound()) checked="checked" #end>
                                     <div class="description">plays a sound when a chat message arrives</div>
+                                    <div class="description no-audio">This no HTML5 Borwser, with the audio tag</div>
                             </div>
                             <div class="view">
                                 <div class="field-value">
@@ -89,7 +90,9 @@
                                     #else
                                     No
                                     #end
+                                    <div class="description no-audio">This no HTML5 Borwser, with the audio tag</div>
                                 </div>
+                                
                             </div>
                         </div>                
                         <div class="field-group">
