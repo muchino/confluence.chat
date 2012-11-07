@@ -18,8 +18,10 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 **IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
+
 ### 1.3.0
 * multilingualism added
+
 ### 1.2.2
 Because of a restructuring the old messages are deleted. It may appear warnings in the log file.
 
