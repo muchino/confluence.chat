@@ -1,5 +1,0 @@
-#requireResource("confluence.chat:chat-files")
-<div>
-    <a href="javascript:void(0)" onclick="javascript:chatWith('$remoteUser.name')">Chat mit $remoteUser.name</a>
-    <a href="javascript:void(0)" onclick="javascript:chatWith('test')">Chat mit test</a>
-</div>

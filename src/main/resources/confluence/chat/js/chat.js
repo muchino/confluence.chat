@@ -12,8 +12,6 @@ ConfluenceChatConfig = {
         return  obj instanceof ChatBox;
     }
     
-    
-    
     function ChatBar(){
         var that = this;
         this.debug = false;
@@ -80,7 +78,7 @@ ConfluenceChatConfig = {
             AJS.log('Deactivate Chat, because '+this.requestFailed +' failed! Perhaps chat is deactivated or uninstalled, and this javascript is in the browsercache');
         
             this.chatDeactivated = true;
-            jQuery('#chatbar-button-online').text('Deactivated endpoint is offline');
+            jQuery('#chatbar-button-online').text(this.getConfigParameter('chat.bar.deactivated'));
             this.setStatus('xa');
             jQuery('#chatbar .chatbar-box').hide();
         }
@@ -397,14 +395,6 @@ ConfluenceChatConfig = {
         }
     }
 
-
-    /**
-         *  optjext like: 
-         *  chatboxid: ''
-         *  chatuserList: ''
-         *  dispayTitle: ''
-         *  message
-         */
     ChatBar.prototype.chatWith = function(options){
         var opts= jQuery.extend({
             chatBoxId: null,
@@ -433,14 +423,10 @@ ConfluenceChatConfig = {
             }else {
                 this.log('could not create chatBox for '+ opts.dispayTitle + ' chatId: '+ opts.chatBoxId);
             }
-            
-            
         }else {
             AJS.log('ChatBar.prototype.chatWith: no chatBoxId given');
         }
-    
     }
-
 
     ChatBar.prototype.bindChatWithLinks = function(){
         var that = this;
@@ -565,7 +551,7 @@ ConfluenceChatConfig = {
 
 
     ChatBar.prototype.getConfigParameter= function(param){
-        return this.bar.find('.parameters input[name='+param+']').val();
+        return this.bar.find('.parameters input[name="'+param+'"]').val();
     
     }
     
@@ -653,13 +639,6 @@ ConfluenceChatConfig = {
         });
     }
 
-    /**
-         * chatBoxId : chatboxid, 
-         * chatUserList: chatUserList,
-         *  minimizeChatBox: false,
-         *  messages: messages,
-         *   dispayTitle: dispayTitle
-         */
     function ChatBox(options){
     
         this.opt = jQuery.extend({
@@ -793,12 +772,15 @@ ConfluenceChatConfig = {
       
     
         
-        var dropdownHolder = jQuery('<div/>').addClass('cb-actions-more')
+        var dropdownHolder = jQuery('<div/>');
+        dropdownHolder.addClass('cb-actions-more');
+        
         var dropdown = jQuery('<ul/>').addClass('cb-dropdown');
         dropdown.appendTo(dropdownHolder);
         var parent= jQuery('<li/>').addClass('aui-dd-parent');
         parent.appendTo(dropdown);
         var trigger =  jQuery('<a/>').attr('href', '#').addClass('aui-dd-trigger');
+        trigger.attr('title', chatBar.getConfigParameter('chat.box.more'));
         trigger.appendTo(parent);
         
         
@@ -806,29 +788,35 @@ ConfluenceChatConfig = {
         dropdownList.appendTo(parent);
         var dropdownItem= jQuery('<li/>').addClass('dropdown-item');
         dropdownItem.appendTo(dropdownList);
-        var dropdownItemLink =  jQuery('<a/>').attr('href', '#').text('Delete History').addClass('item-link').click(function(e){
+        var dropdownItemLink =  jQuery('<a/>').attr('href', '#').text(chatBar.getConfigParameter('chat.box.more.history')).addClass('item-link').click(function(e){
             that.deleteHistory();
             return true;
         })
         dropdownItemLink.appendTo(dropdownItem);
-        
         dropdownHolder.appendTo(options);
-  
         dropdown.dropDown("Standard", {
             alignment : 'right'
         });
 
-        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-max').click(function(){
+        jQuery('<a/>').attr('href', '#')
+        .text('+')
+        .attr('title', chatBar.getConfigParameter('chat.icon.max'))
+        .addClass('opt-max').click(function(){
             that.toggleChatBoxGrowth();
         }).appendTo(options);
         
         
         
-        jQuery('<a/>').attr('href', '#').text('-').addClass('opt-min').click(function(){
+        jQuery('<a/>').attr('href', '#')
+        .text('-')
+        .attr('title', chatBar.getConfigParameter('chat.icon.min'))
+        .addClass('opt-min').click(function(){
             that.toggleChatBoxGrowth();
         }).appendTo(options);
         
-        jQuery('<a/>').attr('href', '#').text('X')
+        jQuery('<a/>').attr('href', '#')
+        .text('X')
+        .attr('title', chatBar.getConfigParameter('chat.icon.close'))
         .click(function(){
             that.closeChatBox();
         }).appendTo(options);

@@ -120,16 +120,10 @@
     </web-resource>    
     
     <web-item key="confluence-chat-admin-menu" name="Confluence Chat" section="system.admin/configuration"  weight="41">
-        <label>Confluence Chat</label>
+        <label key="chat.config.webitem"/>
         <link>/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</link>
         <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
     </web-item>
-    
-    <!--    <web-resource key="chatbar-hide-files" name="Chatbar Hide Files">
-        <resource type="download" name="chatbar-hide.css" location="confluence/chat/css/chatbar-hide.css"/>
-        <context>main</context>
-    </web-resource>-->
-    
     
     <resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
         <param name="content-type" value="image/png"/>

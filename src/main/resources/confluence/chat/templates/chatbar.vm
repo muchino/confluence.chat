@@ -1,99 +1,88 @@
 #if($action.hasChatAccess())
-
-#requireResource("confluence.chat:chat-files")
-<!--[if gte IE 9]>
-<style type="text/css">
-    .gradient {
-    filter: none;
-    }
-</style>	px
-height	33.8px
-<![endif]-->
-
-#set($chatUser = $chatManager.getChatUser($remoteUser))
-#set($pref = $chatUser.getPreferences())
-#set($status = $chatUser.getStatus().toString())
-
-
-#set($onlineOffline = "online")
-
-#if($status == "xa")
-#set($onlineOffline = "offline")
-#end
-
-
-<div id="chatbar" class="$onlineOffline">
-    #if($chatManager.getChatConfiguration().getPlaySound())
-    <audio id="chatsound" >
-        <source src="$req.contextPath/download/resources/confluence.chat/button-9.m4a" type="audio/x-aac" />
-        <source src="$req.contextPath/download/resources/confluence.chat/button-9.mp3" type="audio/mpeg" />
-        <source src="$req.contextPath/download/resources/confluence.chat/button-9.ogg" type="audio/ogg" />
-        <div class="no-audio"></div>
-    </audio>
+    #requireResource("confluence.chat:chat-files")
+    <!--[if gte IE 9]>
+    <style type="text/css">
+        .gradient {
+        filter: none;
+        }
+    </style>	px
+    height	33.8px
+    <![endif]-->
+    #set($chatUser = $chatManager.getChatUser($remoteUser))
+    #set($pref = $chatUser.getPreferences())
+    #set($status = $chatUser.getStatus().toString())
+    #set($onlineOffline = "online")
+    #if($status == "xa")
+    #set($onlineOffline = "offline")
     #end
-    <div id="chatbar-status" class="$status">
-        <fieldset class="parameters hidden">
-            <input type="hidden" name="chat-playSound" id="chat-version" value="$chatManager.getPlaySound()" />
-            <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
-            <input type="hidden" name="chat-debugMode" id="chat-version" value="$chatManager.getChatConfiguration().getDebugMode()" />
-            <input type="hidden" name="chat-hideInEditMode" id="chat-version" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
-        </fieldset>
-        <div id="chatbar-buttons">
-            <div id="chatbar-button-config">&nbsp;</div>
-            <div id="chatbar-button-online">
-                #if($chatManager.getChatConfiguration().getPlaySound())
-                <div class="csound"></div>
-                #end
-                <div class="online">
-                    Online Users (<span>$chatManager.getOnlineUsers().size()</span>)
-
+    <div id="chatbar" class="$onlineOffline">
+        #if($chatManager.getChatConfiguration().getPlaySound())
+        <audio id="chatsound" style="display: none;">
+            <source src="$req.contextPath/download/resources/confluence.chat/button-9.m4a" type="audio/x-aac" />
+            <source src="$req.contextPath/download/resources/confluence.chat/button-9.mp3" type="audio/mpeg" />
+            <source src="$req.contextPath/download/resources/confluence.chat/button-9.ogg" type="audio/ogg" />
+            <div class="no-audio"></div>
+        </audio>
+        #end
+        <div id="chatbar-status" class="$status">
+            <fieldset class="parameters hidden">
+                <input type="hidden" name="chat-playSound" id="chat-version" value="$chatManager.getPlaySound()" />
+                <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
+                <input type="hidden" name="chat-debugMode" id="chat-version" value="$chatManager.getChatConfiguration().getDebugMode()" />
+                <input type="hidden" name="chat-hideInEditMode" id="chat-version" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
+                <input type="hidden" name="chat.icon.close" id="chat-version" value="$i18n.getText('close.name')" />
+                <input type="hidden" name="chat.icon.more" id="chat-version" value="$i18n.getText('chat.icon.more')" />
+                <input type="hidden" name="chat.icon.min" id="chat-version" value="$i18n.getText('chat.icon.min')" />
+                <input type="hidden" name="chat.icon.max" id="chat-version" value="$i18n.getText('chat.icon.max')" />
+                <input type="hidden" name="chat.box.more.history" id="chat-version" value="$i18n.getText('chat.box.more.history')" />
+                <input type="hidden" name="chat.bar.deactivated" id="chat-version" value="$i18n.getText('chat.bar.deactivated')" />
+            </fieldset>
+            <div id="chatbar-buttons">
+                <div  title="$i18n.getText('chat.icon.config')"  id="chatbar-button-config">&nbsp;</div>
+                <div id="chatbar-button-online">
+                    #if($chatManager.getChatConfiguration().getPlaySound())
+                    <div title="$i18n.getText('chat.icon.sound')"  class="csound"></div>
+                    #end
+                    <div class="online">$i18n.getText('chat.bar.online', $chatManager.getOnlineUsers().size())</div>
+                    <div class="offline">$i18n.getText('chat.bar.offline')</div>
                 </div>
-                <div class="offline">
-                    You are offline
-                </div>
-
+                <br style="clear: both; " />
             </div>
-            <br style="clear: both; " />
-        </div>
-        <div id="chatbar-online-users" class="chatbar-box">
-            <div class="cb-head">
-                <div class="cb-opt">
-                    <a  href="#">X</a>
+            <div id="chatbar-online-users" class="chatbar-box">
+                <div class="cb-head">
+                    <div class="cb-opt">
+                        <a title="$i18n.getText('close.name')" href="#">X</a>
+                    </div>
+                    <div class="cb-title">$i18n.getText('chat.bar.contacts')</div>
                 </div>
-                <div class="cb-title">Contacts</div>
-
-            </div>
-            <div id="chatbar-online-users-list" class="chatbar-box-content">
-                <div class="chat-user" >
-                    <div>
-                        <!--                        <img src="/images/icons/profilepics/default.gif" />-->
-                        <div class="chat-user-info">
-                            <span class="is">admin</span>
-                            <!-- <div class="chat-user-status">&#8220;<span>status</span>&#8221;</div> -->
-                            <div class="chat-where"><a class="icon icon-page" href="#" ></a><span></span></div>
+                <div id="chatbar-online-users-list" class="chatbar-box-content">
+                    <div class="chat-user" >
+                        <div>
+                            <div class="chat-user-info">
+                                <span class="is">admin</span>
+                                <div class="chat-where"><a class="icon icon-page" href="#" ></a><span></span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="chatbar-config" class="chatbar-box">
-            <div class="cb-head">
-                <div class="cb-opt">
-                    <a  href="#">X</a>
+            <div id="chatbar-config" class="chatbar-box">
+                <div class="cb-head">
+                    <div class="cb-opt">
+                        <a title="$i18n.getText('close.name')"  href="#">X</a>
+                    </div>
+                    <div class="cb-title">$i18n.getText('chat.bar.config')</div>
                 </div>
-                <div class="cb-title">Configuration</div>
-
+                <div  class="chatbar-box-content chat-options">
+                    <select name="status">
+                        <option  value="chat" #if($status == "chat") selected="selected" #end >$i18n.getText('chat.bar.config.online')</option>
+                        <option  value="away" #if($status == "away") selected="selected" #end >$i18n.getText('chat.bar.config.away')</option>
+                        <option  value="dnd" #if($status == "dnd") selected="selected" #end >$i18n.getText('chat.bar.config.dnd')</option>
+                        <option  value="xa" #if($status == "xa") selected="selected" #end>$i18n.getText('chat.bar.config.offline')</option>
+                    </select>
+                    <br/>
+                </div>   
             </div>
-            <div  class="chatbar-box-content chat-options">
-                <select name="status">
-                    <option  value="chat" #if($status == "chat") selected="selected" #end >Online</option>
-                    <option  value="away" #if($status == "away") selected="selected" #end >Away</option>
-                    <option  value="dnd" #if($status == "dnd") selected="selected" #end >Do not disturb</option>
-                    <option  value="xa" #if($status == "xa") selected="selected" #end>Offline</option>
-                </select>
-                <br/>
-            </div>   
         </div>
     </div>
-</div>
 #end

@@ -1,11 +1,11 @@
 package confluence.chat.actions;
 
-import confluence.chat.manager.ChatManager;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
+import confluence.chat.manager.ChatManager;
 
 public class ChatBarAction extends ConfluenceActionSupport {
 
-    private ChatManager chatManager;
+    private final ChatManager chatManager;
 
     public ChatBarAction(ChatManager chatManager) {
         this.chatManager = chatManager;
@@ -21,13 +21,6 @@ public class ChatBarAction extends ConfluenceActionSupport {
      */
     public ChatManager getChatManager() {
         return chatManager;
-    }
-
-    /**
-     * @param chatManager the chatManager to set
-     */
-    public void setChatManager(ChatManager chatManager) {
-        this.chatManager = chatManager;
     }
 
     public Boolean hasChatAccess() {
