@@ -1,7 +1,9 @@
 package confluence.chat.actions;
 
 import com.atlassian.confluence.core.ConfluenceActionSupport;
+import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
+import javax.servlet.http.HttpServletRequest;
 
 public class ChatBarAction extends ConfluenceActionSupport {
 
@@ -24,6 +26,10 @@ public class ChatBarAction extends ConfluenceActionSupport {
     }
 
     public Boolean hasChatAccess() {
-        return chatManager.hasChatAccess(getRemoteUser());
+
+        HttpServletRequest request = ServletActionContext.getRequest();
+
+
+        return chatManager.hasChatAccess(getRemoteUser(), request.getParameter("spaceKey"));
     }
 }

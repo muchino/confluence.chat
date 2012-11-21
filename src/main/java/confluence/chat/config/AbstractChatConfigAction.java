@@ -2,6 +2,7 @@ package confluence.chat.config;
 
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import confluence.chat.manager.ChatManager;
+import confluence.chat.utils.ChatUtils;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +24,7 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         activeTab = getActiveTab();
         this.accessGroupsCSV = "";
         List<String> groups = chatManager.getChatConfiguration().getGroups();
-        for (int i = 0; i < groups.size(); i++) {
-            String group = groups.get(i);
-            if (i == 0) {
-                this.accessGroupsCSV = group;
-            } else {
-                this.accessGroupsCSV = this.accessGroupsCSV + "," + group;
-            }
-        }
+        this.accessGroupsCSV = ChatUtils.listToString(groups);
         return SUCCESS;
     }
 

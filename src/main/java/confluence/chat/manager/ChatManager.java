@@ -12,6 +12,7 @@ import confluence.chat.model.ChatBox;
 import confluence.chat.model.ChatBoxMap;
 import com.atlassian.user.User;
 import confluence.chat.config.ChatConfiguration;
+import confluence.chat.config.ChatSpaceConfiguration;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public interface ChatManager {
 
     public ChatBoxMap getNewMessageChatBoxes(User user);
 
-    public List<ChatUser> getOnlineUsers();
+    public List<ChatUser> getOnlineUsers(String spaceKey);
 
     public void sendMessage(final String sender, final String receiver, final String message);
 
@@ -52,7 +53,11 @@ public interface ChatManager {
 
     public ChatConfiguration getChatConfiguration();
 
-    public Boolean hasChatAccess(User user);
+    public ChatSpaceConfiguration getChatSpaceConfiguration(String spaceKey);
+
+    public void setChatSpaceConfiguration(ChatSpaceConfiguration config, String spaceKey);
+
+    public Boolean hasChatAccess(User user, String spaceKey);
 
     public void manageHistory(ChatBox chatBox, User owner);
 
@@ -61,8 +66,6 @@ public interface ChatManager {
     public Integer countChatBoxes(final String username);
 
     public void deleteAllMessages();
-
-    public ChatConfiguration createConfig();
 
     public void deleteChatBoxesOfUser(User user);
 }

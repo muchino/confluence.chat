@@ -1,0 +1,56 @@
+#requireResource("confluence.chat:chat-files-admin")
+#applyDecorator("root")
+#decoratorParam("helper" $action.spaceHelper)
+#decoratorParam("context" "space-administration")
+#decoratorParam("mode"  "view-space-administration")
+
+#applyDecorator ("root")
+#decoratorParam ("context" "spaceadminpanel")
+#decoratorParam ("selection" "confluence-chat-space-admin")
+#decoratorParam ("title" $action.getText("action.name1"))
+#decoratorParam ("selectedTab" "admin")
+#decoratorParam("helper" $action.spaceHelper)
+<form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
+    <input type="hidden" name="key" value="$helper.spaceKey" />
+    <fieldset>
+        <h2>$i18n.getText('chat.config.access.title')</h2>
+        <p>$i18n.getText('chat.config.access.desc')</p>
+        <div class="field-group">
+            <label for="chat-all-users-edit">$i18n.getText('chat.config.access.all.title')</label>
+            <div class="edit">
+                <input class="checkbox" type="checkbox" id="chat-all-users-edit" name="allowAll" title="$i18n.getText('chat.config.access.all.desc')" #if ($action.getAllowAllUsers()) checked="checked" #end>
+                    <div class="description">$i18n.getText('chat.config.access.all.desc')</div>
+            </div>
+            <div class="view">
+                <div id="chat-all-users-view" class="field-value">
+                    #if ($action.getAllowAllUsers())
+                    $i18n.getText('yes.name')
+                    #else
+                    $i18n.getText('no.name')
+                    #end
+                </div>
+            </div>
+        </div>
+        <div class="field-group" id="chat-access-groups">
+            <label for="chat-access-groups-edit">$i18n.getText('chat.config.access.restrict.title')</label>
+            <div class="edit">
+                <textarea id="chat-access-groups-edit" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off">$action.getAccessGroupsLines()</textarea>
+                <div class="description">$i18n.getText('chat.config.access.restrict.desc')</div>
+            </div>
+            <div class="view">
+                <div id="chat-access-groups-view" class="field-value">$action.getAccessGroupsCSV()</div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="buttons-container">
+        <div class="buttons view">
+            <a id="chat-edit" class="view" href="#edit">$i18n.getText('edit.name')</a>
+        </div>
+        <div class="buttons edit">
+            <input id="chat-save" class="button submit" type="submit" value="$i18n.getText('save.name')">
+                <a href="viewconfiguration.action">$i18n.getText('cancel.name')</a>
+        </div>
+    </div>
+</form>
+#end
+#end

@@ -41,13 +41,23 @@
     
     <xwork name="Chat" key="confluence.chat">
         
+        <package name="Space Admin " extends="default" namespace="/spaces/${atlassian.plugin.key}">
+            <default-interceptor-ref name="defaultStack"/>
+            <action name="viewconfiguration" class="confluence.chat.config.ViewSpaceConfigurationAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-space.vm</result>
+            </action>
+            <action name="updateconfiguration" class="confluence.chat.config.UpdateSpaceConfigurationAction">
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-space.vm</result>
+            </action>
+        </package>  
+                
         <package name="Chat Config" extends="default"  namespace="/admin/plugins/${atlassian.plugin.key}">
             <default-interceptor-ref name="defaultStack"/>
             <action name="viewconfiguration" class="confluence.chat.config.ViewConfigurationAction" >
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>
             <action name="updateconfiguration" class="confluence.chat.config.UpdateConfigurationAction">
-                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+                <result name="success" type="redirect">/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</result>
             </action>
             <action name="editchathistory" class="confluence.chat.config.RemoveChatHistoryAction">
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
@@ -142,4 +152,13 @@
             <parameter name="username" type="username" required="true" />
         </parameters>
     </xhtml-macro>
+    
+    <web-item key="confluence-chat-space-admin" name="Confluence Chat Configuration Space" section="system.space.admin/security" weight="5">
+        <description>Create the link in the space admin menu.</description>
+        <label key="chat.config.space.title"/>
+        <link>/spaces/${atlassian.plugin.key}/viewconfiguration.action?key=$generalUtil.urlEncode($helper.spaceKey)</link> 
+        <icon width="16" height="16"> 
+            <link>/download/resources/${atlassian.plugin.key}/images-chat/plugin-logo.png</link> 
+        </icon>
+    </web-item>    
 </atlassian-plugin>

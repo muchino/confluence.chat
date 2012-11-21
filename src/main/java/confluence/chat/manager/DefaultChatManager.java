@@ -17,6 +17,7 @@ import com.thoughtworks.xstream.XStream;
 import confluence.chat.Version;
 import confluence.chat.conditions.ChatUseCondition;
 import confluence.chat.config.ChatConfiguration;
+import confluence.chat.config.ChatSpaceConfiguration;
 import confluence.chat.model.ChatBox;
 import confluence.chat.model.ChatBoxId;
 import confluence.chat.model.ChatBoxMap;
@@ -29,6 +30,7 @@ import confluence.chat.model.ChatUserList;
 import confluence.chat.utils.ChatUtils;
 import confluence.chat.utils.ChatVersionTransformer;
 import java.util.*;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -48,6 +50,7 @@ public final class DefaultChatManager implements ChatManager {
     private ConfluenceBandanaContext confluenceBandanaContextChat = new ConfluenceBandanaContext(BANDANA_CHAT);
     private ChatUserList users = new ChatUserList();
     private Map<String, ChatBoxMap> chatBoxes = new HashMap<String, ChatBoxMap>();
+    private Map<String, ChatSpaceConfiguration> configurationSpace = new HashMap<String, ChatSpaceConfiguration>();
     private TransactionTemplate transactionTemplate;
     private GroupManager groupManager;
     private ChatUseCondition chatUseCondition;
@@ -239,7 +242,7 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     @Override
-    public List<ChatUser> getOnlineUsers() {
+    public List<ChatUser> getOnlineUsers(String spaceKey) {
         List<ChatUser> onlineUserList = new ArrayList<ChatUser>();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.SECOND, -ChatManager.SECONDS_TO_BE_OFFLINE);
@@ -251,8 +254,11 @@ public final class DefaultChatManager implements ChatManager {
             }
             if (!ChatStatus.OFFLINE.equals(chatUser.getStatus())
                     && time.before(chatUser.getLastSeen())) {
-                onlineUserList.add(chatUser);
-
+                if (StringUtils.isEmpty(spaceKey)) {
+                    onlineUserList.add(chatUser);
+                } else if (this.hasChatAccess(userAccessor.getUser(chatUser.getUsername()), spaceKey)) {
+                    onlineUserList.add(chatUser);
+                }
             }
         }
         return onlineUserList;
@@ -355,15 +361,39 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     @Override
-    public Boolean hasChatAccess(User user) {
-        if (getChatConfiguration().getAllowAll()) {
-            return true;
-        } else {
-            if (chatUseCondition == null) {
-                chatUseCondition = new ChatUseCondition(this, groupManager);
+    public ChatSpaceConfiguration getChatSpaceConfiguration(String spaceKey) {
+        if (!this.configurationSpace.containsKey(spaceKey)) {
+            XStream xStream = new XStream();
+            xStream.setClassLoader(ChatSpaceConfiguration.class.getClassLoader());
+            ChatSpaceConfiguration config = null;
+            try {
+                config = (ChatSpaceConfiguration) bandanaManager.getValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION + "." + spaceKey);
+            } catch (Exception e) {
+                logger.warn(" error reading chat ChatSpaceConfiguration");
             }
-            return chatUseCondition.hasAccess(user);
+            if (config == null) {
+                config = createConfigSpace(spaceKey);
+            }
+            this.configurationSpace.put(spaceKey, config);
         }
+        return this.configurationSpace.get(spaceKey);
+    }
+
+    @Override
+    public void setChatSpaceConfiguration(ChatSpaceConfiguration config, String spaceKey) {
+        if (config != null) {
+            bandanaManager.setValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION + "." + spaceKey, config);
+            this.configurationSpace.put(spaceKey, config);
+            chatUseCondition = null;
+        }
+    }
+
+    @Override
+    public Boolean hasChatAccess(User user, String spaceKey) {
+        if (chatUseCondition == null) {
+            chatUseCondition = new ChatUseCondition(this, groupManager);
+        }
+        return chatUseCondition.hasAccess(user, spaceKey);
     }
 
     @Override
@@ -397,10 +427,15 @@ public final class DefaultChatManager implements ChatManager {
 
     }
 
-    @Override
-    public ChatConfiguration createConfig() {
+    private ChatConfiguration createConfig() {
         ChatConfiguration config = new ChatConfiguration();
         setChatConfiguration(config);
+        return config;
+    }
+
+    private ChatSpaceConfiguration createConfigSpace(String spaceKey) {
+        ChatSpaceConfiguration config = new ChatSpaceConfiguration();
+        setChatSpaceConfiguration(config, spaceKey);
         return config;
     }
 
