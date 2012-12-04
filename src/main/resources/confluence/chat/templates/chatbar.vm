@@ -5,8 +5,7 @@
         .gradient {
         filter: none;
         }
-    </style>	px
-    height	33.8px
+    </style>
     <![endif]-->
     #set($chatUser = $chatManager.getChatUser($remoteUser))
     #set($pref = $chatUser.getPreferences())
