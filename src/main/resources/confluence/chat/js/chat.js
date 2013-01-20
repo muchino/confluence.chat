@@ -38,7 +38,8 @@ ConfluenceChatConfig = {
                 jQuery.ajax({
                     url: AJS.contextPath()+"/ajax/chat/chatbar.action",
                     data: {
-                        spaceKey : that.spaceKey 
+                        spaceKey : that.spaceKey ,
+                        bodyClass: jQuery('body').attr('class')
                     },
                     error: function(){
                         that.chatDeactivated = true;
@@ -264,7 +265,10 @@ ConfluenceChatConfig = {
         this.hideInEditMode = "true" == this.getConfigParameter('chat-hideInEditMode');
         AJS.log('Init Confluence Chat in version: ' + this.version);
         if(this.hideInEditMode){
-            this.chatDeactivated = this.chatDeactivated  || jQuery('body').hasClass('edit') || jQuery('body').hasClass('create');
+            this.chatDeactivated = this.chatDeactivated  
+            || jQuery('body').hasClass('edit') 
+            || jQuery('body').hasClass('scaffoldingeditor') 
+            || jQuery('body').hasClass('create');
             if(this.chatDeactivated ){
                 this.log('Confluence Chat: Hide the bar in editor');
                 this.bar.hide();
