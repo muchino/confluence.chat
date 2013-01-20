@@ -3,10 +3,21 @@ ConfluenceChatAPI = new Object();
 ConfluenceChatConfig = {
     margin : 25, 
     chatBoxWidth : 260,
-    barWidth : 224
+    barWidth : 224,
+    active : true
 };
 
 (function($) {
+    
+    var isTaCPage = window.location.href.indexOf('termsandconditions/termsandconditions.action') > 0;
+    if(isTaCPage){
+        AJS.log("CHAT: chat is not allowed on the Terms and Conditions , because of the behaviour of the TaC Plugin! -> Abort ")
+    }
+    
+    var chatActive = ConfluenceChatConfig.active = ConfluenceChatConfig.active && !isTaCPage
+    if(!chatActive){
+        return;
+    }
     
     function isChatBox(obj){
         return  obj instanceof ChatBox;
@@ -46,9 +57,22 @@ ConfluenceChatConfig = {
                         that.requestErrorHandler();
                     },
                     success: function(html){
-                        jQuery('body').append(html);
-                        that.requestSuccessHandler();
-                        that.init();
+                        var chatHTML = jQuery(html);
+                        /**
+         *If the reponse has the element #chatbar,
+         *the the reposne is realy the chat response
+         *https://github.com/muchino/confluence.chat/issues/41
+         */
+                        if (chatHTML.attr("id") == "chatbar"){
+                            jQuery('body').append(chatHTML);
+                            that.requestSuccessHandler();
+                            that.init();
+                            jQuery('body').trigger('chat_init');
+                        }else {
+                            that.chatDeactivated = true;
+                            AJS.log("Deactivate chat,because the intial response isn't comming from the chat. ");
+                        }
+                        return;
                     }
                 });
             }
@@ -127,13 +151,15 @@ ConfluenceChatConfig = {
                     },
                     success: function(data) {
                         that.requestSuccessHandler();
-                        that.lastHeartBeatServerdate = data.lr;
-                        if(typeof(data.chatboxes) != "undefined"){
-                            that.retrieveChatMessages(data.chatboxes);
-                        }
-                        setInterval(function(){
-                            that.chatHeartbeat();
-                        }, 650);
+                        jQuery('body').bind('chat_init', function(){
+                            that.lastHeartBeatServerdate = data.lr;
+                            if(typeof(data.chatboxes) != "undefined"){
+                                that.retrieveChatMessages(data.chatboxes);
+                            }
+                            setInterval(function(){
+                                that.chatHeartbeat();
+                            }, 650);
+                        });
                     }
                 });
                 jQuery([window, document]).blur(function(){
@@ -147,6 +173,9 @@ ConfluenceChatConfig = {
     }
     
     ChatBar.prototype.chatHeartbeat = function(){
+        if(this.chatDeactivated){
+            return;
+        }
         var that = this;
         this.heartBeatCount++;
         
@@ -156,9 +185,6 @@ ConfluenceChatConfig = {
             }
         }
         
-        if(this.chatDeactivated){
-            return;
-        }
         jQuery.ajax({
             url: AJS.contextPath()+"/chat/heartbeat.action",
             cache: false,
