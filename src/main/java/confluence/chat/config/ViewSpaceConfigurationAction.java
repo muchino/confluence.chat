@@ -2,11 +2,14 @@ package confluence.chat.config;
 
 import com.atlassian.confluence.spaces.actions.AbstractSpaceAction;
 import com.atlassian.confluence.spaces.actions.SpaceAware;
+import com.atlassian.confluence.util.breadcrumbs.Breadcrumb;
+import com.atlassian.confluence.util.breadcrumbs.BreadcrumbAware;
+import com.atlassian.confluence.util.breadcrumbs.SpaceAdminActionBreadcrumb;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.utils.ChatUtils;
 import java.util.List;
 
-public class ViewSpaceConfigurationAction extends AbstractSpaceAction implements SpaceAware {
+public class ViewSpaceConfigurationAction extends AbstractSpaceAction implements SpaceAware, BreadcrumbAware {
 
     private String accessGroupsCSV;
     private ChatManager chatManager;
@@ -53,5 +56,10 @@ public class ViewSpaceConfigurationAction extends AbstractSpaceAction implements
 
     public String getGlobalGroups() {
         return ChatUtils.listToString(chatManager.getChatConfiguration().getGroups());
+    }
+
+    @Override
+    public Breadcrumb getBreadcrumb() {
+        return new SpaceAdminActionBreadcrumb(this, space);
     }
 }
