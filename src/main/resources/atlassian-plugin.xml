@@ -62,7 +62,9 @@
             <action name="editchathistory" class="confluence.chat.config.RemoveChatHistoryAction">
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>                
-            
+            <action name="doconfiguremultiplespaces" class="confluence.chat.config.AutoConfigureMultipleSpacesAction">
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+            </action>                            
         </package>
         
         

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author osr
  */
-public class ChatConfiguration implements Serializable {
+public class ChatConfiguration implements Serializable, Configuration {
 
     private List<String> groups = new ArrayList<String>();
     private Boolean allowAll = true;
@@ -28,6 +28,7 @@ public class ChatConfiguration implements Serializable {
     /**
      * @return the groups
      */
+    @Override
     public List<String> getGroups() {
         return groups;
     }
@@ -42,6 +43,7 @@ public class ChatConfiguration implements Serializable {
     /**
      * @return the allowAll
      */
+    @Override
     public Boolean getAllowAll() {
         return allowAll;
     }

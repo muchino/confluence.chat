@@ -12,7 +12,6 @@ import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.user.GroupManager;
 import com.atlassian.user.User;
-import com.atlassian.user.search.page.Pager;
 import com.thoughtworks.xstream.XStream;
 import confluence.chat.Version;
 import confluence.chat.conditions.ChatUseCondition;
@@ -28,7 +27,6 @@ import confluence.chat.model.ChatStatus;
 import confluence.chat.model.ChatUser;
 import confluence.chat.model.ChatUserList;
 import confluence.chat.utils.ChatUtils;
-import confluence.chat.utils.ChatVersionTransformer;
 import java.util.*;
 import org.apache.commons.lang.StringUtils;
 

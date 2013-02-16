@@ -22,3 +22,7 @@
     display: none;
 
 }
+
+body #chat-configuration .chat-config-global-info  * {
+    color: #666666;
+}

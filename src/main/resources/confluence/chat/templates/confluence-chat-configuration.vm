@@ -3,8 +3,11 @@
     <head>
         #requireResource("confluence.chat:chat-files-admin")
         <title>$i18n.getText('chat.config.title')</title>
+        <meta name="help-path" content="confluence/chat/templates/help.vm"/>
     </head>
     <body>
+         #parse ( "/template/includes/actionerrors.vm" )
+        #parse ( "/template/includes/actionmessages.vm" )
         <div class="aui-tabs horizontal-tabs">
             <ul class="tabs-menu">
                 <li class="menu-item active-tab">
@@ -13,11 +16,15 @@
                 <li class="menu-item">
                     <a href="#history"><strong>$i18n.getText('chat.config.tab.history')</strong></a>
                 </li>
+                <li class="menu-item">
+                    <a href="#tools"><strong>$i18n.getText('chat.config.tab.tools')</strong></a>
+                </li>
             </ul>
             <div id="chatconfig" class="tabs-pane active-pane">
 
                 
                 <form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
+                    #form_xsrfToken()
                     <fieldset>
                         <h2>$i18n.getText('chat.config.access.title')</h2>
                         <p>$i18n.getText('chat.config.access.desc')</p>
@@ -142,6 +149,40 @@
                         #end
                     </tbody>
                 </table>                
+            </div>
+            <div id="tools" class="tabs-pane">
+                <form action="doconfiguremultiplespaces.action" method="post" class="aui" >
+                    #form_xsrfToken()
+                    <h2>$i18n.getText('chat.config.access.import')</h2>
+                    <fieldset>
+                        <div class="field-group">
+                            <label for="chat-all-users-edit-tools">$i18n.getText('space.name')</label>
+                            <select name="space" multiple="true" autocomplete="false">
+                                #foreach ($space in $spaceManager.getAllSpaces())
+                                    <option value="$space.getKey()">$space.getName()</option>
+                                #end
+                            </select>
+                            <div class="description">$i18n.getText('chat.config.tools.spaces')</div>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="chat-all-users-edit-tools">$i18n.getText('chat.config.access.all.title')</label>
+                            <input class="checkbox" type="checkbox"  name="allowAll" title="$i18n.getText('chat.config.access.all.desc')" autocomplete="false">
+                             <div class="description">$i18n.getText('chat.config.access.all.desc')</div>
+                        </div>
+                        <div class="field-group" id="chat-access-groups">
+                            <label for="chat-access-groups-edit-tools">$i18n.getText('chat.config.access.restrict.title')</label>
+                            <textarea id="chat-access-groups-edit-tools" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off"></textarea>
+                            <div class="description">$i18n.getText('chat.config.access.restrict.desc')</div>
+                        </div>
+                    </fieldset>
+                    <div class="buttons-container">
+                        <div class="buttons">
+                            <input class="button submit" type="submit" value="$i18n.getText('save.name')">
+                                <a href="viewconfiguration.action">$i18n.getText('cancel.name')</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </body>

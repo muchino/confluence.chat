@@ -3,12 +3,6 @@ package confluence.chat.config;
 import com.atlassian.user.User;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
-import confluence.chat.model.ChatBox;
-import confluence.chat.model.ChatBoxId;
-import confluence.chat.model.ChatBoxMap;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 

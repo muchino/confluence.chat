@@ -23,29 +23,29 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
     public String execute() throws Exception {
         activeTab = getActiveTab();
         this.accessGroupsCSV = "";
-        List<String> groups = chatManager.getChatConfiguration().getGroups();
+        List<String> groups = getChatManager().getChatConfiguration().getGroups();
         this.accessGroupsCSV = ChatUtils.listToString(groups);
         return SUCCESS;
     }
 
     public Boolean getAllowAllUsers() {
-        return chatManager.getChatConfiguration().getAllowAll();
+        return getChatManager().getChatConfiguration().getAllowAll();
     }
 
     public Boolean getDebugMode() {
-        return chatManager.getChatConfiguration().getDebugMode();
+        return getChatManager().getChatConfiguration().getDebugMode();
     }
 
     public Boolean getHideInEditMode() {
-        return chatManager.getChatConfiguration().getHideInEditMode();
+        return getChatManager().getChatConfiguration().getHideInEditMode();
     }
 
     public Boolean getShowWhereIam() {
-        return chatManager.getChatConfiguration().getShowWhereIam();
+        return getChatManager().getChatConfiguration().getShowWhereIam();
     }
 
     public Boolean getPlaySound() {
-        return chatManager.getChatConfiguration().getShowWhereIam();
+        return getChatManager().getChatConfiguration().getShowWhereIam();
     }
 
     public String getAccessGroupsLines() {
@@ -61,7 +61,7 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         Iterator<String> iterator = userAccessor.getUserNames().iterator();
         while (iterator.hasNext()) {
             String username = iterator.next();
-            Integer count = chatManager.countChatBoxes(username);
+            Integer count = getChatManager().countChatBoxes(username);
             if (count > 0) {
                 boxes.put(username, count);
             }
@@ -70,5 +70,12 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
     }
     
     abstract public String getActiveTab();
+
+    /**
+     * @return the chatManager
+     */
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
     
 }
