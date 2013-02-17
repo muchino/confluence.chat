@@ -197,11 +197,17 @@
                             <input class="checkbox" type="checkbox"  name="overwriteAllowAll" title="$i18n.getText('chat.config.import.settings.all.desc')" autocomplete="false" checked="checked">
                                 <div class="description">$i18n.getText('chat.config.import.settings.all.desc')</div>
                         </div>
+                        <!--
                         <div class="field-group">
                             <label>$i18n.getText('chat.config.import.settings.groups.title')</label>
                             <input class="checkbox" type="checkbox"  name="overwriteGroups" title="$i18n.getText('chat.config.import.settings.groups.desc')" autocomplete="false" checked="checked">
                                 <div class="description">$i18n.getText('chat.config.import.settings.groups.desc')</div>
-                        </div>
+                        </div>-->
+                        <div class="field-group">
+                            <label>$i18n.getText('chat.config.import.settings.groups.append')</label>
+                            <input class="checkbox" type="checkbox"  name="appendGroups" title="$i18n.getText('chat.config.import.settings.groups.append.desc')" autocomplete="false" checked="checked">
+                                <div class="description">$i18n.getText('chat.config.import.settings.groups.append..desc')</div>
+                        </div>                        
                     </fieldset>
                     <div class="buttons-container">
                         <div class="buttons">
@@ -212,6 +218,7 @@
                 </form>
             </div>
             <div id="spacesettings" class="tabs-pane">
+                <h2>$i18n.getText('space.name')</h2>
                 <table width="100%" class="grid">
                     <tbody><tr>
                             <th>$i18n.getText('space.name')</th>
@@ -219,22 +226,52 @@
                             <th>$i18n.getText('chat.config.access.restrict.title')</th>
                             <th></th>
                         </tr>
-                        
+
                         #foreach ($space in $spaceManager.getAllSpaces())
-                            #set($config = $chatManager.getChatSpaceConfiguration($space.getKey()))
-                            <tr>
-                                <td>$space.getName()</td>
-                                <td>
-                                    #if ($config.getAllowAll())
-                                    $i18n.getText('yes.name')
-                                    #else
-                                    $i18n.getText('no.name')
-                                    #end
-                                </td>
-                                <td>$action.getGroups($config)</td>
-                                
-                                <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('chat.config.tab.chat')</a></td>
-                            </tr>
+                        #if(!$space.isPersonal())
+                        #set($config = $chatManager.getChatSpaceConfiguration($space.getKey()))
+                        <tr>
+                            <td>$space.getName()</td>
+                            <td>
+                                #if ($config.getAllowAll())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </td>
+                            <td>$action.getGroups($config)</td>
+
+                            <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('chat.config.tab.chat')</a></td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>                 
+                <h2>$i18n.getText('permissions.PERSONALSPACE')</h2>
+                <table width="100%" class="grid">
+                    <tbody><tr>
+                            <th>$i18n.getText('space.name')</th>
+                            <th>$i18n.getText('chat.config.access.all.title')</th>
+                            <th>$i18n.getText('chat.config.access.restrict.title')</th>
+                            <th></th>
+                        </tr>
+
+                        #foreach ($space in $spaceManager.getAllSpaces())
+                        #if($space.isPersonal())
+                        #set($config = $chatManager.getChatSpaceConfiguration($space.getKey()))
+                        <tr>
+                            <td>$space.getName()</td>
+                            <td>
+                                #if ($config.getAllowAll())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </td>
+                            <td>$action.getGroups($config)</td>
+                            <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('chat.config.tab.chat')</a></td>
+                        </tr>
+                        #end
                         #end
                     </tbody>
                 </table>                 

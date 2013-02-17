@@ -35,26 +35,33 @@ public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
         if (request.getParameterValues("space") != null) {
             boolean allowAll = StringUtils.isNotEmpty(request.getParameter("allowAll"));
             boolean overwriteAllowAll = StringUtils.isNotEmpty(request.getParameter("overwriteAllowAll"));
-            boolean overwriteGroups = StringUtils.isNotEmpty(request.getParameter("overwriteGroups"));
-            if (overwriteAllowAll || overwriteGroups) {
-                List<String> groups = ChatUtils.stringToList(request.getParameter("groups"));
-                String[] spaces = request.getParameterValues("space");
-                for (int i = 0; i < spaces.length; i++) {
-                    Space space = spaceManager.getSpace(spaces[i]);
-                    if (space != null) {
-                        configured++;
-                        ChatSpaceConfiguration config = getChatManager().getChatSpaceConfiguration(space.getKey());
-                        if (overwriteAllowAll) {
-                            config.setAllowAll(allowAll);
-                        }
-                        if (overwriteGroups) {
-                            config.setGroups(groups);
-                        }
-                        getChatManager().setChatSpaceConfiguration(config, space.getKey());
+//            boolean overwriteGroups = StringUtils.isNotEmpty(request.getParameter("overwriteGroups"));
+            boolean appendGroups = StringUtils.isNotEmpty(request.getParameter("appendGroups"));
+
+            List<String> groups = ChatUtils.stringToList(request.getParameter("groups"));
+            String[] spaces = request.getParameterValues("space");
+            for (int i = 0; i < spaces.length; i++) {
+                Space space = spaceManager.getSpace(spaces[i]);
+                if (space != null) {
+                    configured++;
+                    ChatSpaceConfiguration config = getChatManager().getChatSpaceConfiguration(space.getKey());
+                    if (overwriteAllowAll) {
+                        config.setAllowAll(allowAll);
                     }
+                    if (appendGroups) {
+                        for (int j = 0; j < groups.size(); j++) {
+                            String group = groups.get(j);
+                            if (!config.getGroups().contains(group)) {
+                                config.getGroups().add(group);
+                            }
+                        }
+
+                    } else {
+                        config.setGroups(groups);
+                    }
+                    getChatManager().setChatSpaceConfiguration(config, space.getKey());
                 }
             }
-
         }
         if (configured > 0) {
             addActionMessage(getText("chat.config.import.success", Arrays.asList(configured)));
