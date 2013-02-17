@@ -6,7 +6,6 @@ package confluence.chat.config;
 
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.spaces.SpaceManager;
-import com.atlassian.xwork.RequireSecurityToken;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.utils.ChatUtils;
@@ -28,25 +27,31 @@ public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
         this.spaceManager = spaceManager;
     }
 
-    
     @Override
     public String execute() throws Exception {
 
         int configured = 0;
-
         HttpServletRequest request = ServletActionContext.getRequest();
         if (request.getParameterValues("space") != null) {
             boolean allowAll = StringUtils.isNotEmpty(request.getParameter("allowAll"));
-            List<String> groups = ChatUtils.stringToList(request.getParameter("groups"));
-            String[] spaces = request.getParameterValues("space");
-            for (int i = 0; i < spaces.length; i++) {
-                Space space = spaceManager.getSpace(spaces[i]);
-                if (space != null) {
-                    configured++;
-                    ChatSpaceConfiguration config = getChatManager().getChatSpaceConfiguration(space.getKey());
-                    config.setAllowAll(allowAll);
-                    config.setGroups(groups);
-                    getChatManager().setChatSpaceConfiguration(config, space.getKey());
+            boolean overwriteAllowAll = StringUtils.isNotEmpty(request.getParameter("overwriteAllowAll"));
+            boolean overwriteGroups = StringUtils.isNotEmpty(request.getParameter("overwriteGroups"));
+            if (overwriteAllowAll || overwriteGroups) {
+                List<String> groups = ChatUtils.stringToList(request.getParameter("groups"));
+                String[] spaces = request.getParameterValues("space");
+                for (int i = 0; i < spaces.length; i++) {
+                    Space space = spaceManager.getSpace(spaces[i]);
+                    if (space != null) {
+                        configured++;
+                        ChatSpaceConfiguration config = getChatManager().getChatSpaceConfiguration(space.getKey());
+                        if (overwriteAllowAll) {
+                            config.setAllowAll(allowAll);
+                        }
+                        if (overwriteGroups) {
+                            config.setGroups(groups);
+                        }
+                        getChatManager().setChatSpaceConfiguration(config, space.getKey());
+                    }
                 }
             }
 
@@ -54,13 +59,13 @@ public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
         if (configured > 0) {
             addActionMessage(getText("chat.config.import.success", Arrays.asList(configured)));
         } else {
-            addActionError(getText("chat.config.import.nospace"));
+            addActionError(getText("chat.config.import.error"));
         }
         return super.execute();
     }
 
     @Override
     public String getActiveTab() {
-        return "tools";
+        return "spaceimporter";
     }
 }

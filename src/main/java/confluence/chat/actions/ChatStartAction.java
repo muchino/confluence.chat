@@ -4,9 +4,9 @@
  */
 package confluence.chat.actions;
 
-import confluence.chat.manager.ChatManager;
 import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
+import confluence.chat.manager.ChatManager;
 
 /**
  *

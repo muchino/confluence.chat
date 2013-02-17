@@ -2,11 +2,9 @@ package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
-import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 public class GetOnlineUserAction extends AbstractChatAction {
 
@@ -21,9 +19,8 @@ public class GetOnlineUserAction extends AbstractChatAction {
 
     @Override
     public Object getBean() {
-        HttpServletRequest request = ServletActionContext.getRequest();
         Map<String, Object> bean = new HashMap<String, Object>();
-        bean.put("users", getChatReplyTransformer().chatUserListToMap(getRemoteUser(), getChatManager().getOnlineUsers(request.getParameter("spaceKey"))));
+        bean.put("users", getChatReplyTransformer().chatUserListToMap(getRemoteUser(), getOnlineUsers()));
         return bean;
     }
 }

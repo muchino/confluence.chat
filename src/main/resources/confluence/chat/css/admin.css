@@ -26,3 +26,7 @@
 body #chat-configuration .chat-config-global-info  * {
     color: #666666;
 }
+.chat-config-tools-spaces {
+    width: 389px;
+    height: 117px;
+}

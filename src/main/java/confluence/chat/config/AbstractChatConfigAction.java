@@ -12,20 +12,22 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
 
     private final ChatManager chatManager;
     private String accessGroupsCSV;
-    private String activeTab ;
+    private String activeTab;
 
     public AbstractChatConfigAction(ChatManager chatManager) {
         this.chatManager = chatManager;
-        
+
     }
 
     @Override
     public String execute() throws Exception {
         activeTab = getActiveTab();
-        this.accessGroupsCSV = "";
-        List<String> groups = getChatManager().getChatConfiguration().getGroups();
-        this.accessGroupsCSV = ChatUtils.listToString(groups);
+        this.accessGroupsCSV = getGroups(getChatManager().getChatConfiguration());
         return SUCCESS;
+    }
+
+    public String getGroups(Configuration config) {
+        return ChatUtils.listToString(config.getGroups());
     }
 
     public Boolean getAllowAllUsers() {
@@ -68,7 +70,7 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         }
         return boxes;
     }
-    
+
     abstract public String getActiveTab();
 
     /**
@@ -77,5 +79,4 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
     public ChatManager getChatManager() {
         return chatManager;
     }
-    
 }

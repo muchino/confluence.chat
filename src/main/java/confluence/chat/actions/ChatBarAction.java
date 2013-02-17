@@ -1,35 +1,17 @@
 package confluence.chat.actions;
 
-import com.atlassian.confluence.core.ConfluenceActionSupport;
-import com.opensymphony.webwork.ServletActionContext;
+import com.atlassian.confluence.pages.PageManager;
+import com.atlassian.confluence.security.PermissionManager;
 import confluence.chat.manager.ChatManager;
-import javax.servlet.http.HttpServletRequest;
 
-public class ChatBarAction extends ConfluenceActionSupport {
+public class ChatBarAction extends AbstractChatAction {
 
-    private final ChatManager chatManager;
-
-    public ChatBarAction(ChatManager chatManager) {
-        this.chatManager = chatManager;
+    public ChatBarAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
+        super(chatManager, pageManager, permissionManager);
     }
 
     @Override
     public final String execute() throws Exception {
         return SUCCESS;
-    }
-
-    /**
-     * @return the chatManager
-     */
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
-
-    public Boolean hasChatAccess() {
-
-        HttpServletRequest request = ServletActionContext.getRequest();
-
-
-        return chatManager.hasChatAccess(getRemoteUser(), request.getParameter("spaceKey"));
     }
 }

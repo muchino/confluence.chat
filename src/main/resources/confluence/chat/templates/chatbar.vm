@@ -18,16 +18,16 @@
         #end
         <div id="chatbar-status" class="$status">
             <fieldset class="parameters hidden">
-                <input type="hidden" name="chat-playSound" id="chat-version" value="$chatManager.getPlaySound()" />
+                <input type="hidden" name="chat-playSound" id="chat-playSound" value="$chatManager.getPlaySound()" />
                 <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
-                <input type="hidden" name="chat-debugMode" id="chat-version" value="$chatManager.getChatConfiguration().getDebugMode()" />
-                <input type="hidden" name="chat-hideInEditMode" id="chat-version" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
-                <input type="hidden" name="chat.icon.close" id="chat-version" value="$i18n.getText('close.name')" />
-                <input type="hidden" name="chat.icon.more" id="chat-version" value="$i18n.getText('chat.icon.more')" />
-                <input type="hidden" name="chat.icon.min" id="chat-version" value="$i18n.getText('chat.icon.min')" />
-                <input type="hidden" name="chat.icon.max" id="chat-version" value="$i18n.getText('chat.icon.max')" />
-                <input type="hidden" name="chat.box.more.history" id="chat-version" value="$i18n.getText('chat.box.more.history')" />
-                <input type="hidden" name="chat.bar.deactivated" id="chat-version" value="$i18n.getText('chat.bar.deactivated')" />
+                <input type="hidden" name="chat-debugMode" id="chat-debugMode" value="$chatManager.getChatConfiguration().getDebugMode()" />
+                <input type="hidden" name="chat-hideInEditMode" id="chat-hideInEditMode" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
+                <input type="hidden" name="chat.icon.close" id="chat-icon.close" value="$i18n.getText('close.name')" />
+                <input type="hidden" name="chat.icon.more" id="chat-icon.more" value="$i18n.getText('chat.icon.more')" />
+                <input type="hidden" name="chat.icon.min" id="chat-icon.min" value="$i18n.getText('chat.icon.min')" />
+                <input type="hidden" name="chat.icon.max" id="chat-icon.max" value="$i18n.getText('chat.icon.max')" />
+                <input type="hidden" name="chat.box.more.history" id="chat-icon.history" value="$i18n.getText('chat.box.more.history')" />
+                <input type="hidden" name="chat.bar.deactivated" id="chat-deactivated" value="$i18n.getText('chat.bar.deactivated')" />
             </fieldset>
             <div id="chatbar-buttons">
                 <div  title="$i18n.getText('chat.icon.config')"  id="chatbar-button-config">&nbsp;</div>
@@ -35,7 +35,7 @@
                     #if($chatManager.getChatConfiguration().getPlaySound())
                     <div title="$i18n.getText('chat.icon.sound')"  class="csound"></div>
                     #end
-                    <div class="online">$i18n.getText('chat.bar.online', $chatManager.getOnlineUsers().size())</div>
+                    <div class="online">$i18n.getText('chat.bar.online',[$action.getOnlineUsers().size()])</div>
                     <div class="offline">$i18n.getText('chat.bar.offline')</div>
                 </div>
                 <br style="clear: both; " />
