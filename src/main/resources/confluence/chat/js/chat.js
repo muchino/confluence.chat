@@ -557,13 +557,6 @@ ConfluenceChatConfig = {
                 if(typeof user.su != "undefined" && typeof user.st != "undefined" ){
                     
                     var title = user.st;
-                    var pos = title.indexOf('-');
-                    if(pos > 0){
-                        title = title.substr(0, pos);
-                        if(jQuery.trim(title).length == 0){
-                            title = user.st;
-                        }
-                    }
                     userWhere.find('a').attr('href', user.su).attr('title',user.st );
                     userWhere.find('span').text(title);
                     userWhere.show();

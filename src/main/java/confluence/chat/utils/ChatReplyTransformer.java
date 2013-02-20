@@ -47,6 +47,7 @@ public class ChatReplyTransformer {
                         if (cO != null) {
                             if (permissionManager.hasPermission(user, Permission.VIEW, cO)) {
                                 userMap.put(ChatUser.CURRENT_SITE_TITLE, cO.getTitle());
+                                userMap.put(ChatUser.CURRENT_CONTENT_ID, cO.getIdAsString());
                                 userMap.put(ChatUser.CURRENT_SITE_URL, this.baseUrl + cO.getUrlPath());
                             }
                         }
