@@ -179,7 +179,7 @@ public class ChatBox implements Serializable {
     /**
      * 
      * @param date
-     * @return eine chat nachrichten liste , die älteste ist ganz vorne
+     * @return eine chat nachrichten liste , die ï¿½lteste ist ganz vorne
      */
     public ChatMessageList getMessagesBefore(Date date) {
         ChatMessageList list = new ChatMessageList();
