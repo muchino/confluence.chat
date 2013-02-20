@@ -33,6 +33,7 @@ public class ChatUser implements Serializable {
     public static String CURRENT_SITE_URL = "su";
     public static String CURRENT_SITE_TITLE = "st";
     public static String CURRENT_CONTENT_ID = "pageId";
+    private static final String CONFLUENCE_TITLE = " - Confluence";
 
     public ChatUser(String username, ChatPreferences preferences) {
         jsonMap.put(USERNAME, username);
@@ -163,7 +164,7 @@ public class ChatUser implements Serializable {
         this.removeCurrentSite();
         if (this.getPreferences().getShowCurrentSite()) {
             if (StringUtils.isNotEmpty(currentTitle) && StringUtils.isNotEmpty(currentUrl)) {
-                this.jsonMap.put(CURRENT_SITE_TITLE, currentTitle);
+                this.jsonMap.put(CURRENT_SITE_TITLE, parseSiteTitle(currentTitle));
                 this.jsonMap.put(CURRENT_SITE_URL, currentUrl);
             }
         }
@@ -187,5 +188,14 @@ public class ChatUser implements Serializable {
      */
     public void setLastMouseMove(Date lastMouseMove) {
         this.lastMouseMove = lastMouseMove;
+    }
+
+    private static String parseSiteTitle(String title) {
+        if (StringUtils.isNotBlank(title)) {
+            if (title.endsWith(CONFLUENCE_TITLE)) {
+                title = title.replace(CONFLUENCE_TITLE, "");
+            }
+        }
+        return title;
     }
 }
