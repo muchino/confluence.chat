@@ -94,6 +94,7 @@ public class ChatBox implements Serializable {
                 message.put(ChatMessage.TO, manager.getChatUser(chatMessage.getTo()).getJSONMap());
                 message.put(ChatMessage.MESSAGE, chatMessage.getMessage());
                 message.put(ChatMessage.SENDDATE, chatMessage.getSenddate().getTime());
+                message.put(ChatMessage.MESSAGE_ID, chatMessage.getId());
                 messageList.add(message);
             }
             jsonMap.put("messages", messageList);
@@ -157,9 +158,8 @@ public class ChatBox implements Serializable {
         return "ChatBox " + getId().toString();
     }
 
-    
     /**
-     * 
+     *
      * @param date
      * @return eine chat nachrichten liste , die neuste nachricht ist ganz vorne
      */
@@ -175,15 +175,15 @@ public class ChatBox implements Serializable {
         }
         return list;
     }
-    
+
     /**
-     * 
+     *
      * @param date
      * @return eine chat nachrichten liste , die �lteste ist ganz vorne
      */
     public ChatMessageList getMessagesBefore(Date date) {
         ChatMessageList list = new ChatMessageList();
-        for (int j = 0 ; j < getMessages().size(); j++) {
+        for (int j = 0; j < getMessages().size(); j++) {
             ChatMessage message = getMessages().get(j);
             if (message.getSenddate().before(date)) {
                 list.add(message);
@@ -192,5 +192,5 @@ public class ChatBox implements Serializable {
             }
         }
         return list;
-    }    
+    }
 }

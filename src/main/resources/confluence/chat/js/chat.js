@@ -37,7 +37,6 @@ ConfluenceChatConfig = {
         this.initCompatibility();
         this.version = "0";
         this.spaceKey = "";
-        that.startChatSession();
         this.users = Object();
         jQuery(document).ready(function(){
             if(typeof(AJS.params.spaceKey) == "string"){
@@ -130,46 +129,43 @@ ConfluenceChatConfig = {
     }
     ChatBar.prototype.startChatSession = function(){  
         var that = this;
-        jQuery(document).ready(function(){
-            var pageId = null;
-            if(typeof(AJS.params.pageId) != "undefined"){
-                pageId = AJS.params.pageId;
-            }
-            if(AJS.params.remoteUser && !that.chatDeactivated){
-                jQuery.ajax({
-                    url: AJS.contextPath()+"/chat/start.action",
-                    cache: false,
-                    dataType: "json",
-                    data: {
-                        spaceKey : that.spaceKey,
-                        currentUrl : window.location.href,
-                        currentTitle: document.title,
-                        pageId: pageId
-                    },
-                    error: function(){
-                        that.requestErrorHandler();
-                    },
-                    success: function(data) {
-                        that.requestSuccessHandler();
-                        jQuery('body').bind('chat_init', function(){
-                            that.lastHeartBeatServerdate = data.lr;
-                            if(typeof(data.chatboxes) != "undefined"){
-                                that.retrieveChatMessages(data.chatboxes);
-                            }
-                            setInterval(function(){
-                                that.chatHeartbeat();
-                            }, 650);
-                        });
+        
+        var pageId = null;
+        if(typeof(AJS.params.pageId) != "undefined"){
+            pageId = AJS.params.pageId;
+        }
+        if(AJS.params.remoteUser && !that.chatDeactivated){
+            jQuery.ajax({
+                url: AJS.contextPath()+"/chat/start.action",
+                cache: false,
+                dataType: "json",
+                data: {
+                    spaceKey : that.spaceKey,
+                    currentUrl : window.location.href,
+                    currentTitle: document.title,
+                    pageId: pageId
+                },
+                error: function(){
+                    that.requestErrorHandler();
+                },
+                success: function(data) {
+                    that.requestSuccessHandler();
+                    that.lastHeartBeatServerdate = data.lr;
+                    if(typeof(data.chatboxes) != "undefined"){
+                        that.retrieveChatMessages(data.chatboxes);
                     }
-                });
-                jQuery([window, document]).blur(function(){
-                    that.windowFocus = false;
-                }).focus(function(){
-                    that.windowFocus = true;
-                    document.title = that.originalTitle;
-                });
-            }
-        });    
+                    setInterval(function(){
+                        that.chatHeartbeat();
+                    }, 650);
+                }
+            });
+            jQuery([window, document]).blur(function(){
+                that.windowFocus = false;
+            }).focus(function(){
+                that.windowFocus = true;
+                document.title = that.originalTitle;
+            });
+        }
     }
     
     ChatBar.prototype.chatHeartbeat = function(){
@@ -389,7 +385,7 @@ ConfluenceChatConfig = {
             }).resize(function(){
                 that.restructureChatBoxes();
             });
-            
+            this.startChatSession();
             this.bindChatWithLinks();
         }
     }
@@ -980,6 +976,17 @@ ConfluenceChatConfig = {
         if(item == null){
             return;
         }
+        var id = "";
+        // check if messages is already added 
+        if(typeof(item.id) != "undefined"){
+            id = "cm"+item.id;
+            if(id.length > 0){
+                if($("#"+id).size()){
+                    return;
+                }
+            }
+            
+        }
         
         if(item.f.un != AJS.params.remoteUser){
             this.startBlink();    
@@ -1035,6 +1042,10 @@ ConfluenceChatConfig = {
         }
         //     nun einfach die nachricht noch drann
         var messageItem = jQuery('<div/>').addClass('cb-mtext').html(message).attr('t',item.t);
+        // check if message is already added
+        if(id.length > 0){
+            messageItem.attr('id', id);    
+        }
         messageItem.appendTo(messageHolder);
         
         content.scrollTop(content[0].scrollHeight);    

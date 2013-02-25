@@ -8,18 +8,21 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
  * @author Dev
  */
-public class ChatMessage implements Serializable{
+public class ChatMessage implements Serializable {
 
     public static final String FROM = "f";
+    public static final String MESSAGE_ID = "id";
     public static final String TO = "to";
     public static final String MESSAGE = "m";
     public static final String SENDDATE = "t";
     private Date senddate = new Date();
+    private Integer id = Math.abs(UUID.randomUUID().hashCode() + senddate.hashCode());
     private Map<String, Object> jsonMap = new HashMap<String, Object>();
 
     public ChatMessage() {
@@ -68,8 +71,8 @@ public class ChatMessage implements Serializable{
     public void setFrom(String from) {
         this.jsonMap.put(FROM, from);
     }
-    
-        /**
+
+    /**
      * @return the from
      */
     public String getTo() {
@@ -83,4 +86,17 @@ public class ChatMessage implements Serializable{
         this.jsonMap.put(TO, to);
     }
 
+    /**
+     * @return the ID
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param aID the ID to set
+     */
+    public void setId(Integer aID) {
+        this.id = aID;
+    }
 }
