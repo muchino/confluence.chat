@@ -48,6 +48,11 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>atlassian-pdk</artifactId>
+                <version>2.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-confluence-plugin</artifactId>
                 <version>${amps.version}</version>
                 <extensions>true</extensions>
