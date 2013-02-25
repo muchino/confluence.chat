@@ -59,9 +59,9 @@
                         </div>
                         <h2>$i18n.getText('chat.config.settings')</h2>
                         <div class="field-group">
-                            <label for="chat-all-settings-edit">$i18n.getText('chat.config.whereiam.title')</label>
+                            <label for="chat-showWhereIam">$i18n.getText('chat.config.whereiam.title')</label>
                             <div class="edit">
-                                <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="showWhereIam"  autocomplete="off"  title="$i18n.getText('chat.config.whereiam.desc')" #if ($action.getShowWhereIam()) checked="checked" #end>
+                                <input class="checkbox" type="checkbox" id="chat-showWhereIam" name="showWhereIam"  autocomplete="off"  title="$i18n.getText('chat.config.whereiam.desc')" #if ($action.getShowWhereIam()) checked="checked" #end>
                                     <div class="description">$i18n.getText('chat.config.whereiam.desc')</div>
                             </div>
                             <div class="view">
@@ -75,9 +75,9 @@
                             </div>
                         </div>
                         <div class="field-group">
-                            <label for="chat-all-settings-edit">$i18n.getText('chat.config.audio.title')</label>
+                            <label for="chat-playSound">$i18n.getText('chat.config.audio.title')</label>
                             <div class="edit">
-                                <input class="checkbox" type="checkbox" id="chat-all-settings-edit" name="playSound"  autocomplete="off"  title="$i18n.getText('chat.config.audio.desc')" #if ($action.getPlaySound()) checked="checked" #end>
+                                <input class="checkbox" type="checkbox" id="chat-playSound" name="playSound"  autocomplete="off"  title="$i18n.getText('chat.config.audio.desc')" #if ($action.getPlaySound()) checked="checked" #end>
                                     <div class="description">$i18n.getText('chat.config.audio.desc')</div>
                                     <div class="description no-audio">$i18n.getText('chat.config.audio.noaudio')</div>
                             </div>

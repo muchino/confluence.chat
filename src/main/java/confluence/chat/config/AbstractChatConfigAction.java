@@ -47,7 +47,7 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
     }
 
     public Boolean getPlaySound() {
-        return getChatManager().getChatConfiguration().getShowWhereIam();
+        return getChatManager().getChatConfiguration().getPlaySound();
     }
 
     public String getAccessGroupsLines() {
