@@ -186,8 +186,8 @@ ConfluenceChatConfig = {
             cache: false,
             dataType: "json",
             data: {
-                lr: this.lastHeartBeatServerdate,
-                mm: this.mousemove 
+                lr: that.lastHeartBeatServerdate,
+                mm: that.mousemove 
             },
             error: function(){
                 that.requestErrorHandler();
@@ -962,12 +962,14 @@ ConfluenceChatConfig = {
     
     
     ChatBox.prototype.send = function() {
+        var that = this;
         var message = AJS.escapeHtml(this.textarea .val());
         this.textarea .val('').focus().css('height','44px');
         if (message != '') {
             jQuery.post(AJS.contextPath()+"/chat/send.action", {
                 to: this.chatUserList, 
-                message: message
+                message: message, 
+                id: Math.round(Math.random() * 10000000) + "" + that.chatBoxId
             } );
         }
         return false;

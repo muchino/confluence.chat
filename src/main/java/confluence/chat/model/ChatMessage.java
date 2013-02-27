@@ -22,7 +22,8 @@ public class ChatMessage implements Serializable {
     public static final String MESSAGE = "m";
     public static final String SENDDATE = "t";
     private Date senddate = new Date();
-    private Integer id = Math.abs(UUID.randomUUID().hashCode() + senddate.hashCode());
+    private String  id;
+
     private Map<String, Object> jsonMap = new HashMap<String, Object>();
 
     public ChatMessage() {
@@ -89,14 +90,14 @@ public class ChatMessage implements Serializable {
     /**
      * @return the ID
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * @param aID the ID to set
      */
-    public void setId(Integer aID) {
+    public void setId(String aID) {
         this.id = aID;
     }
 }

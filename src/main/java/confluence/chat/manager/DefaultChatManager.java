@@ -184,7 +184,7 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     @Override
-    public void sendMessage(final String sender, final String receiver, final String message) {
+    public void sendMessage(final String sender, final String receiver, final String message, final String id) {
 
         transactionTemplate.execute(new TransactionCallback() {
             @Override
@@ -193,6 +193,7 @@ public final class DefaultChatManager implements ChatManager {
                 chatMessage.setFrom(sender);
                 chatMessage.setTo(receiver);
                 chatMessage.setMessage(message);
+                chatMessage.setId(id);
 
 //        chatboxes of receiver
                 ChatBox chatBoxWithReceiver = getChatBoxes(receiver).getChatBoxWithUser(sender);

@@ -41,7 +41,7 @@ public interface ChatManager {
 
     public List<ChatUser> getOnlineUsers(String spaceKey);
 
-    public void sendMessage(final String sender, final String receiver, final String message);
+    public void sendMessage(final String sender, final String receiver, final String message, final String id);
 
     public void setOnlineStatus(String user, ChatStatus status);
 

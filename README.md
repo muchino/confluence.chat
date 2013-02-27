@@ -18,6 +18,17 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 **IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
+### 1.5.2
+This is a bugfixing release 	
+* problems in Chrome 12.0.742.112 (#49 reported by keithw1305 )
+* Play Sound setting was displayed wrong in the configuration screen (#48 reported by Memonen)
+* Users disapears sometimes (#38 reported by thomykay and gargouri22)
+* Messages received twice randomly  (reported by  gargouri22)
+Thank you gargouri22 for testing and your researching!
+
+### 1.5.1
+* Page name was truncated at by hyphen  (#45 reported by anthony3123 )
+
 ### 1.5.0
 * Autoconfigure multiple spaces at once
 * Overviewtable with all space settings
