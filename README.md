@@ -24,7 +24,8 @@ This is a bugfixing release
 * Play Sound setting was displayed wrong in the configuration screen (#48 reported by Memonen)
 * Users disapears sometimes (#38 reported by thomykay and gargouri22)
 * Messages received twice randomly  (reported by  gargouri22)
-Thank you gargouri22 for testing and your researching!
+
+**Thank you gargouri22 for testing and your researching!**
 
 ### 1.5.1
 * Page name was truncated at by hyphen  (#45 reported by anthony3123 )
