@@ -45,7 +45,7 @@
             
             }
             
-            $(this).change(update).keyup(update).keydown(update);
+            $(this).change(update).keyup(update);
             
             update.apply(this);
             
