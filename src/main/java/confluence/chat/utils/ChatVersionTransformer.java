@@ -31,7 +31,6 @@ public class ChatVersionTransformer {
          * savedVersion ist kleiner gleich der �bergebenen
          */
         if (isOlderThan("1.2.0")) {
-            System.out.println("ja ich muss was machen");
         }
 
 

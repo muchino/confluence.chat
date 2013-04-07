@@ -28,6 +28,7 @@ import confluence.chat.model.ChatUser;
 import confluence.chat.model.ChatUserList;
 import confluence.chat.utils.ChatUtils;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -47,8 +48,8 @@ public final class DefaultChatManager implements ChatManager {
     private ConfluenceBandanaContext confluenceBandanaContextPreferences = new ConfluenceBandanaContext(KEY_PREFERENCES);
     private ConfluenceBandanaContext confluenceBandanaContextChat = new ConfluenceBandanaContext(BANDANA_CHAT);
     private ChatUserList users = new ChatUserList();
-    private Map<String, ChatBoxMap> chatBoxes = new HashMap<String, ChatBoxMap>();
-    private Map<String, ChatSpaceConfiguration> configurationSpace = new HashMap<String, ChatSpaceConfiguration>();
+    private Map<String, ChatBoxMap> chatBoxes = new ConcurrentHashMap<String, ChatBoxMap>();
+    private Map<String, ChatSpaceConfiguration> configurationSpace = new ConcurrentHashMap<String, ChatSpaceConfiguration>();
     private TransactionTemplate transactionTemplate;
     private GroupManager groupManager;
     private ChatUseCondition chatUseCondition;
@@ -61,13 +62,6 @@ public final class DefaultChatManager implements ChatManager {
         this.transactionTemplate = transactionTemplate;
         this.groupManager = groupManager;
         this.logger.debug("Init ChatManager in version " + getVersion());
-//        this.chatVersionTransformer = new ChatVersionTransformer(this);
-//        if (this.chatVersionTransformer.transformationNeeded()) {
-//            System.out.println("chat needs transform");
-//            this.chatVersionTransformer.transform();
-//            ChatVersion dummy = new ChatVersion("1.0");
-//            getChatConfiguration().setChatVersionPlain(dummy.getVersion());
-//        }
     }
 
     @Override
@@ -315,13 +309,21 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     @Override
-    public void setOnlineStatus(User user, ChatStatus status) {
-        ChatUser chatUser = getChatUser(user);
-        if (chatUser != null) {
+    public void setOnlineStatus(User user, final ChatStatus status) {
+        final ChatUser chatUser = getChatUser(user);
+        if (chatUser != null && status != ChatStatus.NO_CHANGE && status != null) {
             // change status
-            if (status != null && status != ChatStatus.NO_CHANGE) {
+            if (chatUser.getStatus() == status) {
                 chatUser.setStatus(status);
             } else {
+                transactionTemplate.execute(new TransactionCallback() {
+                    @Override
+                    public String doInTransaction() {
+                        chatUser.getPreferences().setChatStatus(status);
+                        setPreferencesOfUser(chatUser.getUsername(), chatUser.getPreferences());
+                        return "";
+                    }
+                });
                 chatUser.setStatus(chatUser.getPreferences().getChatStatus());
             }
             chatUser.setLastSeen(new Date());

@@ -6,13 +6,13 @@ package confluence.chat.model;
 
 import com.atlassian.user.User;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author Dev
  */
-public class ChatUserList extends HashMap<String, ChatUser> {
+public class ChatUserList extends ConcurrentHashMap<String, ChatUser> {
 
     public ChatUser putUser(User user, ChatPreferences pref) {
         ChatUser chatuser = new ChatUser(user.getName(), pref);

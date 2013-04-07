@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -22,7 +23,7 @@ public class ChatUser implements Serializable {
     private Date lastSeen;
     private Date lastMouseMove;
     private ChatStatus status = null;
-    private Map<String, String> jsonMap = new HashMap<String, String>();
+    private Map<String, String> jsonMap = new ConcurrentHashMap<String, String>();
     private ChatPreferences preferences;
     public static String USERNAME = "un";
     public static String FULLNAME = "fn";

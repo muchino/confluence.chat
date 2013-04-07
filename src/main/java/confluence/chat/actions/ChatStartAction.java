@@ -20,6 +20,7 @@ public class ChatStartAction extends AbstractChatAction {
 
     @Override
     public final String execute() throws Exception {
+        super.setStatus();
         super.start();
         return SUCCESS;
     }

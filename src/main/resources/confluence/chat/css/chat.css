@@ -117,9 +117,6 @@
 .chatbox .cb-opt{
     float: right;
 }
-.cb-opt > *{
-    margin-right: 8px;
-}
 
 .chatbox .cb-dropdown {
     list-style: none;
@@ -133,6 +130,10 @@
     color: #ffffff;
     font-weight:bold;
     font-family:Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+    height: 16px;
+    display: inline-block;
+    width: 16px;
+    line-height: 1em;
 }
 
 .chatbox .cb-opt > a:hover,
@@ -193,11 +194,11 @@ cb-title {
     margin-left: 5px;
 }
 
-.chatbox .opt-max {
+.chatbox  a.opt-max {
     display: none;
 }
 .chatbox.min .opt-max {
-    display: inline;
+    display: inline-block;
 }
 .chatbox .chat-where-text span{
     font-size: 11px;

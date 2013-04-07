@@ -1,20 +1,60 @@
 .chatbox,
 #chatbar {
-
     right:  0;
     position: fixed;
     bottom:  0%;
     z-index: 3000;
-
 }
-#chatbar-buttons {
+
+#chatbar {
     background-color: #003366;
+    height: 30px;
+}
+
+#chatbar .cb-title-config,
+#chatbar #chatbar-config,
+#chatbar.open.config #chatbar-online-users,
+#chatbar.open.config .cb-title-users,
+#chatbar.open.config .cb-config,
+#chatbar.open.users .cb-users,
+#chatbar-buttons #chatbar-button-online {
+    display: none;
+}
+
+#chatbar.open #chatbar-buttons #chatbar-button-online,
+#chatbar:hover #chatbar-buttons #chatbar-button-online{
+    display: block;
+}
+#chatbar.open .chatbar-box{
+    display: block;
+}
+#chatbar.open.config .cb-title-config,
+#chatbar.open.config #chatbar-config{
+    display: block;
+}
+#chatbar.open.config #chatbar-config{
+    
 }
 
 #chatbar #chatbar-button-online {
     padding-left: 0;
     text-align: left;
     width: 186px;
+}
+
+#chatbar .cb-users,
+#chatbar .cb-config {
+    background: url("images-chat/cog.png");
+    background-repeat: no-repeat;
+    background-position: 0 3px;
+}
+
+#chatbar .cb-users{
+    background-image: url("images-chat/users.png");
+}
+
+#chatbar-buttons {
+    height: 30px;
 }
 
 #chatbar-buttons > div {
@@ -100,10 +140,10 @@
     color: gray;
     font-size: 11px;
 }
-#chatbar #chatbar-status #chatbar-button-config{
-    background: url("images-chat/chat.png");
+#chatbar #chatbar-status #chatbar-status-icon{
+    background: url("images-chat/chat-bubble.png");
     background-repeat: no-repeat;
-    background-position: 10px 11px;
+    background-position: center;
     width: 17px;
     min-width: 17px;
 
@@ -132,9 +172,12 @@
 }
 .chatuser-link-holder .away,
 .chatbox .away .cb-title,
-#chatbar #chatbar-status.away #chatbar-button-config,
 #chatbar  .chat-user  .away .chat-user-info { 
     background-image:  url("images-chat/away.png") 
+}
+
+#chatbar #chatbar-status.away #chatbar-status-icon{
+    background-image:  url("images-chat/away-bubble.png") 
 }
 .chatuser-link-holder .xa,
 #chatbar  .chat-user .offline .chat-user-info  {
@@ -143,13 +186,16 @@
 }
 .chatuser-link-holder .dnd,
 .chatbox .dnd .cb-title,
-#chatbar #chatbar-status.dnd #chatbar-button-config,
-#chatbar  .chat-user .dnd .chat-user-info {
+#chatbar  .chat-user .dnd .chat-user-info{
     background-image:  url("images-chat/dnd.png");
 }
 
-#chatbar #chatbar-status.xa #chatbar-button-config {
-    background-image: none;
+#chatbar #chatbar-status.dnd #chatbar-status-icon{
+    background-image:  url("images-chat/dnd-bubble.png");
+}
+
+#chatbar #chatbar-status.xa #chatbar-status-icon {
+    background-image:  url("images-chat/xa-bubble.png");
 }
 
 #chatbar #chatbar-config select {

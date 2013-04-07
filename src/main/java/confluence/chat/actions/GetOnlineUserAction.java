@@ -14,6 +14,7 @@ public class GetOnlineUserAction extends AbstractChatAction {
 
     @Override
     public final String execute() throws Exception {
+        setStatus();
         return SUCCESS;
     }
 

@@ -137,7 +137,7 @@
                 </form>
             </div>
             <div id="history" class="tabs-pane">
-                <table width="100%" class="grid">
+                <table width="100%" class="grid aui">
                     <tbody><tr>
                             <th>$i18n.getText('username.name')</th>
                             <th>$i18n.getText('chat.config.boxes')</th>
@@ -219,7 +219,7 @@
             </div>
             <div id="spacesettings" class="tabs-pane">
                 <h2>$i18n.getText('space.name')</h2>
-                <table width="100%" class="grid">
+                <table width="100%" class="grid aui">
                     <tbody><tr>
                             <th>$i18n.getText('space.name')</th>
                             <th>$i18n.getText('chat.config.access.all.title')</th>
@@ -248,7 +248,7 @@
                     </tbody>
                 </table>                 
                 <h2>$i18n.getText('permissions.PERSONALSPACE')</h2>
-                <table width="100%" class="grid">
+                <table width="100%" class="grid aui">
                     <tbody><tr>
                             <th>$i18n.getText('space.name')</th>
                             <th>$i18n.getText('chat.config.access.all.title')</th>

@@ -4,15 +4,15 @@
  */
 package confluence.chat.manager;
 
-import confluence.chat.model.ChatUser;
-import confluence.chat.model.ChatPreferences;
-import confluence.chat.model.ChatStatus;
-import confluence.chat.model.ChatBoxId;
-import confluence.chat.model.ChatBox;
-import confluence.chat.model.ChatBoxMap;
 import com.atlassian.user.User;
 import confluence.chat.config.ChatConfiguration;
 import confluence.chat.config.ChatSpaceConfiguration;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxId;
+import confluence.chat.model.ChatBoxMap;
+import confluence.chat.model.ChatPreferences;
+import confluence.chat.model.ChatStatus;
+import confluence.chat.model.ChatUser;
 import java.util.List;
 
 /**

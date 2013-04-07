@@ -124,6 +124,25 @@ ConfluenceChatConfig = {
         this.debug = debug;
     }
     
+    ChatBar.prototype.isOpen = function(){
+        var cookie = 'cbar-open';
+        var open = AJS.Cookie.read(cookie);
+        if(open  == "true"){
+            return true
+        }else{
+            return false;
+        }
+    }
+    ChatBar.prototype.minimize = function () {
+        AJS.Cookie.erase("cbar-open")
+        this.bar.removeClass('open');
+    }
+    ChatBar.prototype.maximize = function () {
+        var cookie = 'cbar-open';
+        this.bar.addClass('open');
+        AJS.Cookie.save(cookie,"true");
+    }
+    
     ChatBar.prototype.getOriginalTitle = function(){  
         return this.originalTitle;
     }
@@ -143,6 +162,7 @@ ConfluenceChatConfig = {
                     spaceKey : that.spaceKey,
                     currentUrl : window.location.href,
                     currentTitle: document.title,
+                    status : that.configurationBox.find('select[name=status]').val(),
                     pageId: pageId
                 },
                 error: function(){
@@ -251,7 +271,7 @@ ConfluenceChatConfig = {
         }
         var closeBoxes = countChatBox - maxWindows;
         if(closeBoxes > 0){
-            this.log(' need to close ' + closeBoxes +' hatboxes, because place is not enough');
+            this.log(' need to close ' + closeBoxes +' chatboxes, because place is not enough');
             for (var i=0; i< closeBoxes; i++){
                 this.closeOldestChatBox();
             }
@@ -276,12 +296,20 @@ ConfluenceChatConfig = {
         if(this.debug){
             AJS.log(msg);    
         }
+    };
+    
+    ChatBar.prototype.showConfig = function(){
+        this.bar.addClass('config');
+        this.bar.removeClass('users');
+    }
+    ChatBar.prototype.showUser = function(){
+        this.bar.removeClass('config');
+        this.bar.addClass('users');
     }
     
     ChatBar.prototype.init = function(){
         var that = this;
         this.bar = jQuery('#chatbar');
-        this.bar.width(ConfluenceChatConfig.barWidth);
         this.version = this.getConfigParameter('chat-version');
         this.debug = "true" == this.getConfigParameter('chat-debugMode');
         this.hideInEditMode = "true" == this.getConfigParameter('chat-hideInEditMode');
@@ -300,44 +328,47 @@ ConfluenceChatConfig = {
         }
         
         this.username = AJS.params.remoteUser;
-        //        this.bar.find('.aui-dd-parent').dropDown("Standard", {
-        //            alignment: "left", 
-        //            useDisabled: true
-        //        });
         this.onlineUsersBox =  this.bar.find('#chatbar-online-users');
         this.configurationBox =  this.bar.find('#chatbar-config');
-        this.bar.find('#chatbar-button-online .online,#chatbar-button-online .offline, #chatbar-online-users .cb-opt a').click(function(){
+        this.bar.find('#chatbar-buttons').click(function(event){
             if(that.chatDeactivated){
+                that.bar.removeClass('open');    
                 return false;
             }
             
-            if(!that.isOnline()){
-                that.bar.find('#chatbar-button-config').click();
-            } else {
-                if(!that.configurationBox.is(':hidden')){
-                    that.configurationBox.slideUp();
-                }
-                that.onlineUsersBox.slideToggle();
+            that.bar.toggleClass('open');
+            if(that.bar.hasClass('open')){
+                that.maximize();
+            }else {
+                that.minimize();    
             }
+            
+            event.preventDefault();
+        });
+        this.bar.find('.cb-close').click(function(){
+            that.bar.removeClass('open');   
+            that.minimize();
             return false;
+        });
         
-        
-        })
-        this.bar.find('#chatbar-button-config ,#chatbar-config .cb-opt a').click(function(){
-            if(!that.onlineUsersBox.is(':hidden')){
-                that.onlineUsersBox.slideUp();
-            }
-            that.configurationBox.slideToggle();
+        this.bar.find('.cb-config').click(function(){
+            that.showConfig();
             return false;
-        })
-        this.configurationBox.find('.chat-options select, .chat-options input ').change(function(){
+        });
+        
+        this.bar.find('.cb-users').click(function(){
+            that.showUser();
+            return false;
+        });
+        this.showUser();
+        
+        this.configurationBox.find('select, input ').change(function(){
             var status = jQuery(this).val();
             jQuery.ajax({
                 url: AJS.contextPath()+"/chat/setstatus.action",
                 cache: false,
                 data: {
-                    status:  that.configurationBox.find('.chat-options select[name=status]').val(),
-                    showCurrentSite:  that.configurationBox.find('.chat-options #chat-site:checked').size()
+                    status:  that.configurationBox.find('select[name=status]').val()
                 },
                 dataType: "json",
                 success: function(data){
@@ -387,6 +418,9 @@ ConfluenceChatConfig = {
             });
             this.startChatSession();
             this.bindChatWithLinks();
+            if(this.isOpen()){
+                this.maximize();
+            }
         }
     }
     
@@ -418,7 +452,8 @@ ConfluenceChatConfig = {
             jQuery.ajax({
                 url: AJS.contextPath()+"/chat/getonlineuser.action",
                 data: {
-                    spaceKey : that.spaceKey 
+                    spaceKey : that.spaceKey ,
+                    status : that.configurationBox.find('select[name=status]').val()
                 },
                 cache: false,
                 dataType: "json",
@@ -619,53 +654,55 @@ ConfluenceChatConfig = {
         var that = this;
         jQuery.each(chatboxes, function(j,chatbox){
             that.log(chatbox)
-            if(typeof(chatbox.messages) != "undefined" && isChatBox(that.chatBoxes[chatbox.id])){
-                
-                chatBar.log("chatbox exists " + chatbox.id + " loop over messages");
-                
-                jQuery.each(chatbox.messages, function(i,item){
-                    if (item)	{
-                        that.chatBoxes[chatbox.id].retrieveMessage(item);      
-                    }
-                });
-            }else{
-                chatBar.log("create chatbox " + chatbox.id);
-                var chatPartner =  chatbox.un[0];
-                var chatTitle = '';
-                // retrieve name
-                jQuery.each(chatbox.messages, function(i,item){
-                    if (item){
-                        if (typeof(item.to) != "undefined"){
-                            if (typeof(item.to.un) != "undefined"){
-                                if (typeof(item.to.fn) != "undefined"){
-                                    if (item.to.un == chatPartner){
-                                        chatTitle  = item.to.fn;
-                                    }
-                                }
-                            }
+            if(typeof(chatbox.messages) != "undefined"){
+                if(isChatBox(that.chatBoxes[chatbox.id])){
+                    chatBar.log("chatbox exists " + chatbox.id + " loop over messages");
+                    jQuery.each(chatbox.messages, function(i,item){
+                        if (item)	{
+                            that.chatBoxes[chatbox.id].retrieveMessage(item);      
                         }
-                        if (typeof(item.f) != "undefined"){
-                            if (typeof(item.f.un) != "undefined"){
-                                if (typeof(item.f.fn) != "undefined"){
-                                    if (item.f.un == chatPartner){
-                                        chatTitle  = item.f.fn;
+                    });
+                }else{
+                    chatBar.log("create chatbox " + chatbox.id);
+                    var chatPartner =  chatbox.un[0];
+                    var chatTitle = '';
+                    // retrieve name
+                    jQuery.each(chatbox.messages, function(i,item){
+                        if (item){
+                            if (typeof(item.to) != "undefined"){
+                                if (typeof(item.to.un) != "undefined"){
+                                    if (typeof(item.to.fn) != "undefined"){
+                                        if (item.to.un == chatPartner){
+                                            chatTitle  = item.to.fn;
+                                        }
                                     }
                                 }
-                            }
-                        }                    
+                            };
+                            if (typeof(item.f) != "undefined"){
+                                if (typeof(item.f.un) != "undefined"){
+                                    if (typeof(item.f.fn) != "undefined"){
+                                        if (item.f.un == chatPartner){
+                                            chatTitle  = item.f.fn;
+                                        }
+                                    }
+                                }
+                            } ;                   
+                        };
+                    });
+                
+                    if(chatTitle == ''){
+                        chatTitle = chatPartner;
                     }
-                });
-                if(chatTitle == ''){
-                    chatTitle = chatPartner;
+                    // create box
+                    chatBar.log("create chatbox " + chatbox.id + " function call");
+                    that.chatWith({
+                        chatBoxId: chatbox.id,
+                        chatUserList : chatPartner ,
+                        dispayTitle : chatTitle,
+                        open: chatbox.open,
+                        messages : chatbox.messages
+                    });
                 }
-                // create box
-                that.chatWith({
-                    chatBoxId: chatbox.id,
-                    chatUserList : chatPartner ,
-                    dispayTitle : chatTitle,
-                    open: chatbox.open,
-                    messages : chatbox.messages
-                });
             }
         });
     }
@@ -978,6 +1015,12 @@ ConfluenceChatConfig = {
         if(item == null){
             return;
         }
+
+        if(this.isClosed() && this.initialized){
+            this.show();
+            chatBar.restructureChatBoxes();
+        }        
+        
         var id = "";
         // check if messages is already added 
         if(typeof(item.id) != "undefined"){
@@ -987,17 +1030,13 @@ ConfluenceChatConfig = {
                     return;
                 }
             }
-            
         }
         
         if(item.f.un != AJS.params.remoteUser){
             this.startBlink();    
         }
         
-        if(this.isClosed() && this.initialized){
-            this.show();
-            chatBar.restructureChatBoxes();
-        }
+
         var message = this.replaceChatMessage(item.m);
         var content = this.box.find('.cb-content');
         

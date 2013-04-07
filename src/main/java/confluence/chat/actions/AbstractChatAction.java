@@ -1,21 +1,28 @@
 package confluence.chat.actions;
 
-import confluence.chat.manager.ChatManager;
-import confluence.chat.model.ChatUser;
-import confluence.chat.model.ChatStatus;
-import confluence.chat.model.ChatBoxId;
-import confluence.chat.model.ChatBox;
-import confluence.chat.model.ChatBoxMap;
-import confluence.chat.model.ChatMessageList;
-import confluence.chat.model.ChatMessage;
 import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import com.atlassian.confluence.pages.PageManager;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.opensymphony.webwork.ServletActionContext;
+import confluence.chat.manager.ChatManager;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxId;
+import confluence.chat.model.ChatBoxMap;
+import confluence.chat.model.ChatMessage;
+import confluence.chat.model.ChatMessageList;
+import confluence.chat.model.ChatStatus;
+import confluence.chat.model.ChatUser;
 import confluence.chat.utils.ChatReplyTransformer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
@@ -157,6 +164,24 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
         return SUCCESS;
     }
 
+    public void setStatus() {
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String status = request.getParameter("status");
+        if (StringUtils.isNotBlank(status)) {
+            ChatStatus chatStatus = ChatStatus.ONLINE;
+            if ("chat".equals(status)) {
+                chatStatus = ChatStatus.ONLINE;
+            } else if ("dnd".equals(status)) {
+                chatStatus = ChatStatus.DO_NOT_DISTURB;
+            } else if ("away".equals(status)) {
+                chatStatus = ChatStatus.AWAY;
+            } else if ("xa".equals(status)) {
+                chatStatus = ChatStatus.OFFLINE;
+            }
+            chatManager.setOnlineStatus(getRemoteUser(), chatStatus);
+        }
+    }
+
     public final String send() throws Exception {
         if (hasChatAccess()) {
             HttpServletRequest request = ServletActionContext.getRequest();
@@ -164,7 +189,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             String id = request.getParameter(AbstractChatAction.PARAM_ID);
             String to = request.getParameter(AbstractChatAction.PARAM_TO);
             if (StringUtils.isNotEmpty(to)) {
-                getChatManager().sendMessage(getRemoteUser().getName(), to, message , id);
+                getChatManager().sendMessage(getRemoteUser().getName(), to, message, id);
             }
         }
         return SUCCESS;

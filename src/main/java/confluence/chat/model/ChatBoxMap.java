@@ -5,13 +5,13 @@
 package confluence.chat.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author Dev
  */
-public class ChatBoxMap extends HashMap<String, ChatBox> implements Serializable {
+public class ChatBoxMap extends ConcurrentHashMap<String, ChatBox> implements Serializable {
 
     public ChatBox getChatBoxWithUser(String user) {
 
