@@ -124,22 +124,6 @@ public class ChatBox implements Serializable {
     }
 
     /**
-     * Beim initialen Seitenrequest -> wieviele nachrichten zeigen
-     *
-     * @param session
-     * @return
-     */
-    public Date getInitMessagesShowSince(HttpSession session) {
-        String key = ChatManager.SESSION_SHOW_MESSAGES_SINCE + this.getId().toString();
-        Date date = (Date) session.getAttribute(key);
-        if (date == null) {
-            date = ChatUtils.getYesterday();
-        }
-        session.setAttribute(key, date);
-        return date;
-    }
-
-    /**
      * @return the lastMessage
      */
     public Date getLastMessage() {

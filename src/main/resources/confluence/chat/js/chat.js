@@ -206,6 +206,7 @@ ConfluenceChatConfig = {
             cache: false,
             dataType: "json",
             data: {
+                spaceKey : that.spaceKey ,
                 lr: that.lastHeartBeatServerdate,
                 mm: that.mousemove 
             },
@@ -1004,6 +1005,7 @@ ConfluenceChatConfig = {
         this.textarea .val('').focus().css('height','44px');
         if (message != '') {
             jQuery.post(AJS.contextPath()+"/chat/send.action", {
+                spaceKey : AJS.params.spaceKey ,
                 to: this.chatUserList, 
                 message: message, 
                 id: Math.round(Math.random() * 10000000) + "" + that.chatBoxId

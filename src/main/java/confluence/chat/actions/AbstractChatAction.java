@@ -15,6 +15,7 @@ import confluence.chat.model.ChatMessageList;
 import confluence.chat.model.ChatStatus;
 import confluence.chat.model.ChatUser;
 import confluence.chat.utils.ChatReplyTransformer;
+import confluence.chat.utils.ChatUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,7 +62,6 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     public final String start() throws Exception {
         if (hasChatAccess()) {
             HttpServletRequest request = ServletActionContext.getRequest();
-            HttpSession session = request.getSession();
             getChatManager().setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
             ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
 
@@ -81,13 +81,12 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             }
 
             ChatBoxMap chatBoxes = getChatManager().getChatBoxes(getRemoteUser());
-
+            Date lastRequestDate = getLastRequestDate();
             Iterator<String> iterator = chatBoxes.keySet().iterator();
             while (iterator.hasNext()) {
                 String chatBoxId = iterator.next();
                 ChatBox chatBox = chatBoxes.get(chatBoxId);
-                Date initMessagesShowSince = chatBox.getInitMessagesShowSince(session);
-                this.addMessagesSince(chatBox, initMessagesShowSince);
+                this.addMessagesSince(chatBox, lastRequestDate);
             }
         }
         return SUCCESS;
@@ -144,7 +143,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
 
     public final String heartbeat() throws Exception {
         if (hasChatAccess()) {
-            ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
+            ChatUser chatUser = getChatUser();
             if (isMouseMoved()) {
                 chatUser.setLastMouseMove(new Date());
             }
@@ -182,7 +181,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
         }
     }
 
-    public final String send() throws Exception {
+    public final boolean send() throws Exception {
         if (hasChatAccess()) {
             HttpServletRequest request = ServletActionContext.getRequest();
             String message = request.getParameter(AbstractChatAction.PARAM_MESSAGE);
@@ -190,9 +189,10 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             String to = request.getParameter(AbstractChatAction.PARAM_TO);
             if (StringUtils.isNotEmpty(to)) {
                 getChatManager().sendMessage(getRemoteUser().getName(), to, message, id);
+                return true;
             }
         }
-        return SUCCESS;
+        return false;
     }
 
     @Override
@@ -209,6 +209,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
                 }
                 bean.put("chatboxes", chatboxes);
             }
+        } else {
+            ServletActionContext.getResponse().setStatus(401);
+            bean.put("error", "unauthorized");
         }
         return bean;
     }
@@ -227,16 +230,24 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
         HttpServletRequest request = ServletActionContext.getRequest();
         String lr = request.getParameter(PARAM_LAST_REQUEST);
         Date date = null;
+        Calendar cal = Calendar.getInstance();
         if (StringUtils.isNumeric(lr)) {
             try {
-                date = new Date(new Long(lr));
+                cal.setTime(new Date(new Long(lr)));
+                cal.add(Calendar.SECOND, -1);
+                date = cal.getTime();
             } catch (Exception e) {
             }
         }
         if (date == null) {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DATE, -1);
-            date = cal.getTime();
+            ChatUser chatUser = getChatUser();
+            Date lastSeen = chatUser.getLastSeen();
+            date = ChatUtils.getYesterday();
+            if (lastSeen != null) {
+                if (lastSeen.before(date)) {
+                    date = lastSeen;
+                }
+            }
         }
         return date;
     }
@@ -298,5 +309,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     public List<ChatUser> getOnlineUsers() {
         HttpServletRequest request = ServletActionContext.getRequest();
         return chatManager.getOnlineUsers(request.getParameter("spaceKey"));
+    }
+
+    private ChatUser getChatUser() {
+        return getChatManager().getChatUser(getRemoteUser());
     }
 }
