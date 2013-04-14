@@ -369,6 +369,7 @@ ConfluenceChatConfig = {
                 url: AJS.contextPath()+"/chat/setstatus.action",
                 cache: false,
                 data: {
+                    spaceKey : AJS.params.spaceKey ,
                     status:  that.configurationBox.find('select[name=status]').val()
                 },
                 dataType: "json",
@@ -960,6 +961,7 @@ ConfluenceChatConfig = {
         this.hide();
         chatBar.restructureChatBoxes();
         jQuery.post(AJS.contextPath()+"/chat/close.action", {
+            spaceKey : AJS.params.spaceKey ,
             close: this.chatUserList
         } );
     }
@@ -968,6 +970,7 @@ ConfluenceChatConfig = {
         var that = this;
         if(confirm('Delete this history?')){
             jQuery.post(AJS.contextPath()+"/chat/delete.action", {
+                spaceKey : AJS.params.spaceKey ,
                 deleteBox: this.chatUserList
             } , function(){
                 that.box.find('.cb-content').empty();
@@ -1017,12 +1020,7 @@ ConfluenceChatConfig = {
         if(item == null){
             return;
         }
-
-        if(this.isClosed() && this.initialized){
-            this.show();
-            chatBar.restructureChatBoxes();
-        }        
-        
+        // wenn die nachricht schon da ist -> abbrechen
         var id = "";
         // check if messages is already added 
         if(typeof(item.id) != "undefined"){
@@ -1033,6 +1031,13 @@ ConfluenceChatConfig = {
                 }
             }
         }
+
+        if(this.isClosed() && this.initialized){
+            this.show();
+            chatBar.restructureChatBoxes();
+        }        
+        
+
         
         if(item.f.un != AJS.params.remoteUser){
             this.startBlink();    

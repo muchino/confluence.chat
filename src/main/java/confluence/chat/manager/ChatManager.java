@@ -25,7 +25,7 @@ public interface ChatManager {
     public static final String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
     public static final String SESSION_SHOW_MESSAGES_SINCE = "confluence.chat.show.message.since.";
     public static final Integer SECONDS_TO_BE_AWAY = 60 * 10;
-    public static final Integer SECONDS_TO_BE_OFFLINE = 30;
+    public static final Integer SECONDS_TO_BE_OFFLINE = 10;
 
     void closeChatBox(final User user, final ChatBoxId chatBoxId);
 
@@ -68,4 +68,8 @@ public interface ChatManager {
     public void deleteAllMessages();
 
     public void deleteChatBoxesOfUser(User user);
+
+    public void doLogout(String username);
+
+    public void doLogin(String username);
 }

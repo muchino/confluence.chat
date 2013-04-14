@@ -167,7 +167,7 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
         HttpServletRequest request = ServletActionContext.getRequest();
         String status = request.getParameter("status");
         if (StringUtils.isNotBlank(status)) {
-            ChatStatus chatStatus = ChatStatus.ONLINE;
+            ChatStatus chatStatus = null;
             if ("chat".equals(status)) {
                 chatStatus = ChatStatus.ONLINE;
             } else if ("dnd".equals(status)) {
@@ -177,7 +177,10 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             } else if ("xa".equals(status)) {
                 chatStatus = ChatStatus.OFFLINE;
             }
-            chatManager.setOnlineStatus(getRemoteUser(), chatStatus);
+            if (chatStatus != null) {
+                chatManager.setOnlineStatus(getRemoteUser(), chatStatus);
+            }
+
         }
     }
 
