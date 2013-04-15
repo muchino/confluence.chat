@@ -313,8 +313,6 @@ public final class DefaultChatManager implements ChatManager {
         final ChatUser chatUser = getChatUser(user);
         if (chatUser != null && status != ChatStatus.NO_CHANGE && status != null) {
             // change status
-            System.out.println(user.getName() + " " + status);
-
             if (chatUser.getStatus() == status) {
                 chatUser.setStatus(status);
             } else {

@@ -5,10 +5,8 @@
 package confluence.chat.model;
 
 import confluence.chat.manager.ChatManager;
-import confluence.chat.utils.ChatUtils;
 import java.io.Serializable;
 import java.util.*;
-import javax.servlet.http.HttpSession;
 
 /**
  *

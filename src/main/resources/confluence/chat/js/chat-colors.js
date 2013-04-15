@@ -38,17 +38,14 @@
     };
 })(jQuery);
 
-
 (function($)     {
-    
     jQuery(document).ready(function(){
-        $.chatstyle.insertRule(['div.cb-head','#chatbar'], 'background-color:'+$('#header').css('backgroundColor')+";");
-        $.chatstyle.insertRule(['div.cb-head'], 'border-color:'+$('#header').css('backgroundColor')+";");
-        $.chatstyle.insertRule(['div.cb-head'], 'color:'+$('#header a').css('color')+";");
-
+        var headerColor = $('#header').css('backgroundColor');
+        if(headerColor != "rgb(0, 0, 0)"){
+            $.chatstyle.insertRule(['div.cb-head','#chatbar'], 'background-color:'+headerColor+";");
+            $.chatstyle.insertRule(['div.cb-head'], 'border-color:'+headerColor+";");
+            $.chatstyle.insertRule(['div.cb-head'], 'color:'+$('#header a').css('color')+";");
+        }
     });
-    
-    
-    
 })(jQuery);
     
