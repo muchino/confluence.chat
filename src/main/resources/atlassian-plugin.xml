@@ -112,7 +112,6 @@
     <web-resource key="chat-files" name="Chat Files">
         <resource type="download" name="modernizr.custom.53588.js" location="confluence/chat/js/modernizr.custom.53588.js"/>
         <resource type="download" name="jquery.autogrow-textarea.js" location="confluence/chat/js/jquery.autogrow-textarea.js"/>
-        <resource type="download" name="chat-colors.js" location="confluence/chat/js/chat-colors.js"/>
         
         <resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
         <resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
@@ -126,6 +125,10 @@
      
     </web-resource>
     
+    <web-resource key="chat-colors" name="Chat Color Files">
+        <resource type="download" name="chat-colors.js" location="confluence/chat/js/chat-colors.js"/>
+        <context>main</context>
+    </web-resource>
 
     <web-resource key="chat-files-admin" name="Confluence Chat Admin Javascript Resources">
         <resource type="download" name="modernizr.custom.53588.js" location="confluence/chat/js/modernizr.custom.53588.js"/>
