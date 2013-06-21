@@ -18,6 +18,15 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 **IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
+### 1.5.3
+
+New Features
+ * New UI for the chatbar (smaller one, to have less problems with the editor)
+
+Bugfixes   
+* Sometimes messages could not be received or sent
+* The current status could be lost
+
 ### 1.5.2
 This is a bugfixing release 	
 * problems in Chrome 12.0.742.112 (#49 reported by keithw1305 )
