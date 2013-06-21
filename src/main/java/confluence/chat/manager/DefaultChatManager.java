@@ -468,4 +468,21 @@ public final class DefaultChatManager implements ChatManager {
             this.setOnlineStatus(chatUser.getUsername(), chatUser.getPreferences().getChatStatus());
         }
     }
+
+    @Override
+    public Map<String, Integer> getChatBoxCountOfUser(User user) {
+        Map<String, Integer> boxes = new TreeMap<String, Integer>();
+        ChatBoxMap chatBoxes1 = getChatBoxes(user);
+        Iterator<String> iterator = userAccessor.getUserNames().iterator();
+        while (iterator.hasNext()) {
+            String username = iterator.next();
+            if (chatBoxes1.hasChatBoxWithUser(username)) {
+                int count = chatBoxes1.getChatBoxWithUser(username).getMessages().size();
+                if (count > 0) {
+                    boxes.put(username, count);
+                }
+            }
+        }
+        return boxes;
+    }
 }

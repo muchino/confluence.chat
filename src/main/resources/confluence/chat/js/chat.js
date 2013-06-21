@@ -9,6 +9,8 @@ ConfluenceChatConfig = {
 
 (function($) {
     
+    var historyDialog = null;
+    
     var isTaCPage = window.location.href.indexOf('termsandconditions/termsandconditions.action') > 0;
     if(isTaCPage){
         AJS.log("CHAT: chat is not allowed on the Terms and Conditions , because of the behaviour of the TaC Plugin! -> Abort ")
@@ -836,7 +838,7 @@ ConfluenceChatConfig = {
         //        jQuery('<a/>').attr('href', '#').text('+').addClass('opt-history').click(function(){
         //            new ChatHistory(that.opt);
         //        }).appendTo(subheader );
-        
+                
         var options = jQuery('<div/>').addClass('cb-opt');
         options.appendTo(header);
         
@@ -863,6 +865,17 @@ ConfluenceChatConfig = {
             return true;
         })
         dropdownItemLink.appendTo(dropdownItem);
+        
+        // history
+        dropdownItem= jQuery('<li/>').addClass('dropdown-item');
+        dropdownItem.appendTo(dropdownList);
+        dropdownItemLink =  jQuery('<a/>').attr('href', '#').text(AJS.I18n.getText("chat.history.show")).addClass('item-link').click(function(e){
+            new ChatHistory(that.opt);
+            return true;
+        })
+        dropdownItemLink.appendTo(dropdownItem);
+        
+        
         dropdownHolder.appendTo(options);
         dropdown.dropDown("Standard", {
             alignment : 'right'
@@ -1183,56 +1196,93 @@ ConfluenceChatConfig = {
     
     function ChatHistory(options){
         this.opt = jQuery.extend({
-            chatBoxId: null,
             chatUserList: null,
-            open: true,
-            dispayTitle: null,
-            messages: new Array()
+            dispayTitle: ""
         }, options);
         this.chatBoxId = this.opt.chatBoxId;
         this.init();
     }
     
     ChatHistory.prototype.init=  function(){
-        
-        //        create a dialog 860px wide x 530px high
-        var dialog = new AJS.Dialog({
-            width:860, 
-            height:530, 
-            id:"example-dialog", 
-            closeOnOutsideClick: true
-        });
-        
-        //        PAGE 0 (first page)
-        //        adds header for first page
-        dialog.addHeader("Dialog - Page 0");
-        
-        //        add panel 1
-        dialog.addPanel("Panel 1", "<p>Some content for panel 1. This has no padding.</p>", "panel-body");
-        dialog.get("panel:0").setPadding(0);
-        
-        dialog.addButton("Next", function (dialog) {
-            
+        var that = this;
+        if(historyDialog == null){
+            historyDialog = AJS.ConfluenceDialog({
+                width: 700,
+                height: 500,
+                id: "chat-history-dialog",
+                closeOnOutsideClick: true,
+                onCancel: cancelDialog
             });
-        
-        dialog.addButton("Next", function (dialog) {
+            historyDialog.addLink(AJS.I18n.getText("chat.history.week.name"), showHistotyWeek, "chat-history-link week ", "#");
+            historyDialog.addLink(AJS.I18n.getText("chat.history.month.name"), showHistotyMonth, "chat-history-link month ", "#");
+            historyDialog.addLink(AJS.I18n.getText("chat.history.year.name"), showHistotyYear, "chat-history-link year", "#");
+            historyDialog.addLink(AJS.I18n.getText("chat.history.all.name"), showHistotyAll, "chat-history-link all", "#");
+            historyDialog.addLink(AJS.I18n.getText("chat.history.show.in.userprofile.name"), null, "",
+                AJS.contextPath()+ "/users/chat/history.action?historyUsername="+that.opt.chatUserList+"&username="+AJS.params.remoteUser+"&days=65000");
+
+            historyDialog.addPanel("chat-history-dialog-panel", "<div id=\"chat-history-dialog-panel\"></div>");
+            historyDialog.addCancel(AJS.I18n.getText("close.name"), cancelDialog);
             
-            });
-        dialog.addButton("Cancel", function (dialog) {
-            dialog.hide();
-        });
+        }
         
+        var panel = $("#chat-history-dialog-panel");
         
-        dialog.addPage();
+        historyDialog.addHeader('..');
+        // load empty form for adding new chat-history
+        showHistoty(1);
+        historyDialog.show();
+
+        function showHistotyAll(){
+            jQuery('.chat-history-link').removeClass('active');
+            jQuery('.chat-history-link.all').addClass('active');
+            showHistoty(65000);
+            return false;
+        }
+        function showHistotyWeek(){
+            jQuery('.chat-history-link').removeClass('active');
+            jQuery('.chat-history-link.week').addClass('active');
+            showHistoty(7);
+            return false;
+        }
+        function showHistotyMonth(){
+            jQuery('.chat-history-link').removeClass('active');
+            jQuery('.chat-history-link.month').addClass('active');
+            showHistoty(30);
+            return false;
+        }
         
-        //        Add events to dialog trigger elements
-        
-        dialog.gotoPage(0);
-        dialog.gotoPanel(0);
-        dialog.show();
+        function showHistotyYear(){
+            jQuery('.chat-history-link').removeClass('active');
+            jQuery('.chat-history-link.year').addClass('active');
+            showHistoty(365);
+            return false;
+        }
+
+        function showHistoty(days) {
+            
+            // submit form via ajax
+            panel.load(AJS.Data.get("context-path") + "/ajax/chat/gethistory.action", {
+                days : days,
+                historyUsername:that.opt.chatUserList
+            }, initForm);
+            return  false;
+        }
+
+        function cancelDialog() {
+            // hide dialog
+            historyDialog.hide();
+            // remove panel content
+            panel.empty();
+        }
+
+        function initForm() {
+            var elem = $('#chat-history-dialog .dialog-page-body');
+            elem.scrollTop(elem[0].scrollHeight);
+            historyDialog.addHeader(panel.find('.chat-history-title').text());
+            AJS.Confluence.Binder.userHover();
+        }
     }
-    
-    
+        
     var chatBar = new ChatBar();
     ConfluenceChatAPI.isOnline = function(){
         return chatBar.isOnline();
@@ -1250,10 +1300,10 @@ ConfluenceChatConfig = {
     }
 
 
-//    ConfluenceChatAPI.showHistory = function(username){
-//        new ChatHistory({
-//            displayTitle: username
-//        });
-//    }
-
+    ConfluenceChatAPI.showHistory = function(username){
+        new ChatHistory({
+            chatUserList: username
+        });
+    }
+    
 })(jQuery);

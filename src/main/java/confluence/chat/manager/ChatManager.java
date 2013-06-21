@@ -14,6 +14,7 @@ import confluence.chat.model.ChatPreferences;
 import confluence.chat.model.ChatStatus;
 import confluence.chat.model.ChatUser;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -72,4 +73,6 @@ public interface ChatManager {
     public void doLogout(String username);
 
     public void doLogin(String username);
+    
+    public Map<String, Integer> getChatBoxCountOfUser(User user);
 }

@@ -1,0 +1,8 @@
+<html>
+    <head>
+        <title>$i18n.getText('chat.history.title')</title>        
+    </head>
+    <body>
+        #parse("confluence/chat/templates/gethistory.vm")
+    </body>
+</html>

@@ -27,8 +27,13 @@ public class ChatBoxMap extends ConcurrentHashMap<String, ChatBox> implements Se
         }
         return this.get(chatBoxId.toString());
     }
-    public ChatBox remove(ChatBoxId id){
+
+    public ChatBox remove(ChatBoxId id) {
         return this.remove(id.toString());
     }
-    
+
+    public Boolean hasChatBoxWithUser(String user) {
+        ChatBoxId chatBoxId = new ChatBoxId(user);
+        return this.containsKey(chatBoxId.toString());
+    }
 }

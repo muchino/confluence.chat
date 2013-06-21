@@ -160,6 +160,8 @@ cb-title {
 .chatbox .cb-mh{
     margin-left: 45px;  
 }
+
+.chat-historylist .cb-mt,
 .chatbox .cb-mt{
     text-align: right;
     border-bottom: 1px solid #EEE;
@@ -168,6 +170,7 @@ cb-title {
     color: #777777
 }
 
+.chat-historylist .cb-ut,
 .chatbox .cb-ut {
     clear: both;
 }
@@ -214,4 +217,29 @@ cb-title {
 
 #chatsound {
     display: none;
+}
+
+.chat-history-link {
+    float: left;
+}
+
+.aui-dialog .dialog-button-panel a.button-panel-link.chat-history-link.active {
+    color: black;
+}
+
+.aui-dialog .chat-history-user-page,
+.aui-dialog .chat-history-title {
+    display: none;
+}
+
+h1.chat-history-title .confluence-userlink {
+    color: #000;
+}
+
+.chat-historylist .userLogoLink {
+    float: left;
+}
+
+.chat-historylist .cb-mh{
+    margin-left: 60px;
 }

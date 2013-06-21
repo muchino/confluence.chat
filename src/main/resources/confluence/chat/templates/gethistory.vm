@@ -1,0 +1,82 @@
+<div class="chat-historylist">
+    #if($chatUser.username)    
+        #if($messages.isEmpty())
+            <h1 class="chat-history-title">#usernameLink($chatUser.username)</h1>
+            #applyDecorator ("warning" )
+                $i18n.getText('chat.history.empty')
+           #end  
+        #else
+            #set($messagesince = $messages.get(0).senddate)
+            <h1 class="chat-history-title">#usernameLink($chatUser.username) - $dateFormatter.formatDateTime($messagesince)</h1>
+        <form class="parameters hidden">
+            <input type="text" name="fullname" value="$!generalUtil.escapeForHtmlAttribute($chatUser.fullName)" />
+            <input type="text" name="username" value="$!chatUser.username" />
+            <input type="text" name="senddate" value="$!senddate" />
+            <input type="text" name="id" value="$!id" />
+        </form>
+            <div class="chat-history-user-page">
+                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=7">$i18n.getText('chat.history.week.name')</a>&nbsp;&#124;&nbsp;
+                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=30">$i18n.getText('chat.history.month.name')</a>&nbsp;&#124;&nbsp;
+                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=365">$i18n.getText('chat.history.year.name')</a>&nbsp;&#124;&nbsp;
+                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=65000">$i18n.getText('chat.history.all.name')</a>
+                
+            </div>
+
+            #set($author = "")
+            #set($oldLine = false)
+
+            #foreach($chatMessage in $messages)    
+                #set($senddate = $chatMessage.senddate.time)
+
+                #set($id = $chatMessage.id)
+                #set($newLine = $action.writeNewLine($chatMessage.senddate))
+                ## Wenn vorher schon eine neue line war und nun wieder -> alte schliessen
+                #if($oldLine && $newLine)</div>#end 
+                #if($newLine )
+                    <div class="cb-mc">
+                        <div class="cb-mt">$dateFormatter.formatDateTime($chatMessage.senddate)</div>
+                  #end
+                  #set($newAuthor = $author  != $chatMessage.from)
+
+                  #if($newAuthor || $newLine)
+                        #if($author != "")
+                                       </div>
+                                </div><!-- new author -->
+                        #end
+                        #set($author = $chatMessage.from)  
+                        <div class="cb-ut">
+                            #userLogoBlock($chatMessage.from)
+                            <div class="cb-mh">
+                                <div class="cb-f">#usernameLink($chatMessage.from)</div>
+                  #end
+                 <div class="cb-mtext">$generalUtil.htmlEncode($chatMessage.message)</div>
+
+
+
+                #set($oldLine = true)
+            #end
+                            </div>
+                        </div><!-- new author -->
+            </div>
+        #end
+   #else
+   
+   
+   
+        <table width="100%" class="grid aui">
+            <tbody><tr>
+                    <th>$i18n.getText('username.name')</th>
+                    <th>$i18n.getText('chat.history.messages')</th>
+                    <th></th>
+                </tr>
+                #foreach ($mapEntry in $action.getChatBoxCount().entrySet())
+                <tr>
+                    <td  align="left">#usernameLink($mapEntry.key)</td>
+                    <td >$mapEntry.value</td>
+                    <td><a href="?historyUsername=$mapEntry.key&username=$remoteUser.name">$i18n.getText('show.word')</a></td>
+                </tr>
+                #end
+            </tbody>
+        </table>         
+   #end
+</div>

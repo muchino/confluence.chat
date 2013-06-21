@@ -9,7 +9,7 @@
     <packaging>atlassian-plugin</packaging>
     <name>Confluence Chat</name>
     <description>A simple built-in chat for confluence</description>
-    <version>1.5.3</version>
+    <version>1.6.0</version>
     <organization>
         <name>Oliver Straesser</name>
         <url>https://github.com/muchino/confluence.chat</url>
