@@ -161,7 +161,14 @@
         <resource type="download" name="modernizr.custom.53588.js" location="confluence/chat/js/modernizr.custom.53588.js"/>
         <resource name="admin.js"  type="download" location="confluence/chat/js/admin.js"/>
         <resource name="admin.css" type="download" location="confluence/chat/css/admin.css"/>
-    </web-resource>    
+    </web-resource> 
+    
+    <web-resource key="chat-print" name="Print stylesheets">
+        <resource name="print.css" type="download" location="confluence/chat/css/print.css">
+            <param name="media" value="print"/>
+        </resource>
+        <context>coreSkin</context>
+    </web-resource>   
     
     <web-item key="confluence-chat-admin-menu" name="Confluence Chat" section="system.admin/configuration"  weight="41">
         <label key="chat.config.webitem"/>

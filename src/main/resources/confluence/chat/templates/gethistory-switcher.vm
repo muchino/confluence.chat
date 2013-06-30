@@ -1,0 +1,7 @@
+<div class="chat-history-user-page aui-buttons">
+    <a class="aui-button #if($action.days == 1) active #end" href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=1">$i18n.getText('chat.history.yesterday.name')</a>
+    <a class="aui-button #if($action.days == 7) active #end" href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=7">$i18n.getText('chat.history.week.name')</a>
+    <a class="aui-button #if($action.days == 30) active #end" href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=30">$i18n.getText('chat.history.month.name')</a>
+    <a class="aui-button #if($action.days == 365) active #end" href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=365">$i18n.getText('chat.history.year.name')</a>
+    <a class="aui-button #if($action.days == 0) active #end" href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=0">$i18n.getText('chat.history.all.name')</a>
+</div>

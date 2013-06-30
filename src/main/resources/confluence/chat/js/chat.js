@@ -1218,7 +1218,7 @@ ConfluenceChatConfig = {
             historyDialog.addLink(AJS.I18n.getText("chat.history.year.name"), showHistotyYear, "chat-history-link year", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.all.name"), showHistotyAll, "chat-history-link all", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.show.in.userprofile.name"), null, "",
-                AJS.contextPath()+ "/users/chat/history.action?historyUsername="+that.opt.chatUserList+"&username="+AJS.params.remoteUser+"&days=65000");
+                AJS.contextPath()+ "/users/chat/history.action?historyUsername="+that.opt.chatUserList+"&username="+AJS.params.remoteUser);
 
             historyDialog.addPanel("chat-history-dialog-panel", "<div id=\"chat-history-dialog-panel\"></div>");
             historyDialog.addCancel(AJS.I18n.getText("close.name"), cancelDialog);
@@ -1235,7 +1235,7 @@ ConfluenceChatConfig = {
         function showHistotyAll(){
             jQuery('.chat-history-link').removeClass('active');
             jQuery('.chat-history-link.all').addClass('active');
-            showHistoty(65000);
+            showHistoty(0);
             return false;
         }
         function showHistotyWeek(){

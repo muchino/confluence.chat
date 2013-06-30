@@ -29,7 +29,7 @@ public class GetHistoryAction extends AbstractChatAction {
     private static final String PARAM_DAYS = "days";
     private ChatMessageList messages = new ChatMessageList();
     private ChatUser chatUser = null;
-    private Integer days = 65000;
+    private Integer days = 7;
     private DateFormat miuntes = new SimpleDateFormat("yMdkm");
     private String lastWrittenMessageDate = null;
     private Date messagesince = null;
@@ -58,17 +58,22 @@ public class GetHistoryAction extends AbstractChatAction {
             }
         }
 
-        messagesince = getSinceDate(days);
+        messagesince = GetHistoryAction.getSinceDate(days);
         if (StringUtils.isNotBlank(usernameList)) {
             chatUser = getChatManager().getChatUser(usernameList);
-            messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
-            Collections.reverse(messages);
+            if (days > 0) {
+                messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
+                Collections.reverse(messages);
+            } else {
+                messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessages();
+            }
+
         }
         return SUCCESS;
     }
 
-    public static Date getSinceDate(Integer numberOfDays){
-    
+    public static Date getSinceDate(Integer numberOfDays) {
+
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR, 0);
         cal.set(Calendar.MINUTE, 0);
@@ -77,7 +82,7 @@ public class GetHistoryAction extends AbstractChatAction {
         cal.add(Calendar.DATE, -1 * numberOfDays);
         return cal.getTime();
     }
-    
+
     public Map<String, Integer> getChatBoxCount() {
         return getChatManager().getChatBoxCountOfUser(getRemoteUser());
     }

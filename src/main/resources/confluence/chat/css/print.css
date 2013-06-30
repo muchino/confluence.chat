@@ -1,0 +1,9 @@
+.chat-history-user-page.aui-buttons,
+body .chatbox,
+#chatbar {
+    display: none !important;
+}
+
+body div.cb-mt {
+    border-color: #000;
+}

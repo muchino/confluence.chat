@@ -4,7 +4,7 @@
  */
 package confluence.chat.actions;
 
-import com.atlassian.confluence.user.actions.AbstractUsersAction;
+import com.atlassian.confluence.user.actions.AbstractUserProfileAction;
 import com.atlassian.confluence.user.actions.UserAware;
 import com.atlassian.user.User;
 import com.opensymphony.webwork.ServletActionContext;
@@ -23,13 +23,13 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author oli
  */
-public class GetUserHistoryAction extends AbstractUsersAction implements UserAware {
+public class GetUserHistoryAction extends AbstractUserProfileAction implements UserAware {
 
     private static final String PARAM_CHATBOX = "historyUsername";
     private static final String PARAM_DAYS = "days";
     private ChatMessageList messages = new ChatMessageList();
     private ChatUser chatUser = null;
-    private Integer days = 1;
+    private Integer days = 7;
     private DateFormat miuntes = new SimpleDateFormat("yMdkm");
     private String lastWrittenMessageDate = null;
     private Date messagesince = null;
@@ -60,11 +60,16 @@ public class GetUserHistoryAction extends AbstractUsersAction implements UserAwa
             }
         }
 
-        messagesince = GetHistoryAction.getSinceDate(days);
+        messagesince = GetHistoryAction.getSinceDate(getDays());
         if (StringUtils.isNotBlank(usernameList)) {
             chatUser = getChatManager().getChatUser(usernameList);
-            messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
-            Collections.reverse(messages);
+            if (getDays() > 0) {
+                messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
+                Collections.reverse(messages);
+            } else {
+                messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessages();
+            }
+
         }
         return SUCCESS;
     }
@@ -77,16 +82,6 @@ public class GetUserHistoryAction extends AbstractUsersAction implements UserAwa
     @Override
     public User getUser() {
         return getRemoteUser();
-    }
-
-    @Override
-    public boolean isUserRequired() {
-        return true;
-    }
-
-    @Override
-    public boolean isViewPermissionRequired() {
-        return true;
     }
 
     /**
@@ -131,5 +126,12 @@ public class GetUserHistoryAction extends AbstractUsersAction implements UserAwa
      */
     public void setChatManager(ChatManager chatManager) {
         this.chatManager = chatManager;
+    }
+
+    /**
+     * @return the days
+     */
+    public Integer getDays() {
+        return days;
     }
 }

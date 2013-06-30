@@ -2,6 +2,7 @@
     #if($chatUser.username)    
         #if($messages.isEmpty())
             <h1 class="chat-history-title">#usernameLink($chatUser.username)</h1>
+            #parse("confluence/chat/templates/gethistory-switcher.vm")
             #applyDecorator ("warning" )
                 $i18n.getText('chat.history.empty')
            #end  
@@ -14,13 +15,7 @@
             <input type="text" name="senddate" value="$!senddate" />
             <input type="text" name="id" value="$!id" />
         </form>
-            <div class="chat-history-user-page">
-                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=7">$i18n.getText('chat.history.week.name')</a>&nbsp;&#124;&nbsp;
-                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=30">$i18n.getText('chat.history.month.name')</a>&nbsp;&#124;&nbsp;
-                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=365">$i18n.getText('chat.history.year.name')</a>&nbsp;&#124;&nbsp;
-                <a href="?historyUsername=$chatUser.username&username=$remoteUser.name&days=65000">$i18n.getText('chat.history.all.name')</a>
-                
-            </div>
+        #parse("confluence/chat/templates/gethistory-switcher.vm")
 
             #set($author = "")
             #set($oldLine = false)
