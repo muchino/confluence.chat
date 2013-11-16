@@ -21,6 +21,7 @@ public class ChatConfiguration implements Serializable, Configuration {
     private String chatVersionPlain = "0";
     private Boolean hideInEditMode = false;
     private Boolean debugMode = false;
+    private Integer heartBeat = 700;
 
     public ChatConfiguration() {
     }
@@ -123,5 +124,19 @@ public class ChatConfiguration implements Serializable, Configuration {
      */
     public void setPlaySound(Boolean playSound) {
         this.playSound = playSound;
+    }
+
+    /**
+     * @return the heartBeat
+     */
+    public Integer getHeartBeat() {
+        return heartBeat;
+    }
+
+    /**
+     * @param heartBeat the heartBeat to set
+     */
+    public void setHeartBeat(Integer heartBeat) {
+        this.heartBeat = heartBeat;
     }
 }

@@ -124,6 +124,18 @@
                                 </div>
                             </div>
                         </div>                    
+                        <div class="field-group">
+                            <label for="chat-heartbeat">$i18n.getText('chat.config.heartbeat.title')</label>
+                            <div class="edit">
+                                <input class="text" type="text" id="chat-heartbeat" name="heartbeat" autocomplete="off" title="$i18n.getText('chat.config.heartbeat.desc')" value="$action.getHeartBeat()">
+                                    <div class="description">$i18n.getText('chat.config.heartbeat.desc')</div>
+                            </div>
+                            <div class="view">
+                                <div id="chat-debugMode" class="field-value">
+                                    $action.getHeartBeat() ms
+                                </div>
+                            </div>
+                        </div>                         
                     </fieldset>
                     <div class="buttons-container">
                         <div class="buttons view">

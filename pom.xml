@@ -25,6 +25,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>com.atlassian.usercompatibility</groupId>
+            <artifactId>usercompatibility-confluence</artifactId>
+            <version>2.1.4</version>
+        </dependency>        
+        <dependency>
             <groupId>com.atlassian.sal</groupId>
             <artifactId>sal-api</artifactId>
             <version>2.6.0</version>

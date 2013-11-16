@@ -54,6 +54,10 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         return this.accessGroupsCSV.replaceAll(",", "\n");
     }
 
+    public Integer getHeartBeat() {
+        return getChatManager().getChatConfiguration().getHeartBeat();
+    }
+
     public String getAccessGroupsCSV() {
         return this.accessGroupsCSV;
     }
