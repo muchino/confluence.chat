@@ -785,11 +785,6 @@ ConfluenceChatConfig = {
         jQuery.jStorage.subscribe('chatbox-'+that.chatBoxId,  function(channel, data){
             if(data ==="stopBlink"){
                 that.stopBlink();
-            }else if(data ==="open"){
-                that.open();
-            } else if(data ==="close"){
-                that.close();
-                
             }
         });        
         chatBar.log("created chatbox init with " + len + " messages");
@@ -1024,7 +1019,7 @@ ConfluenceChatConfig = {
         chatBar.restructureChatBoxes();
         jQuery.post(AJS.contextPath()+"/chat/close.action", {
             spaceKey : AJS.params.spaceKey ,
-            close: this.chatUserList
+            close: this.chatBoxId
         } );
     }
     
@@ -1033,7 +1028,7 @@ ConfluenceChatConfig = {
         if(confirm('Delete this history?')){
             jQuery.post(AJS.contextPath()+"/chat/delete.action", {
                 spaceKey : AJS.params.spaceKey ,
-                deleteBox: this.chatUserList
+                deleteBox: that.chatBoxId
             } , function(){
                 that.box.find('.cb-content').empty();
             });
@@ -1267,7 +1262,7 @@ ConfluenceChatConfig = {
             historyDialog.addLink(AJS.I18n.getText("chat.history.year.name"), showHistotyYear, "chat-history-link year", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.all.name"), showHistotyAll, "chat-history-link all", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.show.in.userprofile.name"), null, "",
-                AJS.contextPath()+ "/users/chat/history.action?historyUsername="+that.opt.chatUserList+"&username="+AJS.params.remoteUser);
+                AJS.contextPath()+ "/users/chat/history.action?chatBoxId="+that.opt.chatBoxId+"&username="+AJS.params.remoteUser);
 
             historyDialog.addPanel("chat-history-dialog-panel", "<div id=\"chat-history-dialog-panel\"></div>");
             historyDialog.addCancel(AJS.I18n.getText("close.name"), cancelDialog);
@@ -1312,7 +1307,7 @@ ConfluenceChatConfig = {
             // submit form via ajax
             panel.load(AJS.Data.get("context-path") + "/ajax/chat/gethistory.action", {
                 days : days,
-                historyUsername:that.opt.chatUserList
+                chatBoxId:that.opt.chatBoxId
             }, initForm);
             return  false;
         }

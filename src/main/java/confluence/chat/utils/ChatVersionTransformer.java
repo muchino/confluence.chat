@@ -4,8 +4,16 @@
  */
 package confluence.chat.utils;
 
+import com.atlassian.confluence.usercompatibility.UserCompatibilityHelper;
 import confluence.chat.ChatVersion;
 import confluence.chat.manager.ChatManager;
+import confluence.chat.model.ChatBox;
+import confluence.chat.model.ChatBoxMap;
+import confluence.chat.model.ChatMessage;
+import confluence.chat.model.ChatMessageList;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *

@@ -4,25 +4,18 @@ import com.atlassian.confluence.core.ConfluenceActionSupport;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.utils.ChatUtils;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
 
-    private final ChatManager chatManager;
+    private ChatManager chatManager;
     private String accessGroupsCSV;
     private String activeTab;
-
-    public AbstractChatConfigAction(ChatManager chatManager) {
-        this.chatManager = chatManager;
-
-    }
 
     @Override
     public String execute() throws Exception {
         activeTab = getActiveTab();
-        this.accessGroupsCSV = getGroups(getChatManager().getChatConfiguration());
         return SUCCESS;
     }
 
@@ -51,7 +44,8 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
     }
 
     public String getAccessGroupsLines() {
-        return this.accessGroupsCSV.replaceAll(",", "\n");
+
+        return this.getAccessGroupsCSV().replaceAll(",", "\n");
     }
 
     public Integer getHeartBeat() {
@@ -59,6 +53,11 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
     }
 
     public String getAccessGroupsCSV() {
+
+        if (this.accessGroupsCSV == null) {
+            this.accessGroupsCSV = getGroups(getChatManager().getChatConfiguration());
+        }
+
         return this.accessGroupsCSV;
     }
 
@@ -67,10 +66,16 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         Iterator<String> iterator = userAccessor.getUserNames().iterator();
         while (iterator.hasNext()) {
             String username = iterator.next();
-            Integer count = getChatManager().countChatBoxes(username);
-            if (count > 0) {
-                boxes.put(username, count);
+            try {
+                Integer count = chatManager.countChatBoxes(username);
+                if (count > 0) {
+                    boxes.put(username, count);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                break;
             }
+
         }
         return boxes;
     }
@@ -82,5 +87,12 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
      */
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    /**
+     * @param chatManager the chatManager to set
+     */
+    public void setChatManager(ChatManager chatManager) {
+        this.chatManager = chatManager;
     }
 }

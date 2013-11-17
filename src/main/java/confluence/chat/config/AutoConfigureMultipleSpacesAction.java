@@ -22,10 +22,7 @@ public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
 
     private SpaceManager spaceManager;
 
-    public AutoConfigureMultipleSpacesAction(SpaceManager spaceManager, ChatManager chatManager) {
-        super(chatManager);
-        this.spaceManager = spaceManager;
-    }
+
 
     @Override
     public String execute() throws Exception {
@@ -74,5 +71,12 @@ public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
     @Override
     public String getActiveTab() {
         return "spaceimporter";
+    }
+
+    /**
+     * @param spaceManager the spaceManager to set
+     */
+    public void setSpaceManager(SpaceManager spaceManager) {
+        this.spaceManager = spaceManager;
     }
 }

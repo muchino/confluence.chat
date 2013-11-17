@@ -14,17 +14,9 @@ public class ViewSpaceConfigurationAction extends AbstractSpaceAction implements
     private String accessGroupsCSV;
     private ChatManager chatManager;
 
-    public ViewSpaceConfigurationAction(ChatManager chatManager) {
-        this.chatManager = chatManager;
-
-    }
-
     @Override
     public String execute() throws Exception {
         super.execute();
-        this.accessGroupsCSV = "";
-        List<String> groups = chatManager.getChatSpaceConfiguration(getSpaceKey()).getGroups();
-        this.accessGroupsCSV = ChatUtils.listToString(groups);
         return SUCCESS;
     }
 
@@ -39,27 +31,45 @@ public class ViewSpaceConfigurationAction extends AbstractSpaceAction implements
     }
 
     public String getAccessGroupsLines() {
-        return this.accessGroupsCSV.replaceAll(",", "\n");
+        return this.getAccessGroupsCSV().replaceAll(",", "\n");
     }
 
     public String getAccessGroupsCSV() {
+        if (this.accessGroupsCSV == null) {
+            List<String> groups = getChatManager().getChatSpaceConfiguration(getSpaceKey()).getGroups();
+            this.accessGroupsCSV = ChatUtils.listToString(groups);
+        }
         return this.accessGroupsCSV;
     }
 
     public Boolean getAllowAllUsers() {
-        return chatManager.getChatSpaceConfiguration(getSpaceKey()).getAllowAll();
+        return getChatManager().getChatSpaceConfiguration(getSpaceKey()).getAllowAll();
     }
 
     public Boolean getGlobalAllowAll() {
-        return chatManager.getChatConfiguration().getAllowAll();
+        return getChatManager().getChatConfiguration().getAllowAll();
     }
 
     public String getGlobalGroups() {
-        return ChatUtils.listToString(chatManager.getChatConfiguration().getGroups());
+        return ChatUtils.listToString(getChatManager().getChatConfiguration().getGroups());
     }
 
     @Override
     public Breadcrumb getBreadcrumb() {
         return new SpaceAdminActionBreadcrumb(this, space);
+    }
+
+    /**
+     * @param chatManager the chatManager to set
+     */
+    public void setChatManager(ChatManager chatManager) {
+        this.chatManager = chatManager;
+    }
+
+    /**
+     * @return the chatManager
+     */
+    public ChatManager getChatManager() {
+        return chatManager;
     }
 }

@@ -1,13 +1,12 @@
 package confluence.chat.config;
 
-import confluence.chat.manager.ChatManager;
-
 public class ViewConfigurationAction extends AbstractChatConfigAction {
 
-    public ViewConfigurationAction(ChatManager chatManager) {
-        super(chatManager);
+    @Override
+    public void validate() {
+        super.validate();
     }
-
+    
     @Override
     public String execute() throws Exception {
         return super.execute();

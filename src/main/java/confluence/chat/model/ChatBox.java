@@ -5,6 +5,7 @@
 package confluence.chat.model;
 
 import confluence.chat.manager.ChatManager;
+import confluence.chat.utils.ChatUtils;
 import java.io.Serializable;
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class ChatBox implements Serializable {
     }
 
     public ChatBoxId getId() {
-        return new ChatBoxId(getMembers());
+        return new ChatBoxId(members);
     }
 
     public void addMessage(ChatMessage chatMessages) {
@@ -80,7 +81,11 @@ public class ChatBox implements Serializable {
     public Map<String, Object> getJSONMap(ChatManager manager) {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         jsonMap.put("id", this.getId().toString());
-        jsonMap.put("un", this.getMembers());
+        List<String> userNameMembers = new ArrayList<String>();
+        for (int i = 0; i < members.size(); i++) {
+            userNameMembers.add(ChatUtils.getUserNameByKeyOrUserName(members.get(i)));
+        }
+        jsonMap.put("un", userNameMembers);
         jsonMap.put("open", this.isOpen());
         jsonMap.put("lm", this.getLastMessage().getTime());
         if (!this.messages.isEmpty()) {
@@ -100,13 +105,6 @@ public class ChatBox implements Serializable {
 
 
         return jsonMap;
-    }
-
-    /**
-     * @return the members
-     */
-    public List<String> getMembers() {
-        return members;
     }
 
     public void close() {
@@ -174,5 +172,9 @@ public class ChatBox implements Serializable {
             }
         }
         return list;
+    }
+
+    public List<String> getUserKeyMembers() {
+        return members;
     }
 }

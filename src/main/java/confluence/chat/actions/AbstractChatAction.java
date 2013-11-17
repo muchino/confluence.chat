@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 public abstract class AbstractChatAction extends ConfluenceActionSupport implements Beanable {
@@ -64,20 +63,21 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
             HttpServletRequest request = ServletActionContext.getRequest();
             getChatManager().setOnlineStatus(getRemoteUser(), ChatStatus.NO_CHANGE);
             ChatUser chatUser = getChatManager().getChatUser(getRemoteUser());
-
-            if (chatUser.getPreferences().getShowCurrentSite() && chatManager.getChatConfiguration().getShowWhereIam()) {
-                String parameterPageId = request.getParameter("pageId");
-                if (StringUtils.isNumeric(parameterPageId)) {
-                    Long pageId = new Long(parameterPageId);
-                    if (getPageManager().getById(pageId) != null) {
-                        chatUser.setCurrentSite(pageId);
+            if (chatUser != null) {
+                if (chatUser.getPreferences().getShowCurrentSite() && chatManager.getChatConfiguration().getShowWhereIam()) {
+                    String parameterPageId = request.getParameter("pageId");
+                    if (StringUtils.isNumeric(parameterPageId)) {
+                        Long pageId = new Long(parameterPageId);
+                        if (getPageManager().getById(pageId) != null) {
+                            chatUser.setCurrentSite(pageId);
+                        }
+                    } else {
+                        chatUser.setCurrentSite(request.getParameter("currentUrl"), request.getParameter("currentTitle"));
                     }
-                } else {
-                    chatUser.setCurrentSite(request.getParameter("currentUrl"), request.getParameter("currentTitle"));
-                }
 
-            } else {
-                chatUser.removeCurrentSite();
+                } else {
+                    chatUser.removeCurrentSite();
+                }
             }
 
             ChatBoxMap chatBoxes = getChatManager().getChatBoxes(getRemoteUser());
@@ -121,9 +121,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     public final String close() throws Exception {
         if (hasChatAccess()) {
             HttpServletRequest request = ServletActionContext.getRequest();
-            String parameter = request.getParameter(PARAM_CLOSE);
-            if (StringUtils.isNotBlank(parameter)) {
-                getChatManager().closeChatBox(getRemoteUser(), new ChatBoxId(parameter));
+            String chatBoxId = request.getParameter(PARAM_CLOSE);
+            if (StringUtils.isNotBlank(chatBoxId)) {
+                getChatManager().closeChatBox(getRemoteUser(), chatBoxId);
             }
         }
         return SUCCESS;
@@ -132,9 +132,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
     public final Boolean delete() throws Exception {
         if (hasChatAccess()) {
             HttpServletRequest request = ServletActionContext.getRequest();
-            String parameter = request.getParameter(PARAM_DELETE);
-            if (StringUtils.isNotBlank(parameter)) {
-                getChatManager().deleteChatBox(getRemoteUser(), new ChatBoxId(parameter));
+            String chatBoxId = request.getParameter(PARAM_DELETE);
+            if (StringUtils.isNotBlank(chatBoxId)) {
+                getChatManager().deleteChatBox(getRemoteUser(), chatBoxId);
                 return true;
             }
         }

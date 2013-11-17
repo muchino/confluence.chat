@@ -4,6 +4,8 @@
  */
 package confluence.chat.model;
 
+import com.atlassian.confluence.usercompatibility.UserCompatibilityHelper;
+import confluence.chat.utils.ChatUtils;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,8 +23,7 @@ public class ChatMessage implements Serializable {
     public static final String MESSAGE = "m";
     public static final String SENDDATE = "t";
     private Date senddate = new Date();
-    private String  id;
-
+    private String id;
     private Map<String, Object> jsonMap = new HashMap<String, Object>();
 
     public ChatMessage() {
@@ -62,28 +63,28 @@ public class ChatMessage implements Serializable {
      * @return the from
      */
     public String getFrom() {
-        return (String) this.jsonMap.get(FROM);
+        return ChatUtils.getUserNameByKeyOrUserName((String) this.jsonMap.get(FROM));
     }
 
     /**
      * @param from the from to set
      */
     public void setFrom(String from) {
-        this.jsonMap.put(FROM, from);
+        this.jsonMap.put(FROM, ChatUtils.getCorrectUserKey(from));
     }
 
     /**
      * @return the from
      */
     public String getTo() {
-        return (String) this.jsonMap.get(TO);
+        return ChatUtils.getUserNameByKeyOrUserName((String) this.jsonMap.get(TO));
     }
 
     /**
      * @param from the from to set
      */
     public void setTo(String to) {
-        this.jsonMap.put(TO, to);
+        this.jsonMap.put(TO, ChatUtils.getCorrectUserKey(to));
     }
 
     /**

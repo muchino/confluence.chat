@@ -8,6 +8,7 @@ import com.atlassian.bandana.BandanaManager;
 import com.atlassian.confluence.setup.bandana.ConfluenceBandanaContext;
 import com.atlassian.confluence.user.UserAccessor;
 import com.atlassian.confluence.user.actions.ProfilePictureInfo;
+import com.atlassian.confluence.usercompatibility.UserCompatibilityHelper;
 import com.atlassian.sal.api.transaction.TransactionCallback;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
 import com.atlassian.user.GroupManager;
@@ -37,16 +38,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class DefaultChatManager implements ChatManager {
 
-    private static final String KEY_HISTORY = "confluence.chat.history.";
-    private static final String KEY_LIVEBOX = "confluence.chat.live.";
-    private static final String KEY_PREFERENCES = "confluence.chat.preferences";
-    private static final String KEY_GLOBAL_CONFIGURATION = "confluence.chat.configuration";
-    private static final String BANDANA_CHAT = "confluence.chat";
     private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     private BandanaManager bandanaManager;
     private UserAccessor userAccessor;
-    private ConfluenceBandanaContext confluenceBandanaContextPreferences = new ConfluenceBandanaContext(KEY_PREFERENCES);
-    private ConfluenceBandanaContext confluenceBandanaContextChat = new ConfluenceBandanaContext(BANDANA_CHAT);
     private ChatUserList users = new ChatUserList();
     private Map<String, ChatBoxMap> chatBoxes = new ConcurrentHashMap<String, ChatBoxMap>();
     private Map<String, ChatSpaceConfiguration> configurationSpace = new ConcurrentHashMap<String, ChatSpaceConfiguration>();
@@ -82,87 +76,90 @@ public final class DefaultChatManager implements ChatManager {
      */
     @Override
     public Integer countChatBoxes(final String username) {
-        return (Integer) transactionTemplate.execute(new TransactionCallback() {
-            @Override
-            public Integer doInTransaction() {
-                ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(username);
-                int count = 0;
-                Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
-                while (iterator.hasNext()) {
-                    iterator.next();
-                    count++;
-                }
-                return count;
-            }
-        });
+        return getChatBoxes(username).size();
     }
 
     /**
      * Returns all chatboxes of an user
      *
-     * @param username
+     * @param userKey
      * @return
      */
     private ChatBoxMap getChatBoxes(final String username) {
 
 
-        if (!chatBoxes.containsKey(username)) {
+        String userKey = ChatUtils.getCorrectUserKey(username);
+        if (!chatBoxes.containsKey(userKey)) {
+            ChatBoxMap chatBoxeMapOfUser = getChatBoxMapOfUserFromBandana(userKey);
 
-            return (ChatBoxMap) transactionTemplate.execute(new TransactionCallback() {
-                @Override
-                public ChatBoxMap doInTransaction() {
-                    ChatBoxMap chatBoxMap = new ChatBoxMap();
-                    ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(username);
-                    Boolean validChatBox = true;
+            /**
+             * check if old chatboxes are there (pre 5.3) and convert them if
+             * needed
+             */
+            if (chatBoxeMapOfUser.isEmpty()
+                    && UserCompatibilityHelper.isRenameUserImplemented()
+                    && !username.equals(userKey)) {
+                ChatBoxMap oldChatBoxeMapOfUser = getChatBoxMapOfUserFromBandana(username);
+                chatBoxeMapOfUser = this.transformToUserKeyChatBoxMap(username, oldChatBoxeMapOfUser);
+
+
+            }
+            chatBoxes.put(userKey, chatBoxeMapOfUser);
+            return chatBoxeMapOfUser;
+
+        }
+
+
+        return chatBoxes.get(userKey);
+    }
+
+    private ChatBoxMap getChatBoxMapOfUserFromBandana(final String username) {
+        return (ChatBoxMap) transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public ChatBoxMap doInTransaction() {
+                ChatBoxMap chatBoxMap = new ChatBoxMap();
+                ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(username);
+                try {
+
+                    XStream xStream = new XStream();
+                    // Set the classloader to this class's class loader, which should be the plugin classloader
+                    xStream.setClassLoader(ChatBox.class.getClassLoader());
+                    xStream.alias("ChatBox", ChatBox.class);
                     try {
+                        Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
+                        while (iterator.hasNext()) {
+                            String chatBoxId = iterator.next();
+                            try {
+                                ChatBox chatBox = (ChatBox) bandanaManager.getValue(confluenceBandanaContext, chatBoxId);
+                                if (chatBox == null) {
+                                    bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
 
-                        XStream xStream = new XStream();
-                        // Set the classloader to this class's class loader, which should be the plugin classloader
-                        xStream.setClassLoader(ChatBox.class.getClassLoader());
-                        xStream.alias("ChatBox", ChatBox.class);
-                        try {
-                            Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
-                            while (iterator.hasNext()) {
-                                String chatBoxId = iterator.next();
-                                try {
-                                    ChatBox chatBox = (ChatBox) bandanaManager.getValue(confluenceBandanaContext, chatBoxId);
-                                    if (chatBox == null) {
-                                        bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
-
-                                    } else {
-                                        chatBoxMap.put(chatBoxId, chatBox);
-                                    }
-                                } catch (Exception e) {
-                                    logger.warn(" error bandanaManager.getValue for chat box  " + chatBoxId + " for user: " + username);
-                                    validChatBox = false;
+                                } else {
+                                    chatBoxMap.put(chatBoxId, chatBox);
                                 }
+                            } catch (Exception e) {
+                                logger.warn(" error bandanaManager.getValue for chat box  " + chatBoxId + " for user: " + username);
                             }
-                        } catch (Exception e) {
-                            logger.warn(" error getChatBoxes " + username, e);
                         }
                     } catch (Exception e) {
                         logger.warn(" error getChatBoxes " + username, e);
                     }
-                    /**
-                     * while updateing plugin -> an error could occour
-                     */
-                    if (validChatBox) {
-                        chatBoxes.put(username, chatBoxMap);
-                    }
-                    return chatBoxMap;
-
+                } catch (Exception e) {
+                    logger.warn(" error getChatBoxes " + username, e);
                 }
-            });
-        } else {
-            return chatBoxes.get(username);
-        }
-
+                /**
+                 * while updateing plugin -> an error could occour
+                 */
+                return chatBoxMap;
+            }
+        });
     }
 
     private ChatPreferences getPreferencesOfUser(String username) {
+        String userKey = ChatUtils.getCorrectUserKey(username);
         ChatPreferences preferences = null;
         try {
-            preferences = (ChatPreferences) bandanaManager.getValue(confluenceBandanaContextPreferences, username);
+            preferences = (ChatPreferences) bandanaManager.getValue(CONTEXT_USER_PREFERENCES, userKey);
         } catch (Exception e) {
         }
         if (preferences == null) {
@@ -174,7 +171,8 @@ public final class DefaultChatManager implements ChatManager {
 
     @Override
     public void setPreferencesOfUser(String username, ChatPreferences preferences) {
-        bandanaManager.setValue(confluenceBandanaContextPreferences, username, preferences);
+        String userKey = ChatUtils.getCorrectUserKey(username);
+        bandanaManager.setValue(CONTEXT_USER_PREFERENCES, userKey, preferences);
     }
 
     @Override
@@ -193,45 +191,49 @@ public final class DefaultChatManager implements ChatManager {
                 ChatBox chatBoxWithReceiver = getChatBoxes(receiver).getChatBoxWithUser(sender);
                 chatBoxWithReceiver.addMessage(chatMessage);
                 chatBoxWithReceiver.open();
-                saveChatBox(receiver, chatBoxWithReceiver);
+                saveChatBox(ChatUtils.getCorrectUserKey(receiver), chatBoxWithReceiver);
                 //        own chatboxes
                 ChatBox chatBoxSelf = getChatBoxes(sender).getChatBoxWithUser(receiver);
                 chatBoxSelf.addMessage(chatMessage);
                 chatBoxSelf.open();
-                saveChatBox(sender, chatBoxSelf);
+                saveChatBox(ChatUtils.getCorrectUserKey(sender), chatBoxSelf);
                 return true;
             }
         });
     }
 
     @Override
-    public void closeChatBox(final User user, final ChatBoxId chatBoxId) {
+    public void closeChatBox(final User user, final String chatBoxId) {
         transactionTemplate.execute(new TransactionCallback() {
             @Override
             public Boolean doInTransaction() {
-                ChatBox chatBoxById = getChatBoxes(user).getChatBoxById(chatBoxId);
+                ChatBox chatBoxById = getChatBoxes(user).getChatBoxByStringId(chatBoxId);
                 chatBoxById.close();
-                saveChatBox(user.getName(), chatBoxById);
+                saveChatBox(ChatUtils.getCorrectUserKey(user.getName()), chatBoxById);
                 return true;
             }
         });
     }
 
     @Override
-    public void deleteChatBox(final User user, final ChatBoxId chatBoxId) {
+    public void deleteChatBox(final User user, final String chatBoxId) {
         transactionTemplate.execute(new TransactionCallback() {
             @Override
             public Boolean doInTransaction() {
                 getChatBoxes(user).remove(chatBoxId);
                 ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(user.getName());
-                bandanaManager.removeValue(confluenceBandanaContext, chatBoxId.toString());
+                bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
                 return true;
             }
         });
     }
 
-    private void saveChatBox(String chatBoxOwner, ChatBox chatBox) {
-        bandanaManager.setValue(getConfluenceBandanaContextHistory(chatBoxOwner), chatBox.getId().toString(), chatBox);
+    /**
+     * Die Funkttion wird auch beim transform genutzt - daher muss der userkey
+     * gegeben werden
+     */
+    private void saveChatBox(String userKey, ChatBox chatBox) {
+        bandanaManager.setValue(getConfluenceBandanaContextHistory(userKey), chatBox.getId().toString(), chatBox);
     }
 
     @Override
@@ -264,16 +266,18 @@ public final class DefaultChatManager implements ChatManager {
 
     @Override
     public ChatUser getChatUser(User user) {
-        ChatUser chatUser;
-        if (!this.users.containsKey(user.getName())) {
-            chatUser = this.users.putUser(user, getPreferencesOfUser(user.getName()));
-            this.setProfilPicture(user, chatUser);
-        } else {
-            chatUser = this.users.get(user.getName());
-        }
-        if (!getChatConfiguration().getShowWhereIam()) {
-            chatUser.removeCurrentSite();
-        }
+        ChatUser chatUser = null;
+        if (user != null) {
+            if (!this.users.containsKey(user.getName())) {
+                chatUser = this.users.putUser(user, getPreferencesOfUser(user.getName()));
+                this.setProfilPicture(user, chatUser);
+            } else {
+                chatUser = this.users.get(user.getName());
+            }
+            if (!getChatConfiguration().getShowWhereIam()) {
+                chatUser.removeCurrentSite();
+            }
+        } 
         return chatUser;
 
     }
@@ -330,8 +334,8 @@ public final class DefaultChatManager implements ChatManager {
         }
     }
 
-    private ConfluenceBandanaContext getConfluenceBandanaContextHistory(String username) {
-        return new ConfluenceBandanaContext(KEY_HISTORY + username);
+    private ConfluenceBandanaContext getConfluenceBandanaContextHistory(String usernameOrKey) {
+        return new ConfluenceBandanaContext(KEY_HISTORY + usernameOrKey);
     }
 
     @Override
@@ -341,7 +345,7 @@ public final class DefaultChatManager implements ChatManager {
             xStream.setClassLoader(ChatConfiguration.class.getClassLoader());
             xStream.alias("ChatConfiguration", ChatConfiguration.class);
             try {
-                chatConfiguration = (ChatConfiguration) bandanaManager.getValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION);
+                chatConfiguration = (ChatConfiguration) bandanaManager.getValue(CONTEXT_CHAT_SETTINGS, KEY_GLOBAL_CONFIGURATION);
             } catch (Exception e) {
                 logger.warn(" error reading chat configuration");
             }
@@ -355,7 +359,7 @@ public final class DefaultChatManager implements ChatManager {
     @Override
     public void setChatConfiguration(ChatConfiguration config) {
         if (config != null) {
-            bandanaManager.setValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION, config);
+            bandanaManager.setValue(CONTEXT_CHAT_SETTINGS, KEY_GLOBAL_CONFIGURATION, config);
             chatConfiguration = config;
             chatUseCondition = null;
         }
@@ -368,7 +372,7 @@ public final class DefaultChatManager implements ChatManager {
             xStream.setClassLoader(ChatSpaceConfiguration.class.getClassLoader());
             ChatSpaceConfiguration config = null;
             try {
-                config = (ChatSpaceConfiguration) bandanaManager.getValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION + "." + spaceKey);
+                config = (ChatSpaceConfiguration) bandanaManager.getValue(CONTEXT_CHAT_SETTINGS, KEY_GLOBAL_CONFIGURATION + "." + spaceKey);
             } catch (Exception e) {
                 logger.warn(" error reading chat ChatSpaceConfiguration");
             }
@@ -383,7 +387,7 @@ public final class DefaultChatManager implements ChatManager {
     @Override
     public void setChatSpaceConfiguration(ChatSpaceConfiguration config, String spaceKey) {
         if (config != null) {
-            bandanaManager.setValue(confluenceBandanaContextChat, KEY_GLOBAL_CONFIGURATION + "." + spaceKey, config);
+            bandanaManager.setValue(CONTEXT_CHAT_SETTINGS, KEY_GLOBAL_CONFIGURATION + "." + spaceKey, config);
             this.configurationSpace.put(spaceKey, config);
             chatUseCondition = null;
         }
@@ -442,16 +446,27 @@ public final class DefaultChatManager implements ChatManager {
 
     @Override
     public void deleteChatBoxesOfUser(User user) {
-        List<ChatBoxId> removeableIds = new ArrayList<ChatBoxId>();
-        ChatBoxMap deleteChatBoxes = this.getChatBoxes(user);
-        Iterator<String> iterator = deleteChatBoxes.keySet().iterator();
-        while (iterator.hasNext()) {
-            ChatBox get = deleteChatBoxes.get(iterator.next());
-            removeableIds.add(get.getId());
-        }
-        for (int i = 0; i < removeableIds.size(); i++) {
-            this.deleteChatBox(user, removeableIds.get(i));
-        }
+        deleteChatBoxesOfUser(ChatUtils.getCorrectUserKey(user.getName()));
+    }
+
+    /**
+     * Wird genutzt um alte oder auch neue Formate zu entefernen
+     *
+     * @param usernameOrkey
+     */
+    private void deleteChatBoxesOfUser(final String usernameOrkey) {
+        transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Object doInTransaction() {
+                ConfluenceBandanaContext confluenceBandanaContext = getConfluenceBandanaContextHistory(usernameOrkey);
+                Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
+                while (iterator.hasNext()) {
+                    bandanaManager.removeValue(confluenceBandanaContext, iterator.next());
+                }
+                return null;
+            }
+        });
+        chatBoxes.remove(usernameOrkey);
     }
 
     @Override
@@ -484,5 +499,46 @@ public final class DefaultChatManager implements ChatManager {
             }
         }
         return boxes;
+    }
+
+    private ChatBoxMap transformToUserKeyChatBoxMap(String username, ChatBoxMap map) {
+        if (UserCompatibilityHelper.isRenameUserImplemented()) {
+
+
+
+            ChatBoxMap newChatBoxMap = new ChatBoxMap();
+            String userKey = ChatUtils.getCorrectUserKey(username);
+
+            Iterator<String> iterator = map.keySet().iterator();
+            while (iterator.hasNext()) {
+                // alte box
+                ChatBox box = map.get(iterator.next());
+                // change members to userkeys
+                List<String> members = new ArrayList<String>();
+                List<String> userKeyMembers = box.getUserKeyMembers();
+                for (int i = 0; i < userKeyMembers.size(); i++) {
+                    members.add(ChatUtils.getCorrectUserKey(userKeyMembers.get(i)));
+                }
+                box.getUserKeyMembers().clear();
+                box.getUserKeyMembers().addAll(members);
+
+                // change messages from & to
+                ChatMessageList messages = box.getMessages();
+                for (int i = 0; i < box.getMessages().size(); i++) {
+                    ChatMessage chatMessage = messages.get(i);
+                    chatMessage.setFrom(chatMessage.getFrom());
+                    chatMessage.setTo(chatMessage.getTo());
+                }
+
+                this.saveChatBox(userKey, box);
+                newChatBoxMap.put(box.getId().toString(), box);
+            }
+            this.deleteChatBoxesOfUser(username);
+            return newChatBoxMap;
+        }
+
+
+        return map;
+
     }
 }

@@ -1,28 +1,62 @@
 package confluence.chat.config;
 
+import com.atlassian.user.EntityException;
+import com.atlassian.user.GroupManager;
 import com.opensymphony.webwork.ServletActionContext;
-import confluence.chat.manager.ChatManager;
 import confluence.chat.utils.ChatUtils;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 public class UpdateSpaceConfigurationAction extends ViewSpaceConfigurationAction {
 
-    private ChatManager chatManager;
+    private String groups = null;
+    private List<String> groupList = new ArrayList<String>();
+    private GroupManager groupManager;
 
-    public UpdateSpaceConfigurationAction(ChatManager ChatManager) {
-        super(ChatManager);
-        this.chatManager = ChatManager;
+    @Override
+    public void validate() {
+        super.validate();
+
+        List<String> stringToList = ChatUtils.stringToList(groups);
+        for (int i = 0; i < stringToList.size(); i++) {
+            String group = stringToList.get(i);
+            try {
+                if (groupManager.getGroup(group) == null) {
+                    addActionError(getText("chat.config.import.error.group", new String[]{group}));
+                }
+            } catch (EntityException ex) {
+                addActionError(getText("chat.config.import.error.group", new String[]{group}));
+            }
+
+        }
+
+
     }
 
     @Override
     public String execute() throws Exception {
         super.execute();
         HttpServletRequest request = ServletActionContext.getRequest();
-        ChatSpaceConfiguration config = chatManager.getChatSpaceConfiguration(getSpaceKey());
+        ChatSpaceConfiguration config = getChatManager().getChatSpaceConfiguration(getSpaceKey());
         config.setAllowAll(StringUtils.isNotEmpty(request.getParameter("allowAll")));
-        config.setGroups(ChatUtils.stringToList(request.getParameter("groups")));
-        chatManager.setChatSpaceConfiguration(config, getSpaceKey());
+        config.setGroups(groupList);
+        getChatManager().setChatSpaceConfiguration(config, getSpaceKey());
         return SUCCESS;
+    }
+
+    /**
+     * @param groups the groups to set
+     */
+    public void setGroups(String groups) {
+        this.groups = groups;
+    }
+
+    /**
+     * @param groupManager the groupManager to set
+     */
+    public void setGroupManager(GroupManager groupManager) {
+        this.groupManager = groupManager;
     }
 }

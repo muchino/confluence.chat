@@ -42,12 +42,14 @@
     <xwork name="Chat" key="confluence.chat">
         
         <package name="Space Admin " extends="default" namespace="/spaces/${atlassian.plugin.key}">
-            <default-interceptor-ref name="defaultStack"/>
+            <default-interceptor-ref name="validatingStack"/>
             <action name="viewconfiguration" class="confluence.chat.config.ViewSpaceConfigurationAction" >
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-space.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-space.vm</result>
             </action>
             <action name="updateconfiguration" class="confluence.chat.config.UpdateSpaceConfigurationAction">
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-space.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-space.vm</result>
             </action>
         </package>  
                 
@@ -57,18 +59,22 @@
         </action>
                 
         <package name="Chat Config" extends="default"  namespace="/admin/plugins/${atlassian.plugin.key}">
-            <default-interceptor-ref name="defaultStack"/>
+            <default-interceptor-ref name="validatingStack"/>
             <action name="viewconfiguration" class="confluence.chat.config.ViewConfigurationAction" >
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>
             <action name="updateconfiguration" class="confluence.chat.config.UpdateConfigurationAction">
                 <result name="success" type="redirect">/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>
             <action name="editchathistory" class="confluence.chat.config.RemoveChatHistoryAction">
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>                
             <action name="doconfiguremultiplespaces" class="confluence.chat.config.AutoConfigureMultipleSpacesAction">
                 <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
             </action>                            
         </package>
         
@@ -210,4 +216,8 @@
         <link>/users/chat/history.action?username=$generalUtil.urlEncode($action.username)</link>
     </web-item>    
     
+    <web-item key="chat-history-userlink" name="Chat Histoty Tab" weight="30" section="system.user/user-content">
+        <label key="chat.history.title"/>
+        <link>/users/chat/history.action</link>
+    </web-item>     
 </atlassian-plugin>

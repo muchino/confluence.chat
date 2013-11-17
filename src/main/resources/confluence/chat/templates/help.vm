@@ -1,1 +1,4 @@
 <p>$action.getText('chat.config.help.rights')</p>
+<p><a href="https://github.com/muchino/confluence.chat/issues" target="_blank" class="aui-button">Issue Tracker</a></p>
+<p><a href="https://github.com/muchino/confluence.chat/blob/master/src/main/resources/faq.md" target="_blank" class="aui-button">FAQ</a></p>
+<p><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=o%2estraesser%40gmail%2ecom&lc=CH&item_name=Oliver%20Straesser&item_number=confluence%2echat&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest" target="_blank" class="aui-button">$i18n.getText('chat.donate')</a></p>

@@ -5,6 +5,7 @@
 package confluence.chat.model;
 
 import confluence.chat.manager.ChatManager;
+import confluence.chat.utils.ChatUtils;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +39,7 @@ public class ChatUser implements Serializable {
 
     public ChatUser(String username, ChatPreferences preferences) {
         jsonMap.put(USERNAME, username);
-        ChatBoxId chatBoxId = new ChatBoxId(username);
+        ChatBoxId chatBoxId = new ChatBoxId(ChatUtils.getCorrectUserKey(username));
         jsonMap.put(ID, chatBoxId.toString());
         this.lastSeen = new Date();
         this.preferences = preferences;

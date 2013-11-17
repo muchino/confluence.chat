@@ -4,6 +4,8 @@
  */
 package confluence.chat.utils;
 
+import com.atlassian.confluence.usercompatibility.UserCompatibilityHelper;
+import com.atlassian.user.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,5 +46,37 @@ public class ChatUtils {
             }
         }
         return list;
+    }
+
+    /**
+     * Returns the username or the userkey in confluence 5.3
+     *
+     * @param username
+     * @return
+     */
+    public static String getCorrectUserKey(String username) {
+        if (UserCompatibilityHelper.isRenameUserImplemented()) {
+            String stringKeyForUsername = UserCompatibilityHelper.getStringKeyForUsername(username);
+            if (stringKeyForUsername != null) {
+                return stringKeyForUsername;
+            }
+        }
+        return username;
+    }
+
+    /**
+     * Returns the username
+     *
+     * @param usernameOrKey
+     * @return
+     */
+    public static String getUserNameByKeyOrUserName(String usernameOrKey) {
+        if (UserCompatibilityHelper.isRenameUserImplemented()) {
+            User userForKey = UserCompatibilityHelper.getUserForKey(usernameOrKey);
+            if (userForKey != null) {
+                return userForKey.getName();
+            }
+        }
+        return usernameOrKey;
     }
 }
