@@ -5,6 +5,14 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ![alt text](http://muchino.github.com/confluence.chat/images/chat.png "")
 
+
+## Table of Contents  
+[Features](#features)  
+[FAQ](#faq)  
+[Releases](#releases)  
+[URLs](#urls)  
+
+
 ## Features
 
 * Chat between confluence users
