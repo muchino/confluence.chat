@@ -1,17 +1,14 @@
 # Confluence Chat  ![alt text](http://muchino.github.com/confluence.chat/images/plugin-logo.png "")
 
+[Features](#features)  
+[FAQ](#faq)  
+[Releases](#releases)  
+[URLs](#urls) 
+
 The confluence chat plugin  brings confluence users more together.  This built-in confluence chat for realtime collaboration gives confluence users the posibility to chat. In addition it shows the browsed page of the chat partner and the current online state.
 If the user uses confluence with multiple Browser Tabs or Browsers at the same time, the chat takes care that all chat windows are synced. 
 
 ![alt text](http://muchino.github.com/confluence.chat/images/chat.png "")
-
-
-## Table of Contents  
-[Features](#features)  
-[FAQ](#faq)  
-[Releases](#releases)  
-[URLs](#urls)  
-
 
 ## Features
 
