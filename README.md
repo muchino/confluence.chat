@@ -16,6 +16,11 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 * Autoaway
 * Multilingualism
 
+
+## FAQ
+
+[Read more in the FAQ](../master/src/main/resources/faq.md)
+
 ## Releases
 **IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
 
