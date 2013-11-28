@@ -8,7 +8,7 @@ ConfluenceChatConfig = {
 };
 
 (function($) {
-    const CHAT_CHANNEL__COORDINATOR = "chat-channel-coordinator", 
+    var CHAT_CHANNEL__COORDINATOR = "chat-channel-coordinator", 
     CHAT_CHANNEL_MESSAGES = "chat-channel-messages",
     CHAT_CHANNEL_USERS = "chat-channel-users";
 

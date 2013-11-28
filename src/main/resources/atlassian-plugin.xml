@@ -198,7 +198,10 @@
                  icon="/download/resources/${atlassian.plugin.key}/images-chat/plugin-logo.png">
         <category name="communication"/>
         <parameters>
-            <parameter name="username" type="username" required="true" />
+            <parameter name="username" type="username" required="true" >
+                <option key="showNameInPlaceholder" value="false" />
+                <option key="showValueInPlaceholder" value="true" />
+            </parameter>
         </parameters>
     </xhtml-macro>
     

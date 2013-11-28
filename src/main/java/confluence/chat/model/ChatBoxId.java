@@ -38,12 +38,8 @@ public final class ChatBoxId implements Serializable {
         this.addMember(userKey);
     }
 
-    public ChatBoxId(ChatUser user) {
-        this(user.getUsername());
-    }
-
     public ChatBoxId(User user) {
-        this(user.getName());
+        this(ChatUtils.getCorrectUserKey(user.getName()));
     }
 
     /**

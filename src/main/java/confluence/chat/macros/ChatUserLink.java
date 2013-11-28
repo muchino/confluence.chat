@@ -48,7 +48,7 @@ public class ChatUserLink implements Macro {
                     ChatUser chatUser = chatManager.getChatUser(user);
                     if (chatUser != null) {
                         status = chatUser.getJSONMap().get(ChatUser.STATUS);
-                        ChatBoxId chatBoxId = new ChatBoxId(chatUser);
+                        ChatBoxId chatBoxId = new ChatBoxId(user);
                         builder.append("<span class=\"chatuser-link-holder\" chatboxId=\"");
                         builder.append(chatBoxId.toString());
                         builder.append("\">");
