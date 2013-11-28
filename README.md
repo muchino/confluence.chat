@@ -1,4 +1,4 @@
-# Confluence Chat  ![alt text](http://muchino.github.com/confluence.chat/images/plugin-logo.png "")
+# Confluence Chat <img width="72px" src="https://raw.github.com/muchino/confluence.chat/master/src/main/resources/confluence/chat/img/plugin-logo.png"> 
 
 [Features](#features)  
 [FAQ](#faq)  
@@ -15,11 +15,12 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 * Chat between confluence users
 * "Where is my chat partner" Info
 * State: Online, Offline, Away, DND
+* History
+* Manage permission
 * Smiley support
 * Link detection
 * "New message" notification
 * Autoaway
-* Multilingualism
 
 
 ## FAQ
@@ -28,6 +29,11 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 **IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
+
+### 2.0.0
+* The stored data structure changed, because of the support for confluence 5.3
+* Massive performance improvements for the server , because only one tab is polling the server now!
+* The milliseconds of the heartbeat are now customizable 
 
 ### 1.6.0
 * Added a chat history UI 
