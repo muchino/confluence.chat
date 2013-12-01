@@ -6,6 +6,7 @@
         <version>${project.version}</version>
         <param name="plugin-icon">confluence/chat/img/plugin-icon.png</param>
         <param name="plugin-logo">confluence/chat/img/plugin-logo.png</param>
+        <param name="plugin-banner">confluence/chat/img/marketplace/banner.png</param>
         <param name="configure.url">/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</param>
     </plugin-info>
     <resource name="i18n" type="i18n" location="confluence/chat/chat" />

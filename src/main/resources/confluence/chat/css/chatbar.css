@@ -11,6 +11,10 @@
     height: 30px;
 }
 
+#chatbar #chatbar-config{
+    padding: 10px;
+}
+
 #chatbar .cb-title-config,
 #chatbar #chatbar-config,
 #chatbar.open.config #chatbar-online-users,
@@ -199,9 +203,9 @@
 }
 
 #chatbar #chatbar-config select {
-    margin: 10px;
     padding: 10px;
     width: 200px;
+    margin-bottom: 10px;
 }
 
 #chatbar .chat-where {
@@ -215,7 +219,7 @@
     top: 4px;
 }
 
-#chatbar .csound {
+#chatbar #chatbar-buttons .csound {
     background-image:  url("images-chat/sound.png");  
     background-repeat: no-repeat;
     float: right;
@@ -223,6 +227,6 @@
     width: 16px;
 }
 
-#chatbar .csound.csound-off {
+#chatbar #chatbar-buttons .csound.csound-off {
     background-image:  url("images-chat/sound_mute.png");  
 }

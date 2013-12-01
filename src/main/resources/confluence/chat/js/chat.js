@@ -1203,7 +1203,6 @@ ConfluenceChatConfig = {
             ':O' : 'surprise',
             ':o' : 'surprise',
             ':D'  : 'big-grin',
-            ':-|'  : 'straight-face',
             ':whistle:'  : 'whistle',
             ':oops:'  : 'oops',
             ':">': 'oops'
@@ -1257,7 +1256,7 @@ ConfluenceChatConfig = {
                 closeOnOutsideClick: true,
                 onCancel: cancelDialog
             });
-            historyDialog.addLink(AJS.I18n.getText("chat.history.week.name"), showHistotyWeek, "chat-history-link week ", "#");
+            historyDialog.addLink(AJS.I18n.getText("chat.history.week.name"), showHistotyWeek, "chat-history-link week active", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.month.name"), showHistotyMonth, "chat-history-link month ", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.year.name"), showHistotyYear, "chat-history-link year", "#");
             historyDialog.addLink(AJS.I18n.getText("chat.history.all.name"), showHistotyAll, "chat-history-link all", "#");
@@ -1273,7 +1272,7 @@ ConfluenceChatConfig = {
         
         historyDialog.addHeader('..');
         // load empty form for adding new chat-history
-        showHistoty(1);
+        showHistoty(7);
         historyDialog.show();
 
         function showHistotyAll(){

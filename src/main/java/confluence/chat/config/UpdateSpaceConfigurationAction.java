@@ -25,6 +25,8 @@ public class UpdateSpaceConfigurationAction extends ViewSpaceConfigurationAction
             try {
                 if (groupManager.getGroup(group) == null) {
                     addActionError(getText("chat.config.import.error.group", new String[]{group}));
+                } else {
+                    groupList.add(group);
                 }
             } catch (EntityException ex) {
                 addActionError(getText("chat.config.import.error.group", new String[]{group}));

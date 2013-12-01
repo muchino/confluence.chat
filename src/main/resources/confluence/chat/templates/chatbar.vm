@@ -71,6 +71,7 @@
                     <option  value="xa" #if($status == "xa") selected="selected" #end>$i18n.getText('chat.bar.config.offline')</option>
                 </select>
                 <br/>
+                <a href="$req.contextPath/users/chat/history.action" class="aui-button">$i18n.getText('chat.history.title')</a>
             </div>
         </div>
     </div>

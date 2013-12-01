@@ -38,9 +38,12 @@
 })(jQuery);
 (function($) {
     jQuery(document).ready(function() {
+        var forbiddenColors = [ "rgb(0, 0, 0)","rgba(0, 0, 0, 0)", 
+            "rgb(255, 255, 255)","rgba(255, 255, 255, 0)", 
+            "#ffffff", "#fff",
+            "transparent" ];
         var headerColor = $('#header').css('backgroundColor');
-        if (headerColor != "rgb(0, 0, 0)"
-                && headerColor != "transparent") {
+        if (jQuery.inArray( headerColor, forbiddenColors ) < 0) {
             try {
                 $.chatstyle.insertRule(['div.cb-head', '#chatbar'], 'background-color:' + headerColor + ";");
                 $.chatstyle.insertRule(['div.cb-head'], 'border-color:' + headerColor + ";");
