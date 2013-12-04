@@ -69,8 +69,6 @@ public interface ChatManager {
 
     public String getVersion();
 
-    public Integer countChatBoxes(final String username);
-
     public void deleteAllMessages();
 
     public void deleteChatBoxesOfUser(User user);
@@ -79,5 +77,5 @@ public interface ChatManager {
 
     public void doLogin(String username);
 
-    public Map<String, Integer> getChatBoxCountOfUser(User user);
+    public List<String> getUsersWithChats(User user);
 }

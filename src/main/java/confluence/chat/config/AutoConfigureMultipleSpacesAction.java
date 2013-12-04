@@ -7,7 +7,6 @@ package confluence.chat.config;
 import com.atlassian.confluence.spaces.Space;
 import com.atlassian.confluence.spaces.SpaceManager;
 import com.opensymphony.webwork.ServletActionContext;
-import confluence.chat.manager.ChatManager;
 import confluence.chat.utils.ChatUtils;
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +20,6 @@ import org.apache.commons.lang.StringUtils;
 public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
 
     private SpaceManager spaceManager;
-
-
 
     @Override
     public String execute() throws Exception {
@@ -66,11 +63,6 @@ public class AutoConfigureMultipleSpacesAction extends ViewConfigurationAction {
             addActionError(getText("chat.config.import.error"));
         }
         return super.execute();
-    }
-
-    @Override
-    public String getActiveTab() {
-        return "spaceimporter";
     }
 
     /**

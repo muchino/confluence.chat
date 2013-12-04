@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author oli
  */
-public class GetHistoryAction extends AbstractChatAction {
+public class GetHistoryAjaxAction extends AbstractChatAction {
 
     private static final String PARAM_CHATBOX = "chatBoxId";
     private static final String PARAM_DAYS = "days";
@@ -45,7 +45,7 @@ public class GetHistoryAction extends AbstractChatAction {
         return messages;
     }
 
-    public GetHistoryAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
+    public GetHistoryAjaxAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
         super(chatManager, pageManager, permissionManager);
     }
 
@@ -61,7 +61,7 @@ public class GetHistoryAction extends AbstractChatAction {
             }
         }
 
-        messagesince = GetHistoryAction.getSinceDate(days);
+        messagesince = GetHistoryAjaxAction.getSinceDate(days);
         if (StringUtils.isNotBlank(chatBoxId)) {
             ChatBox box = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxByStringId(chatBoxId);
             if (days > 0) {
@@ -92,8 +92,8 @@ public class GetHistoryAction extends AbstractChatAction {
         return cal.getTime();
     }
 
-    public Map<String, Integer> getChatBoxCount() {
-        return getChatManager().getChatBoxCountOfUser(getRemoteUser());
+    public List<String> getUsersWithChats() {
+        return getChatManager().getUsersWithChats(getRemoteUser());
     }
 
     /**

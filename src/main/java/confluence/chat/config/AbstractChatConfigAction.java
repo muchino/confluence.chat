@@ -3,19 +3,15 @@ package confluence.chat.config;
 import com.atlassian.confluence.core.ConfluenceActionSupport;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.utils.ChatUtils;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
 abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
 
     private ChatManager chatManager;
     private String accessGroupsCSV;
-    private String activeTab;
 
     @Override
     public String execute() throws Exception {
-        activeTab = getActiveTab();
         return SUCCESS;
     }
 
@@ -61,26 +57,9 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         return this.accessGroupsCSV;
     }
 
-    public Map<String, Integer> getChatBoxes() {
-        Map<String, Integer> boxes = new TreeMap<String, Integer>();
-        Iterator<String> iterator = userAccessor.getUserNames().iterator();
-        while (iterator.hasNext()) {
-            String username = iterator.next();
-            try {
-                Integer count = chatManager.countChatBoxes(username);
-                if (count > 0) {
-                    boxes.put(username, count);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
-            }
-
-        }
-        return boxes;
+    public List<String> getUsersWithChats() {
+        return chatManager.getUsersWithChats(null);
     }
-
-    abstract public String getActiveTab();
 
     /**
      * @return the chatManager

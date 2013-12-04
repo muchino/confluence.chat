@@ -54,29 +54,50 @@
             </action>
         </package>  
                 
-        <action name="gethistory" class="confluence.chat.actions.GetHistoryAction" >
+        <action name="gethistory" class="confluence.chat.actions.GetHistoryAjaxAction" >
             <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
             <result name="success" type="velocity">/confluence/chat/templates/gethistory.vm</result>
         </action>
                 
         <package name="Chat Config" extends="default"  namespace="/admin/plugins/${atlassian.plugin.key}">
             <default-interceptor-ref name="validatingStack"/>
-            <action name="viewconfiguration" class="confluence.chat.config.ViewConfigurationAction" >
-                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
-                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+            <action name="viewconfigure" class="confluence.chat.config.ViewConfigurationAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global.vm</result>
             </action>
-            <action name="updateconfiguration" class="confluence.chat.config.UpdateConfigurationAction">
-                <result name="success" type="redirect">/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</result>
-                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
+            <action name="updateconfigure" class="confluence.chat.config.UpdateConfigurationAction">
+                <result name="success" type="redirect">/admin/plugins/${atlassian.plugin.key}/viewconfigure.action</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global.vm</result>
             </action>
-            <action name="editchathistory" class="confluence.chat.config.RemoveChatHistoryAction">
-                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
-                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
-            </action>                
+                        
+            <action name="viewhistory" class="confluence.chat.config.BrowseHistoryAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-histories.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-histories.vm</result>
+            </action>            
+            
+            <action name="doviewhistory" class="confluence.chat.config.BrowseHistoryAction" method="doUserSearch" >
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-histories.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-histories.vm</result>
+            </action>              
+            
+            <action name="removechathistory" class="confluence.chat.config.RemoveChatHistoryAction">
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-histories.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-histories.vm</result>
+            </action>  
+            <action name="configuremultiplespaces" class="confluence.chat.config.ViewConfigurationAction">
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-importer.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-importer.vm</result>
+            </action>             
             <action name="doconfiguremultiplespaces" class="confluence.chat.config.AutoConfigureMultipleSpacesAction">
-                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
-                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration.vm</result>
-            </action>                            
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-importer.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-importer.vm</result>
+            </action>   
+            
+            <action name="viewspacesettings" class="confluence.chat.config.ViewConfigurationAction" >
+                <result name="success" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-spaces.vm</result>
+                <result name="input" type="velocity">/confluence/chat/templates/confluence-chat-configuration-global-spaces.vm</result>
+            </action>            
+                                                                          
         </package>
         
         
@@ -86,7 +107,7 @@
                 <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="velocity">/confluence/chat/templates/chatbar.vm</result>
             </action>
-            <action name="gethistory" class="confluence.chat.actions.GetHistoryAction" >
+            <action name="gethistory" class="confluence.chat.actions.GetHistoryAjaxAction" >
                 <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="velocity">/confluence/chat/templates/gethistory.vm</result>
             </action>
@@ -105,7 +126,7 @@
         <package name="ChatActions" extends="default"  namespace="/chat">
             <default-interceptor-ref name="defaultStack"/>
             
-            <action name="history" class="confluence.chat.actions.GetHistoryAction" >
+            <action name="history" class="confluence.chat.actions.GetHistoryAjaxAction" >
                 <condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
                 <result name="success" type="velocity">/confluence/chat/templates/gethistorypage.vm</result>
             </action>
@@ -179,12 +200,34 @@
         <context>coreSkin</context>
     </web-resource>   
     
-    <web-item key="confluence-chat-admin-menu" name="Confluence Chat" section="system.admin/configuration"  weight="41">
-        <label key="chat.config.webitem"/>
-        <link>/admin/plugins/${atlassian.plugin.key}/viewconfiguration.action</link>
+    <web-section key="chat" name="Confluence Chat Config Section" location="system.admin" weight="110">
+        <description>Creates a section in the confluence admin menu.</description>
+        <label key="chat.config.space.title"/>
+    </web-section>
+        
+    <web-item key="confluence-chat-admin-config" name="Confluence Chat" section="system.admin/chat"  weight="1">
+        <label key="chat.config.tab.chat"/>
+        <link>/admin/plugins/${atlassian.plugin.key}/viewconfigure.action</link>
         <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
     </web-item>
     
+    <web-item key="confluence-chat-admin-histories" name="Confluence Chat Histories" section="system.admin/chat"  weight="2">
+        <label key="chat.config.tab.history"/>
+        <link>/admin/plugins/${atlassian.plugin.key}/viewhistory.action</link>
+        <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
+    </web-item>
+    
+    <web-item key="confluence-chat-admin-importer" name="Confluence Chat Importer" section="system.admin/chat"  weight="3">
+        <label key="chat.config.tab.spaceimporter"/>
+        <link>/admin/plugins/${atlassian.plugin.key}/configuremultiplespaces.action</link>
+        <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
+    </web-item>
+        
+    <web-item key="confluence-chat-admin-spaces" name="Confluence Chat Spaces" section="system.admin/chat"  weight="4">
+        <label key="chat.config.tab.spacesettings"/>
+        <link>/admin/plugins/${atlassian.plugin.key}/viewspacesettings.action</link>
+        <condition class="com.atlassian.confluence.plugin.descriptor.web.conditions.ConfluenceAdministratorCondition"/>
+    </web-item>
     <resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
         <param name="content-type" value="image/png"/>
     </resource>

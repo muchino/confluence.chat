@@ -4,6 +4,7 @@
  */
 package confluence.chat.actions;
 
+import bucket.core.actions.PaginationSupport;
 import com.atlassian.confluence.user.actions.AbstractUserProfileAction;
 import com.atlassian.confluence.user.actions.UserAware;
 import com.atlassian.user.User;
@@ -13,9 +14,10 @@ import confluence.chat.model.ChatMessageList;
 import confluence.chat.model.ChatUser;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
@@ -35,6 +37,9 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
     private Date messagesince = null;
     private String usernameList;
     private ChatManager chatManager;
+    private PaginationSupport paginationSupport;
+    private List<String> usersWithChats = new ArrayList<String>();
+    private Integer startIndex = 0;
 
     /**
      * @return the messages
@@ -60,8 +65,9 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
             }
         }
 
-        messagesince = GetHistoryAction.getSinceDate(getDays());
+
         if (StringUtils.isNotBlank(usernameList)) {
+            messagesince = GetHistoryAjaxAction.getSinceDate(getDays());
             chatUser = getChatManager().getChatUser(usernameList);
             if (getDays() > 0) {
                 messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
@@ -70,6 +76,10 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
                 messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessages();
             }
 
+        } else {
+            usersWithChats = getChatManager().getUsersWithChats(getRemoteUser());
+            paginationSupport = new PaginationSupport(usersWithChats, 10);
+            paginationSupport.setStartIndex(startIndex);
         }
         return SUCCESS;
     }
@@ -110,10 +120,6 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
         return messagesince;
     }
 
-    public Map<String, Integer> getChatBoxCount() {
-        return getChatManager().getChatBoxCountOfUser(getRemoteUser());
-    }
-
     /**
      * @return the chatManager
      */
@@ -133,5 +139,19 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
      */
     public Integer getDays() {
         return days;
+    }
+
+    /**
+     * @return the paginationSupport
+     */
+    public PaginationSupport getPaginationSupport() {
+        return paginationSupport;
+    }
+
+    /**
+     * @param startIndex the startIndex to set
+     */
+    public void setStartIndex(Integer startIndex) {
+        this.startIndex = startIndex;
     }
 }

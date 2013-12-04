@@ -1,0 +1,135 @@
+<html>
+    <head>
+        #requireResource("confluence.chat:chat-files-admin")
+        <title>$i18n.getText('chat.config.title')</title>
+        <meta name="help-path" content="confluence/chat/templates/help.vm"/>
+        <content tag="selectedWebItem">confluence-chat-admin-config</content>
+    </head>
+    <body>
+        #parse ( "/template/includes/actionerrors.vm" )
+        #parse ( "/template/includes/actionmessages.vm" )
+        <div id="chatconfig">
+            <form action="updateconfigure.action" method="post" class="aui" id="chat-configuration">
+                #form_xsrfToken()
+                <fieldset>
+                    <h2>$i18n.getText('chat.config.access.title')</h2>
+                    <p>$i18n.getText('chat.config.access.desc')</p>
+                    <div class="field-group">
+                        <label for="chat-all-users-edit">$i18n.getText('chat.config.access.all.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-all-users-edit" name="allowAll" title="$i18n.getText('chat.config.access.all.desc')" #if ($action.getAllowAllUsers()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.access.all.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-all-users-view" class="field-value">
+                                #if ($action.getAllowAllUsers())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-group" id="chat-access-groups">
+                        <label for="chat-access-groups-edit">$i18n.getText('chat.config.access.restrict.title')</label>
+                        <div class="edit">
+                            <textarea id="chat-access-groups-edit" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off">$action.getAccessGroupsLines()</textarea>
+                            <div class="description">$i18n.getText('chat.config.access.restrict.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-access-groups-view" class="field-value">$action.getAccessGroupsCSV()</div>
+                        </div>
+                    </div>
+                    <h2>$i18n.getText('chat.config.settings')</h2>
+                    <div class="field-group">
+                        <label for="chat-showWhereIam">$i18n.getText('chat.config.whereiam.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-showWhereIam" name="showWhereIam"  autocomplete="off"  title="$i18n.getText('chat.config.whereiam.desc')" #if ($action.getShowWhereIam()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.whereiam.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-all-location-view" class="field-value">
+                                #if ($action.getShowWhereIam())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="chat-playSound">$i18n.getText('chat.config.audio.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-playSound" name="playSound"  autocomplete="off"  title="$i18n.getText('chat.config.audio.desc')" #if ($action.getPlaySound()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.audio.desc')</div>
+                                <div class="description no-audio">$i18n.getText('chat.config.audio.noaudio')</div>
+                        </div>
+                        <div class="view">
+                            <div class="field-value">
+                                #if ($action.getPlaySound())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                                <div class="description no-audio">$i18n.getText('chat.config.audio.noaudio')</div>
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="field-group">
+                        <label for="chat-hideInEditMode">$i18n.getText('chat.config.hide.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-hideInEditMode" name="hideInEditMode"  autocomplete="off"  title="$i18n.getText('chat.config.hide.desc')" #if ($action.getHideInEditMode()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.hide.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-hideInEditMode" class="field-value">
+                                #if ($action.getHideInEditMode())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="field-group">
+                        <label for="chat-debugMode">$i18n.getText('chat.config.debug.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-debugMode" name="debugMode" autocomplete="off" title="$i18n.getText('chat.config.debug.desc')" #if ($action.getDebugMode()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.debug.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-debugMode" class="field-value">
+                                #if ($action.getDebugMode())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="field-group">
+                        <label for="chat-heartbeat">$i18n.getText('chat.config.heartbeat.title')</label>
+                        <div class="edit">
+                            <input class="text" type="text" id="chat-heartbeat" name="heartbeat" autocomplete="off" title="$i18n.getText('chat.config.heartbeat.desc')" value="$action.getHeartBeat()">
+                                <div class="description">$i18n.getText('chat.config.heartbeat.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-debugMode" class="field-value">
+                                $action.getHeartBeat() ms
+                            </div>
+                        </div>
+                    </div>                         
+                </fieldset>
+                <div class="buttons-container">
+                    <div class="buttons view">
+                        <a id="chat-edit" class="view" href="#edit">$i18n.getText('edit.name')</a>
+                    </div>
+                    <div class="buttons edit">
+                        <input id="chat-save" class="button submit" type="submit" value="$i18n.getText('save.name')">
+                            <a href="viewconfigure.action">$i18n.getText('cancel.name')</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

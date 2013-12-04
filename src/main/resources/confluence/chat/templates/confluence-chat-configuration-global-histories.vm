@@ -1,0 +1,83 @@
+
+
+<html>
+    <head>
+        <title>$i18n.getText('chat.config.tab.history')</title>
+        <meta name="help-path" content="confluence/chat/templates/help.vm"/>
+        <content tag="selectedWebItem">confluence-chat-admin-histories</content>
+    </head>
+    <body>
+        #parse ( "/template/includes/actionerrors.vm" )
+        #parse ( "/template/includes/actionmessages.vm" )
+
+        ## Used in browseusers.vm
+        #* @vtlvariable name="advanced" type="boolean" *#
+        #* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.SearchUsersAction" *#
+
+        #putMetadata('simple-user-search-mode-available', $action.isSupportsSimpleSearch())
+
+        <input type="hidden" id="" value="">
+            <div class="pageSection" id="user-search">
+                <div id="search-simple" #if($advanced)style="display:none"#end>
+                    <form method="POST" action="doviewhistory.action" name="searchusers" class="aui">
+                        <div class="field-group">
+                            #bodytag( "Component" "label='find.user'" "id=searchTerm" "name='searchTerm'" "theme='aui'" "template='text-inline.vm'")#end
+                        </div>
+                        <div class="buttons-container">
+                            <div class="buttons">
+                                <input value="$action.getText('search.name')" type="submit" class="button submit">
+                                    <a href="viewhistory.action?searchTerm=*">$action.getText('show.all.users')</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>## search-simple
+                #set($users = $action.paginationSupport.page)
+                #set ($filter = "")
+                #if ($emailPattern)
+                #set ($filter = "emailPattern=$emailPattern")
+                #elseif ($groupName)
+                #set ($filter = "groupName=$groupName")
+                #end
+
+                #if($users && ($stringUtils.isNotEmpty($usernameTerm) || $stringUtils.isNotEmpty($fullnameTerm) || $stringUtils.isNotEmpty($emailTerm) || $stringUtils.isNotEmpty($searchTerm) ))
+                #if( $users.isEmpty())
+                $action.getText("there.are.no.users")
+                #else
+                #set ($paginationUrl="?searchTerm=$!{searchTerm}&")
+
+                #if ($action.paginationSupport.items)
+                    #entityPagination($action.paginationSupport $paginationUrl)
+                    #set ($currentIndex = $action.paginationSupport.startIndex)
+                #end
+                <table id="browse-user-table" class="aui user-table">
+                    <thead>
+                        <tr>
+                            <th width="30%">$action.getText("user.name")</th>
+                            <th width="40%">$action.getText("username.name")</th>
+                            <th width="30%">$action.getText("remove.name")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach ($user in $action.paginationSupport.page.iterator())
+                        #set($htmlSafeEmail = $!generalUtil.htmlEncode($user.email))
+                        #set($htmlSafeUsername = $!generalUtil.htmlEncode($user.name))
+                        #set($userProfileLink = "viewuser.action?username=$!generalUtil.doubleUrlEncode($user.name)")
+                        #set($userDisabled = $userAccessor.isDeactivated($user))
+                        <tr id="user-row-$htmlSafeUsername" #if ($userDisabled)class="inactive"#end>
+                            <td>
+                                <a href="$userProfileLink" class="confluence-userlink" data-username="$htmlSafeUsername">$!generalUtil.htmlEncode($user.fullName)</a> #if ($userDisabled)<em>$i18n.getText("deactivated.users.label")</em>#end
+                            </td>
+                            <td>$htmlSafeUsername</td>
+                            <td><a href="removechathistory.action?username=$user.name">$i18n.getText('remove.name')</a></td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+                #if ($action.paginationSupport.items)
+                #entityPagination($action.paginationSupport $paginationUrl)
+                #end
+                #end
+                #end
+            </div>        
+    </body>
+</html>

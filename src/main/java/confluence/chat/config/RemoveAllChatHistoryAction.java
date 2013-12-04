@@ -8,9 +8,4 @@ public class RemoveAllChatHistoryAction extends AbstractChatConfigAction {
         getChatManager().deleteAllMessages();
         return SUCCESS;
     }
-
-    @Override
-    public String getActiveTab() {
-        return "history";
-    }
 }

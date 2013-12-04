@@ -25,9 +25,4 @@ public class RemoveChatHistoryAction extends AbstractChatConfigAction {
         }
         return SUCCESS;
     }
-
-    @Override
-    public String getActiveTab() {
-        return "history";
-    }
 }

@@ -11,9 +11,4 @@ public class ViewConfigurationAction extends AbstractChatConfigAction {
     public String execute() throws Exception {
         return super.execute();
     }
-
-    @Override
-    public String getActiveTab() {
-        return "chatconfig";
-    }
 }

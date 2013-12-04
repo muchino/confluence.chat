@@ -69,17 +69,6 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     /**
-     * Returns how many chatboxes a user have
-     *
-     * @param username
-     * @return
-     */
-    @Override
-    public Integer countChatBoxes(final String username) {
-        return getChatBoxes(username).size();
-    }
-
-    /**
      * Returns all chatboxes of an user
      *
      * @param userKey
@@ -277,7 +266,7 @@ public final class DefaultChatManager implements ChatManager {
             if (!getChatConfiguration().getShowWhereIam()) {
                 chatUser.removeCurrentSite();
             }
-        } 
+        }
         return chatUser;
 
     }
@@ -350,7 +339,7 @@ public final class DefaultChatManager implements ChatManager {
                 logger.warn(" error reading chat configuration");
             }
             if (chatConfiguration == null) {
-                chatConfiguration = createConfig();
+                chatConfiguration = new ChatConfiguration();
             }
         }
         return chatConfiguration;
@@ -377,7 +366,7 @@ public final class DefaultChatManager implements ChatManager {
                 logger.warn(" error reading chat ChatSpaceConfiguration");
             }
             if (config == null) {
-                config = createConfigSpace(spaceKey);
+                config = new ChatSpaceConfiguration();
             }
             this.configurationSpace.put(spaceKey, config);
         }
@@ -432,18 +421,6 @@ public final class DefaultChatManager implements ChatManager {
 
     }
 
-    private ChatConfiguration createConfig() {
-        ChatConfiguration config = new ChatConfiguration();
-        setChatConfiguration(config);
-        return config;
-    }
-
-    private ChatSpaceConfiguration createConfigSpace(String spaceKey) {
-        ChatSpaceConfiguration config = new ChatSpaceConfiguration();
-        setChatSpaceConfiguration(config, spaceKey);
-        return config;
-    }
-
     @Override
     public void deleteChatBoxesOfUser(User user) {
         deleteChatBoxesOfUser(ChatUtils.getCorrectUserKey(user.getName()));
@@ -485,20 +462,21 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     @Override
-    public Map<String, Integer> getChatBoxCountOfUser(User user) {
-        Map<String, Integer> boxes = new TreeMap<String, Integer>();
-        ChatBoxMap chatBoxes1 = getChatBoxes(user);
-        Iterator<String> iterator = userAccessor.getUserNames().iterator();
-        while (iterator.hasNext()) {
-            String username = iterator.next();
-            if (chatBoxes1.hasChatBoxWithUser(username)) {
-                int count = chatBoxes1.getChatBoxWithUser(username).getMessages().size();
-                if (count > 0) {
-                    boxes.put(username, count);
+    public List<String> getUsersWithChats(User user) {
+        final List<String> usernames = new ArrayList<String>();
+        final String usernameOrKey = ChatUtils.getCorrectUserKey(user.getName());
+        transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Object doInTransaction() {
+                ConfluenceBandanaContext confluenceBandanaContextHistory = getConfluenceBandanaContextHistory(usernameOrKey);
+                Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContextHistory).iterator();
+                while (iterator.hasNext()) {
+                    usernames.add(ChatUtils.getUserNameByKeyOrUserName(iterator.next()));
                 }
+                return null;
             }
-        }
-        return boxes;
+        });
+        return usernames;
     }
 
     private ChatBoxMap transformToUserKeyChatBoxMap(String username, ChatBoxMap map) {

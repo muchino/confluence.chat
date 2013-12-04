@@ -13,9 +13,8 @@
         #decoratorParam ("context" "spaceadminpanel")
         #decoratorParam ("selection" "confluence-chat-space-admin")
         #decoratorParam ("title" $action.getText("chat.config.title"))
-        #decoratorParam ("selectedTab" "admin")
+        #decoratorParam ("selectedTab" "addons")
         #decoratorParam("helper" $action.spaceHelper)
-
             <form action="updateconfiguration.action" method="post" class="aui" id="chat-configuration">
                 #form_xsrfToken()
                 <input type="hidden" name="key" value="$helper.spaceKey" />

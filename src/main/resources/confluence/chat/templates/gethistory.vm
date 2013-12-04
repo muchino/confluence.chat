@@ -40,38 +40,51 @@
                         #end
                         #set($author = $chatMessage.from)  
                         <div class="cb-ut">
-                            #userLogoBlock($chatMessage.from)
-                            <div class="cb-mh">
+                            <div>
                                 <div class="cb-f">#usernameLink($chatMessage.from)</div>
                   #end
-                 <div class="cb-mtext">$generalUtil.htmlEncode($chatMessage.message)</div>
-
-
-
-                #set($oldLine = true)
+                  #set($messageHTML = $chatMessage.message)
+                 <div class="cb-mtext">$messageHTML</div>
+                  #set($oldLine = true)
             #end
                             </div>
                         </div><!-- new author -->
             </div>
         #end
    #else
-   
-   
-   
-        <table width="100%" class="grid aui">
-            <tbody><tr>
-                    <th>$i18n.getText('username.name')</th>
-                    <th>$i18n.getText('chat.history.messages')</th>
-                    <th></th>
-                </tr>
-                #foreach ($mapEntry in $action.getChatBoxCount().entrySet())
+        
+        #set ($paginationUrl="?searchTerm=$!{searchTerm}&")
+        #if ($action.paginationSupport.items)
+            #entityPagination($action.paginationSupport $paginationUrl)
+            #set ($currentIndex = $action.paginationSupport.startIndex)
+        #end
+        <table id="browse-user-table" class="aui user-table">
+            <thead>
                 <tr>
-                    <td  align="left">#usernameLink($mapEntry.key)</td>
-                    <td >$mapEntry.value</td>
-                    <td><a href="?historyUsername=$mapEntry.key&username=$remoteUser.name">$i18n.getText('show.word')</a></td>
+                    <th width="30%">$action.getText("user.name")</th>
+                    <th width="40%">$action.getText("username.name")</th>
+                    <th width="30%">$action.getText("show.word")</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach ($username in $action.paginationSupport.page.iterator())
+                #set($htmlSafeUsername = $!generalUtil.htmlEncode($username))
+                #set($userProfileLink = "viewuser.action?username=$!generalUtil.doubleUrlEncode($username)")
+                <tr >
+                    <td>
+                        #usernameLink($username)
+                    </td>
+                    <td>$htmlSafeUsername</td>
+                    <td><a href="?historyUsername=$username&username=$user.name">$i18n.getText('show.word')</a></td>
                 </tr>
                 #end
             </tbody>
-        </table>         
+        </table>
+        #if ($action.paginationSupport.items.isEmpty())
+            $action.getText("there.are.no.users")
+        #end
+        #if ($action.paginationSupport.items)
+            #entityPagination($action.paginationSupport $paginationUrl)
+        #end
    #end
 </div>
