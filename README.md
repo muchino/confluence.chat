@@ -30,6 +30,12 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 ## Releases
 **IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
 
+### 2.0.1
+* Improve admin section to increase config page performance
+* Add page navigation in chat history overview
+* fix endoding problem on chat history page
+* lass database interaction on overview pages
+
 ### 2.0.0
 * The stored data structure changed, because of the support for confluence 5.3
 * Massive performance improvements for the server , because only one tab is polling the server now!
