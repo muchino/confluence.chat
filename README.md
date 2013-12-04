@@ -34,7 +34,7 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 * Improve admin section to increase config page performance
 * Add page navigation in chat history overview
 * fix endoding problem on chat history page
-* lass database interaction on overview pages
+* less database interaction on overview pages
 
 ### 2.0.0
 * The stored data structure changed, because of the support for confluence 5.3
