@@ -19,7 +19,6 @@ import confluence.chat.conditions.ChatUseCondition;
 import confluence.chat.config.ChatConfiguration;
 import confluence.chat.config.ChatSpaceConfiguration;
 import confluence.chat.model.ChatBox;
-import confluence.chat.model.ChatBoxId;
 import confluence.chat.model.ChatBoxMap;
 import confluence.chat.model.ChatMessage;
 import confluence.chat.model.ChatMessageList;
@@ -153,7 +152,6 @@ public final class DefaultChatManager implements ChatManager {
         }
         if (preferences == null) {
             preferences = new ChatPreferences();
-            this.setPreferencesOfUser(username, preferences);
         }
         return preferences;
     }

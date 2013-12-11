@@ -9,13 +9,11 @@ import com.atlassian.user.User;
 import confluence.chat.config.ChatConfiguration;
 import confluence.chat.config.ChatSpaceConfiguration;
 import confluence.chat.model.ChatBox;
-import confluence.chat.model.ChatBoxId;
 import confluence.chat.model.ChatBoxMap;
 import confluence.chat.model.ChatPreferences;
 import confluence.chat.model.ChatStatus;
 import confluence.chat.model.ChatUser;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -26,6 +24,7 @@ public interface ChatManager {
     public static final String KEY_GLOBAL_CONFIGURATION = "confluence.chat.configuration";
     public static final String SESSION_LAST_REQUEST = "confluence.chat.time.last.message";
     public static final String KEY_HISTORY = "confluence.chat.history.";
+    public static final String QUERY_HISTORIES = "SELECT DISTINCT BANDANACONTEXT FROM bandana WHERE BANDANACONTEXT LIKE '" + KEY_HISTORY + "%'";
     public static final String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
     public static final String SESSION_SHOW_MESSAGES_SINCE = "confluence.chat.show.message.since.";
     public static final Integer SECONDS_TO_BE_AWAY = 60 * 10;

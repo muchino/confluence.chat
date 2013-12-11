@@ -26,7 +26,7 @@
                         <div class="buttons-container">
                             <div class="buttons">
                                 <input value="$action.getText('search.name')" type="submit" class="button submit">
-                                    <a href="viewhistory.action?searchTerm=*">$action.getText('show.all.users')</a>
+                                    <a href="doviewhistory.action?searchTerm=*">$action.getText('show.all.users')</a>
                             </div>
                         </div>
                     </form>
