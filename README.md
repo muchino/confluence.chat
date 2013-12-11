@@ -28,10 +28,15 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 [Read more in the FAQ](../master/src/main/resources/faq.md)
 
 ## Releases
-**IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
+
+### 2.0.1
+* Improve admin section to increase config page performance
+* Add page navigation in chat history overview
+* fix endoding problem on chat history page
+* less database interaction on overview pages
 
 ### 2.0.0
-* The stored data structure changed, because of the support for confluence 5.3
+* **The stored data structure changed, because of the support for confluence 5.3**
 * Massive performance improvements for the server , because only one tab is polling the server now!
 * The milliseconds of the heartbeat are now customizable 
 
@@ -88,6 +93,8 @@ Because of a restructuring the old messages are deleted. It may appear warnings 
 * play sound when new message arrives (could be gloabl disabled by an administrator or by an user for his self )
 * alphabetical sorting of the users
 * ability to delete the chat data. The data could be deleted selectively by an admin or in the new dopmenu of the chatbox 
+
+**IMPORTANT: If you upgrade from <= 1.1.1 and the chat doesn't work, please remove all chatboxes (could be deleted in the chat admin area => backend)  and restart your confluence.**
 
 ### 1.1.1 
 * Add configuration to hide the configuration in edit mode. 
