@@ -21,12 +21,14 @@
                 <div id="search-simple" #if($advanced)style="display:none"#end>
                     <form method="POST" action="doviewhistory.action" name="searchusers" class="aui">
                         <div class="field-group">
-                            #bodytag( "Component" "label='find.user'" "id=searchTerm" "name='searchTerm'" "theme='aui'" "template='text-inline.vm'")#end
+                            #bodytag( "Component" "label='find.user'" "id=searchTerm" "name='searchTerm'" "theme='aui'" "template='text-inline.vm'")
+                                #param("description" "$i18n.getText('find.user.description')")
+                            #end
                         </div>
                         <div class="buttons-container">
                             <div class="buttons">
-                                <input value="$action.getText('search.name')" type="submit" class="button submit">
-                                    <a href="doviewhistory.action?searchTerm=*">$action.getText('show.all.users')</a>
+                                <input type="submit" class="aui-button aui-button-primary" value="$action.getText('search.name')">                                
+                                <a href="doviewhistory.action?searchTerm=*"  class="aui-button aui-button-link">$action.getText('show.all.users')</a>
                             </div>
                         </div>
                     </form>
@@ -61,11 +63,10 @@
                         #foreach ($user in $action.paginationSupport.page.iterator())
                         #set($htmlSafeEmail = $!generalUtil.htmlEncode($user.email))
                         #set($htmlSafeUsername = $!generalUtil.htmlEncode($user.name))
-                        #set($userProfileLink = "viewuser.action?username=$!generalUtil.doubleUrlEncode($user.name)")
                         #set($userDisabled = $userAccessor.isDeactivated($user))
                         <tr id="user-row-$htmlSafeUsername" #if ($userDisabled)class="inactive"#end>
                             <td>
-                                <a href="$userProfileLink" class="confluence-userlink" data-username="$htmlSafeUsername">$!generalUtil.htmlEncode($user.fullName)</a> #if ($userDisabled)<em>$i18n.getText("deactivated.users.label")</em>#end
+                                <a href="$req.contextPath/display/~$htmlSafeUsername" class="confluence-userlink" data-username="$htmlSafeUsername">$!generalUtil.htmlEncode($user.fullName)</a> #if ($userDisabled)<em>$i18n.getText("deactivated.users.label")</em>#end
                             </td>
                             <td>$htmlSafeUsername</td>
                             <td><a href="removechathistory.action?username=$user.name">$i18n.getText('remove.name')</a></td>
