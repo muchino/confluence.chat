@@ -10,8 +10,8 @@ Confluence Admin -> Stylesheets
 ```css
 .cb-dropdown .aui-dd-parent .aui-dropdown li.dropdown-item:first-child {display:none;}
 ```
-#### Menu Entries 
-To hide the menu entries in the ser profile you have to go into the Confluence Admin -> Manage Addons -> Confluence Chat -> Modules and deactivate the following modules 
+#### History Menu Entries 
+To hide the menu entries in the user profile and confluence admin you have to go into the Confluence Admin -> Manage Addons -> Confluence Chat -> Modules and deactivate the following modules 
 * Confluence Chat Histories (The global menu entry in the Confluence Admin)
 * 2 x Chat Histoty Tab (The Tab in the user profile / menu entry)
 
