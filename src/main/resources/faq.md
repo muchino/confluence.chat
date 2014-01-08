@@ -2,7 +2,7 @@
 
 
 #### Hide the Chat Histories
-There is no config for this. but if it's possible to hide the menu entries to enter the chat history:
+There is no config for this. but it's possible to hide the menu entries to enter the chat history:
 
 #### To hide the dropdown menu entry in a chatbox:
 ```css
