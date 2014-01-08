@@ -1,5 +1,21 @@
 ### FAQ
 
+
+#### Hide the Chat Histories
+There is no config for this. but if it's possible to hide the menu entries to enter the chat history:
+
+#### To hide the dropdown menu entry in a chatbox:
+```css
+.cb-dropdown .aui-dd-parent .aui-dropdown li.dropdown-item:first-child {display:none;}
+```
+#### To hide the menu entries in the ser profile you have to go into the confluence admin -> Manage Addons -> Confluence Chat -> Modules and deactivate the following modules 
+* Confluence Chat Histories (The global menu entry in the Confluence Admin)
+* 2 x Chat Histoty Tab (The Tab in the user profile / menu entry)
+
+After you have deactivated this three modules, the user has no entry point to see his histories
+
+
+
 #### The editor hides the save button
 You could activate the option "Hide in editor" in the chat configursation or you could add the following css rule in the global css styles:
 
