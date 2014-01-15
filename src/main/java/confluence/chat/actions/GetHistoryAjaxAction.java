@@ -92,8 +92,8 @@ public class GetHistoryAjaxAction extends AbstractChatAction {
         return cal.getTime();
     }
 
-    public List<String> getUsersWithChats() {
-        return getChatManager().getUsersWithChats(getRemoteUser());
+    public List<String> getKeysOfChats() {
+        return getChatManager().getKeysOfChats(getRemoteUser());
     }
 
     /**

@@ -57,8 +57,8 @@ abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
         return this.accessGroupsCSV;
     }
 
-    public List<String> getUsersWithChats() {
-        return chatManager.getUsersWithChats(null);
+    public List<String> getKeysOfChats() {
+        return chatManager.getKeysOfChats(null);
     }
 
     /**

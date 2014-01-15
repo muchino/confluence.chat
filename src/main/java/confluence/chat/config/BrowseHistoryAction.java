@@ -37,14 +37,14 @@ public class BrowseHistoryAction extends SearchUsersAction {
     @Override
     public String doUserSearch() {
         super.doUserSearch();
-        List<String> allUserNamesWithChatBoxes = getAllUserNamesWithChatBoxes();
+        List<String> allkeysWithBoxes = getAllKeysWithChatBoxes();
         List chatResults = new ArrayList();
         List results = super.getPaginationSupport().getItems();
         for (int i = 0; i < results.size(); i++) {
             Object object = results.get(i);
             if (object instanceof User) {
                 String userKey = ChatUtils.getCorrectUserKey(((User) object).getName());
-                if (allUserNamesWithChatBoxes.contains(userKey)) {
+                if (allkeysWithBoxes.contains(userKey)) {
                     chatResults.add(object);
                 }
             }
@@ -54,7 +54,7 @@ public class BrowseHistoryAction extends SearchUsersAction {
         return SUCCESS;
     }
 
-    private List<String> getAllUserNamesWithChatBoxes() {
+    private List<String> getAllKeysWithChatBoxes() {
         List<String> usernames = new ArrayList<String>();
         Statement ps = null;
         try {

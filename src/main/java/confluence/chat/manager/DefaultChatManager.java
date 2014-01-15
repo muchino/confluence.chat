@@ -460,7 +460,7 @@ public final class DefaultChatManager implements ChatManager {
     }
 
     @Override
-    public List<String> getUsersWithChats(User user) {
+    public List<String> getKeysOfChats(User user) {
         final List<String> usernames = new ArrayList<String>();
         final String usernameOrKey = ChatUtils.getCorrectUserKey(user.getName());
         transactionTemplate.execute(new TransactionCallback() {
@@ -512,9 +512,11 @@ public final class DefaultChatManager implements ChatManager {
             this.deleteChatBoxesOfUser(username);
             return newChatBoxMap;
         }
-
-
         return map;
+    }
 
+    @Override
+    public Boolean isRenameUserImplemented() {
+        return UserCompatibilityHelper.isRenameUserImplemented();
     }
 }

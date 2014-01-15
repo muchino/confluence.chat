@@ -38,7 +38,6 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
     private String usernameList;
     private ChatManager chatManager;
     private PaginationSupport paginationSupport;
-    private List<String> usersWithChats = new ArrayList<String>();
     private Integer startIndex = 0;
 
     /**
@@ -77,8 +76,7 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
             }
 
         } else {
-            usersWithChats = getChatManager().getUsersWithChats(getRemoteUser());
-            paginationSupport = new PaginationSupport(usersWithChats, 10);
+            paginationSupport = new PaginationSupport(getChatManager().getKeysOfChats(getRemoteUser()), 10);
             paginationSupport.setStartIndex(startIndex);
         }
         return SUCCESS;

@@ -67,16 +67,22 @@
                 </tr>
             </thead>
             <tbody>
-                #foreach ($username in $action.paginationSupport.page.iterator())
-                #set($htmlSafeUsername = $!generalUtil.htmlEncode($username))
-                #set($userProfileLink = "viewuser.action?username=$!generalUtil.doubleUrlEncode($username)")
-                <tr >
-                    <td>
-                        #usernameLink($username)
-                    </td>
-                    <td>$htmlSafeUsername</td>
-                    <td><a href="?historyUsername=$username&username=$user.name">$i18n.getText('show.word')</a></td>
-                </tr>
+                #foreach ($chatboxId in $action.paginationSupport.page.iterator())
+                    #if($chatManager.isRenameUserImplemented())
+                        #set($username = $chatboxId)
+                    #else
+                        #set($username = $chatManager.getChatBoxes($remoteUser).getChatBoxByStringId($chatboxId).getUserKeyMembers().get(0))
+                    #end
+                    #set($userProfileLink = "viewuser.action?username=$!generalUtil.doubleUrlEncode($username)")
+                    #set($htmlSafeUsername = $!generalUtil.htmlEncode($username))
+
+                    <tr >
+                        <td>
+                            #usernameLink($username)
+                        </td>
+                        <td>$htmlSafeUsername</td>
+                        <td><a href="?historyUsername=$username&username=$user.name">$i18n.getText('show.word')</a></td>
+                    </tr>
                 #end
             </tbody>
         </table>

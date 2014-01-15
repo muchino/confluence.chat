@@ -76,5 +76,7 @@ public interface ChatManager {
 
     public void doLogin(String username);
 
-    public List<String> getUsersWithChats(User user);
+    public List<String> getKeysOfChats(User user);
+    
+    public Boolean isRenameUserImplemented();
 }
