@@ -54,5 +54,4 @@
         return this;
         
     }
-    
-})(jQuery);
+})(AJS.$);
