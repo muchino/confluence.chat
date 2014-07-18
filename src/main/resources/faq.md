@@ -1,5 +1,7 @@
 ### FAQ
 
+###When is the sound playing?
+The sound is only played if the window hasn't the focus or the textarea hasn't the focus.
 
 #### Hide the Chat Histories
 There is no config for this. but it's possible to hide the menu entries to enter the chat history:

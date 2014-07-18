@@ -216,7 +216,7 @@ cb-title {
 }
 
 #chatsound {
-    display: none;
+    /*display: none;*/
 }
 
 .chat-history-link {

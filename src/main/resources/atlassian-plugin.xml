@@ -24,15 +24,15 @@
     
     
     
-    <resource type="download" name="button-9.m4a" location="confluence/chat/assets/button-9.m4a">
-        <property key="content-type" value="audio/x-aac"/>
-        <param name="content-type" value="audio/x-aac"/>
+    <resource type="download" name="button9.m4a" location="confluence/chat/assets/button9.m4a">
+        <property key="content-type" value="audio/x-m4a"/>
+        <param name="content-type" value="audio/x-m4a"/>
     </resource>
-    <resource type="download" name="button-9.mp3" location="confluence/chat/assets/button-9.mp3">
+    <resource type="download" name="button9.mp3" location="confluence/chat/assets/button9.mp3">
         <property key="content-type" value="audio/mpeg"/>
         <param name="content-type" value="audio/mpeg"/>
     </resource>
-    <resource type="download" name="button-9.ogg" location="confluence/chat/assets/button-9.ogg">
+    <resource type="download" name="button9.ogg" location="confluence/chat/assets/button9.ogg">
         <property key="content-type" value="audio/ogg"/>
         <param name="content-type" value="audio/ogg"/>
     </resource>
@@ -165,6 +165,7 @@
         <transformation extension="js">
             <transformer key="jsI18n"/>
         </transformation>   
+        <resource type="download" name="buzz.js" location="confluence/chat/js/buzz.js"/>
         <resource type="download" name="json2.js" location="confluence/chat/js/json2.js"/>
         <resource type="download" name="jstorage.min.js" location="confluence/chat/js/jstorage.min.js"/>
         <resource type="download" name="modernizr.custom.53588.js" location="confluence/chat/js/modernizr.custom.53588.js"/>

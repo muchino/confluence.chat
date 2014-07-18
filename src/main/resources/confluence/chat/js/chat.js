@@ -7,6 +7,8 @@ ConfluenceChatConfig = {
     active: true
 };
 
+
+
 (function($) {
     var CHAT_CHANNEL__COORDINATOR = "chat-channel-coordinator",
             CHAT_CHANNEL_MESSAGES = "chat-channel-messages",
@@ -16,8 +18,12 @@ ConfluenceChatConfig = {
             // timestamp plays a key role!   
             // youngest (newest) tab always gets coordinator
             guid = (new Date()).getTime(),
-            isTaCPage = window.location.href.indexOf('termsandconditions/termsandconditions.action') > 0;
-
+            isTaCPage = window.location.href.indexOf('termsandconditions/termsandconditions.action') > 0,
+            SOUND = new buzz.sound(AJS.contextPath() + "/download/resources/confluence.chat/button9", {
+                formats: ["ogg", "mp3", "m4a"],
+                preload: true,
+                autoplay: false
+            });
     function iAmCoordinator(value) {
         coordinator = value;
     }
@@ -333,6 +339,15 @@ ConfluenceChatConfig = {
             AJS.log(msg);
         }
     };
+
+    ChatBar.prototype.windowHasFocus = function() {
+        return this.windowFocus;
+    };
+
+    ChatBar.prototype.isCoordinator = function() {
+        return coordinator;
+    };
+
 
     ChatBar.prototype.showConfig = function() {
         this.bar.addClass('config');
@@ -826,14 +841,21 @@ ConfluenceChatConfig = {
             this.blinkInterval = window.setInterval(function() {
                 that.blink();
             }, 1000);
-            try {
-                if (chatBar.isSound()) {
-                    var audio = document.getElementById('chatsound');
-                    audio.play();
+        }
+    };
+    ChatBox.prototype.playSound = function() {
+        if (chatBar.isCoordinator() 
+                && chatBar.getHeartbeatCount() > 0) {
+            if (!chatBar.windowHasFocus() ||
+                    !this.textarea.hasClass('cb-ts')) {
+                try {
+                    if (chatBar.isSound()) {
+                        SOUND.load().play();
+                    }
                 }
-            }
-            catch (err) {
-                chatBar.log("Error playing sound");
+                catch (err) {
+                    chatBar.log("Error playing sound");
+                }
             }
         }
     };
@@ -1067,6 +1089,7 @@ ConfluenceChatConfig = {
 
         if (item.f.un !== AJS.params.remoteUser) {
             this.startBlink();
+            this.playSound();
         }
 
         var message = this.replaceChatMessage(item.m);

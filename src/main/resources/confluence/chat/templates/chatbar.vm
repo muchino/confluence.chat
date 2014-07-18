@@ -8,14 +8,6 @@
 #set($onlineOffline = "offline")
 #end
 <div id="chatbar" class="$onlineOffline">
-    #if($chatManager.getChatConfiguration().getPlaySound())
-    <audio id="chatsound" style="display: none;">
-        <source src="$req.contextPath/download/resources/confluence.chat/button-9.m4a" type="audio/x-aac" />
-        <source src="$req.contextPath/download/resources/confluence.chat/button-9.mp3" type="audio/mpeg" />
-        <source src="$req.contextPath/download/resources/confluence.chat/button-9.ogg" type="audio/ogg" />
-        <div class="no-audio"></div>
-    </audio>
-    #end
     <div id="chatbar-status" class="$status">
         <fieldset class="parameters hidden">
             <input type="hidden" name="chat-playSound" id="chat-playSound" value="$chatManager.getPlaySound()" />
