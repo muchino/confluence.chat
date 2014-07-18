@@ -33,7 +33,7 @@
                     <div class="field-group" id="chat-access-groups">
                         <label for="chat-access-groups-edit">$i18n.getText('chat.config.access.restrict.title')</label>
                         <div class="edit">
-                            <textarea id="chat-access-groups-edit" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off">$action.getAccessGroupsLines()</textarea>
+                            <textarea class="textarea" id="chat-access-groups-edit" name="groups" title="Access Groups" cols="50" rows="10" autocomplete="off">$action.getAccessGroupsLines()</textarea>
                             <div class="description">$i18n.getText('chat.config.access.restrict.desc')</div>
                         </div>
                         <div class="view">

@@ -3,7 +3,7 @@
         insertRule: function(selector, rules, contxt)
         {
             var context = contxt || document, stylesheet;
-            if (typeof context.styleSheets == 'object')
+            if (typeof context.styleSheets === 'object')
             {
                 if (context.styleSheets.length)
                 {
@@ -38,12 +38,12 @@
 })(AJS.$);
 (function($) {
     $(document).ready(function() {
-        var forbiddenColors = [ "rgb(0, 0, 0)","rgba(0, 0, 0, 0)", 
-        "rgb(255, 255, 255)","rgba(255, 255, 255, 0)", 
-        "#ffffff", "#fff",
-        "transparent" ];
+        var forbiddenColors = ["rgb(0, 0, 0)", "rgba(0, 0, 0, 0)",
+            "rgb(255, 255, 255)", "rgba(255, 255, 255, 0)",
+            "#ffffff", "#fff",
+            "transparent"];
         var headerColor = $('#header').css('backgroundColor');
-        if ($.inArray( headerColor, forbiddenColors ) < 0) {
+        if ($.inArray(headerColor, forbiddenColors) < 0) {
             try {
                 $.chatstyle.insertRule(['div.cb-head', '#chatbar'], 'background-color:' + headerColor + ";");
                 $.chatstyle.insertRule(['div.cb-head'], 'border-color:' + headerColor + ";");

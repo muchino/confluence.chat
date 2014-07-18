@@ -19,7 +19,7 @@
         <atlassian.plugin.key>${project.artifactId}</atlassian.plugin.key>
         <confluence.version>4.3</confluence.version>
         <confluence.data.version>4.3</confluence.data.version>
-        <amps.version>4.1.4</amps.version>
+        <amps.version>5.0.2</amps.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties> 
     
