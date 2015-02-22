@@ -23,7 +23,6 @@
             <input type="hidden" name="chat.bar.deactivated" id="chat-deactivated" value="$i18n.getText('chat.bar.deactivated')" />
         </fieldset>
         <div id="chatbar-buttons">
-            <div id="chatbar-status-icon">&nbsp;</div>
             <div id="chatbar-button-online">
                 #if($chatManager.getChatConfiguration().getPlaySound())
                 <div title="$i18n.getText('chat.icon.sound')"  class="csound"></div>
@@ -31,6 +30,7 @@
                 <div class="online">$i18n.getText('chat.bar.online',[$action.getOnlineUsers().size()])</div>
                 <div class="offline">$i18n.getText('chat.bar.offline')</div>
             </div>
+            <div id="chatbar-status-icon">&nbsp;</div>
             <br style="clear: both; " />
         </div>
         <div class="chatbar-box">

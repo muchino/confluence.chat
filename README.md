@@ -29,6 +29,9 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 
+### 2.0.5
+* Change icon order in chatbar. #102
+
 ### 2.0.2
 * Pre Confluence 5.0: Instead of usernames, the chatboxId was schown in the chat history overview page (#80 reported by mikmouk )
 

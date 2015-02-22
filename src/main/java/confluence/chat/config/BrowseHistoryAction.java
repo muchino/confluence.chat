@@ -71,8 +71,8 @@ public class BrowseHistoryAction extends SearchUsersAction {
 			addActionError("Error while Hibernate execution: " + ex.getMessage());
 			LOG.error("Error while Hibernate execution: ", ex);
 		} catch (SQLException ex) {
-			addActionError("Error while SQ execution: " + ex.getMessage());
-			LOG.error("Error while SQ execution: ", ex);
+			addActionError("Error while SQL execution: " + ex.getMessage());
+			LOG.error("Error while SQL execution: ", ex);
 		} finally {
 			JDBCUtils.close(ps);
 		}
