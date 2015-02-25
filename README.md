@@ -29,6 +29,9 @@ If the user uses confluence with multiple Browser Tabs or Browsers at the same t
 
 ## Releases
 
+### 2.0.6
+* Fix compilation error within in Confluence 5.7
+
 ### 2.0.5
 * Change icon order in chatbar. #102
 

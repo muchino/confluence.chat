@@ -8,6 +8,11 @@
 .chatbox.min .cb-content-hold {
     display: none;
 }
+
+.chatbox .cb-content-hold {
+    background-color: #FFFFFF !important;
+}
+
 .chatbox.closed {
     display: none;
 }
