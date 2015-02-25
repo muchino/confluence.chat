@@ -17,6 +17,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.hibernate.HibernateException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -26,6 +27,7 @@ public class BrowseHistoryAction extends SearchUsersAction {
 
 	private PaginationSupport paginationSupportNew;
 	private PluginHibernateSessionFactory pluginHibernateSessionFactory;
+        private static final Logger logger = Logger.getLogger(BrowseHistoryAction.class);
 
 	/**
 	 * @param sessionFactory the sessionFactory to set
@@ -69,10 +71,10 @@ public class BrowseHistoryAction extends SearchUsersAction {
 			}
 		} catch (HibernateException ex) {
 			addActionError("Error while Hibernate execution: " + ex.getMessage());
-			LOG.error("Error while Hibernate execution: ", ex);
+			logger.error("Error while Hibernate execution: ", ex);
 		} catch (SQLException ex) {
-			addActionError("Error while SQL execution: " + ex.getMessage());
-			LOG.error("Error while SQL execution: ", ex);
+			addActionError("Error while SchaQL execution: " + ex.getMessage());
+                        logger.error("Error while SQL execution: ", ex);
 		} finally {
 			JDBCUtils.close(ps);
 		}
