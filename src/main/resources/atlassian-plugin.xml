@@ -120,6 +120,7 @@
                 <result name="input" type="velocity">/confluence/chat/templates/gethistory-user-page.vm</result>
                 <result name="error" type="velocity">/confluence/chat/templates/gethistory-user-page.vm</result>
                 <result name="success" type="velocity">/confluence/chat/templates/gethistory-user-page.vm</result>
+                <result name="none" type="velocity">/404.vm</result>
             </action>
         </package>
         
@@ -262,6 +263,7 @@
     <web-item key="chat-history" name="Chat Histoty Tab" weight="30" section="system.profile">
         <label key="chat.history.title"/>
         <link>/users/chat/history.action?username=$generalUtil.urlEncode($action.username)</link>
+        <condition class="confluence.chat.conditions.CanViewHistoryCondition" />
     </web-item>    
     
     <web-item key="chat-history-userlink" name="Chat Histoty Tab" weight="30" section="system.user/user-content">

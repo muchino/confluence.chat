@@ -7,9 +7,7 @@ ConfluenceChatConfig = {
     active: true
 };
 
-
-
-(function($) {
+(function ($) {
     var CHAT_CHANNEL__COORDINATOR = "chat-channel-coordinator",
             CHAT_CHANNEL_MESSAGES = "chat-channel-messages",
             CHAT_CHANNEL_USERS = "chat-channel-users",
@@ -28,11 +26,18 @@ ConfluenceChatConfig = {
         coordinator = value;
     }
 
+    function isInEditMode() {
+        var $body = $('body');
+        return $body.hasClass('edit')
+                || $body.hasClass('scaffoldingeditor')
+                || $body.hasClass('create');
+    }
+
     $.jStorage.publish(CHAT_CHANNEL__COORDINATOR, guid);
     iAmCoordinator(true);
 
     // a very famous election algorithm (I forgot the name)
-    $.jStorage.subscribe(CHAT_CHANNEL__COORDINATOR, function(channel, data) {
+    $.jStorage.subscribe(CHAT_CHANNEL__COORDINATOR, function (channel, data) {
         if (data < guid) { // older than this tab
             $.jStorage.publish(CHAT_CHANNEL__COORDINATOR, guid);
             iAmCoordinator(true);
@@ -41,7 +46,7 @@ ConfluenceChatConfig = {
         }
     });
 
-    $(window).unload(function() {
+    $(window).unload(function () {
         // guid = 0 --> if there is another tab, it is younger (timestamp > 0)
         $.jStorage.publish(CHAT_CHANNEL__COORDINATOR, 0);
     });
@@ -70,7 +75,7 @@ ConfluenceChatConfig = {
         this.version = "0";
         this.spaceKey = "";
         this.users = Object();
-        $(document).ready(function() {
+        $(document).ready(function () {
             if (typeof (AJS.params.spaceKey) === "string") {
                 that.log("Chat in space " + AJS.params.spaceKey);
                 that.spaceKey = AJS.params.spaceKey;
@@ -83,11 +88,11 @@ ConfluenceChatConfig = {
                         spaceKey: that.spaceKey,
                         bodyClass: $('body').attr('class')
                     },
-                    error: function() {
+                    error: function () {
                         that.chatDeactivated = true;
                         that.requestErrorHandler();
                     },
-                    success: function(html) {
+                    success: function (html) {
                         var chatHTML = $(html);
                         /**
                          *If the reponse has the element #chatbar,
@@ -108,30 +113,30 @@ ConfluenceChatConfig = {
                 });
             }
         });
-        $.jStorage.subscribe(CHAT_CHANNEL_MESSAGES, function(channel, data) {
+        $.jStorage.subscribe(CHAT_CHANNEL_MESSAGES, function (channel, data) {
             that.retrieveChatMessages(data);
         });
-        $.jStorage.subscribe(CHAT_CHANNEL_USERS, function(channel, data) {
+        $.jStorage.subscribe(CHAT_CHANNEL_USERS, function (channel, data) {
             that.refreshUser(data);
         });
     }
-    ChatBar.prototype.requestSuccessHandler = function() {
+    ChatBar.prototype.requestSuccessHandler = function () {
         this.requestFailed = 0;
     };
 
-    ChatBar.prototype.isSound = function() {
+    ChatBar.prototype.isSound = function () {
         return !$('#chatbar .csound').hasClass('csound-off');
     };
 
-    ChatBar.prototype.deactivateSound = function() {
+    ChatBar.prototype.deactivateSound = function () {
         $('#chatbar .csound').addClass('csound-off');
         AJS.Cookie.save("chatsoundoff", "true");
     };
-    ChatBar.prototype.activateSound = function() {
+    ChatBar.prototype.activateSound = function () {
         $('#chatbar .csound').removeClass('csound-off');
         AJS.Cookie.erase("chatsoundoff");
     };
-    ChatBar.prototype.getStatusOfUser = function(username) {
+    ChatBar.prototype.getStatusOfUser = function (username) {
         if (username in this.users) {
             if ('s' in this.users[username]) {
                 return this.users[username].s;
@@ -140,10 +145,9 @@ ConfluenceChatConfig = {
         return 'xa';
     };
 
-    ChatBar.prototype.requestErrorHandler = function() {
+    ChatBar.prototype.requestErrorHandler = function () {
         this.requestFailed++;
         if (this.requestFailed >= 3) {
-
             AJS.log('Deactivate Chat, because ' + this.requestFailed + ' failed! Perhaps chat is deactivated or uninstalled, and this javascript is in the browsercache');
 
             this.chatDeactivated = true;
@@ -153,15 +157,15 @@ ConfluenceChatConfig = {
         }
     };
 
-    ChatBar.prototype.getHeartbeatCount = function() {
+    ChatBar.prototype.getHeartbeatCount = function () {
         return this.heartBeatCount;
     };
 
-    ChatBar.prototype.setDebugMode = function(debug) {
+    ChatBar.prototype.setDebugMode = function (debug) {
         this.debug = debug;
     };
 
-    ChatBar.prototype.isOpen = function() {
+    ChatBar.prototype.isOpen = function () {
         var cookie = 'cbar-open';
         var open = AJS.Cookie.read(cookie);
         if (open === "true") {
@@ -170,20 +174,20 @@ ConfluenceChatConfig = {
             return false;
         }
     };
-    ChatBar.prototype.minimize = function() {
+    ChatBar.prototype.minimize = function () {
         AJS.Cookie.erase("cbar-open");
         this.bar.removeClass('open');
     };
-    ChatBar.prototype.maximize = function() {
+    ChatBar.prototype.maximize = function () {
         var cookie = 'cbar-open';
         this.bar.addClass('open');
         AJS.Cookie.save(cookie, "true");
     };
 
-    ChatBar.prototype.getOriginalTitle = function() {
+    ChatBar.prototype.getOriginalTitle = function () {
         return this.originalTitle;
     };
-    ChatBar.prototype.startChatSession = function() {
+    ChatBar.prototype.startChatSession = function () {
         var that = this;
 
         var pageId = null;
@@ -202,10 +206,10 @@ ConfluenceChatConfig = {
                     status: that.configurationBox.find('select[name=status]').val(),
                     pageId: pageId
                 },
-                error: function() {
+                error: function () {
                     that.requestErrorHandler();
                 },
-                success: function(data) {
+                success: function (data) {
                     that.requestSuccessHandler();
                     that.lastHeartBeatServerdate = data.lr;
                     if (typeof (data.chatboxes) !== "undefined") {
@@ -217,21 +221,21 @@ ConfluenceChatConfig = {
                         beat = 700;
                     }
                     that.log('Start silent HeartBeat with ' + beat + ' ms');
-                    setInterval(function() {
+                    setInterval(function () {
                         that.chatHeartbeat();
                     }, beat);
                 }
             });
-            $([window, document]).blur(function() {
+            $([window, document]).blur(function () {
                 that.windowFocus = false;
-            }).focus(function() {
+            }).focus(function () {
                 that.windowFocus = true;
                 document.title = that.originalTitle;
             });
         }
     };
 
-    ChatBar.prototype.chatHeartbeat = function() {
+    ChatBar.prototype.chatHeartbeat = function () {
         if (this.chatDeactivated || !coordinator) {
             return;
         }
@@ -253,10 +257,10 @@ ConfluenceChatConfig = {
                 lr: that.lastHeartBeatServerdate,
                 mm: that.mousemove
             },
-            error: function() {
+            error: function () {
                 that.requestErrorHandler();
             },
-            success: function(data) {
+            success: function (data) {
                 that.requestSuccessHandler();
                 that.lastHeartBeatServerdate = data.lr;
                 if (typeof (data.chatboxes) !== "undefined") {
@@ -266,8 +270,17 @@ ConfluenceChatConfig = {
         });
         this.mousemove = false;
     };
+    ChatBar.prototype.closeAllChatBoxes = function () {
+        for (var x in this.chatBoxes) {
+            if (isChatBox(this.chatBoxes[x])) {
+                if (!this.chatBoxes[x].isClosed()) {
+                    this.chatBoxes[x].closeChatBox();
+                }
+            }
+        }
+    };
 
-    ChatBar.prototype.closeOldestChatBox = function() {
+    ChatBar.prototype.closeOldestChatBox = function () {
         this.log('closeOldestChatBox ');
         var lastBox = null;
         for (var x in this.chatBoxes) {
@@ -291,7 +304,7 @@ ConfluenceChatConfig = {
         return false;
     };
 
-    ChatBar.prototype.restructureChatBoxes = function() {
+    ChatBar.prototype.restructureChatBoxes = function () {
 
         var winWidth = $(window).width() - ConfluenceChatConfig.barWidth;
 
@@ -334,42 +347,40 @@ ConfluenceChatConfig = {
         }
     };
 
-    ChatBar.prototype.log = function(msg) {
+    ChatBar.prototype.log = function (msg) {
         if (this.debug) {
             AJS.log(msg);
         }
     };
 
-    ChatBar.prototype.windowHasFocus = function() {
+    ChatBar.prototype.windowHasFocus = function () {
         return this.windowFocus;
     };
 
-    ChatBar.prototype.isCoordinator = function() {
+    ChatBar.prototype.isCoordinator = function () {
         return coordinator;
     };
 
 
-    ChatBar.prototype.showConfig = function() {
+    ChatBar.prototype.showConfig = function () {
         this.bar.addClass('config');
         this.bar.removeClass('users');
     };
-    ChatBar.prototype.showUser = function() {
+    ChatBar.prototype.showUser = function () {
         this.bar.removeClass('config');
         this.bar.addClass('users');
     };
 
-    ChatBar.prototype.init = function() {
+    ChatBar.prototype.init = function () {
         var that = this;
         this.bar = $('#chatbar');
+        var $body = $('body');
         this.version = this.getConfigParameter('chat-version');
         this.debug = "true" === this.getConfigParameter('chat-debugMode');
         this.hideInEditMode = "true" === this.getConfigParameter('chat-hideInEditMode');
         AJS.log('Init Confluence Chat in version: ' + this.version);
         if (this.hideInEditMode) {
-            this.chatDeactivated = this.chatDeactivated
-                    || $('body').hasClass('edit')
-                    || $('body').hasClass('scaffoldingeditor')
-                    || $('body').hasClass('create');
+            this.chatDeactivated = this.chatDeactivated || isInEditMode();
             if (this.chatDeactivated) {
                 this.log('Confluence Chat: Hide the bar in editor');
                 this.bar.hide();
@@ -378,10 +389,14 @@ ConfluenceChatConfig = {
             this.log('Confluence Chat: Show the bar in editor');
         }
 
+        if (!this.chatDeactivated) {
+            $body.addClass('chat-active');
+        }
+
         this.username = AJS.params.remoteUser;
         this.onlineUsersBox = this.bar.find('#chatbar-online-users');
         this.configurationBox = this.bar.find('#chatbar-config');
-        this.bar.find('#chatbar-buttons').click(function(event) {
+        this.bar.find('#chatbar-buttons').click(function (event) {
             if (that.chatDeactivated) {
                 that.bar.removeClass('open');
                 return false;
@@ -396,24 +411,24 @@ ConfluenceChatConfig = {
 
             event.preventDefault();
         });
-        this.bar.find('.cb-close').click(function() {
+        this.bar.find('.cb-close').click(function () {
             that.bar.removeClass('open');
             that.minimize();
             return false;
         });
 
-        this.bar.find('.cb-config').click(function() {
+        this.bar.find('.cb-config').click(function () {
             that.showConfig();
             return false;
         });
 
-        this.bar.find('.cb-users').click(function() {
+        this.bar.find('.cb-users').click(function () {
             that.showUser();
             return false;
         });
         this.showUser();
 
-        this.configurationBox.find('select, input ').change(function() {
+        this.configurationBox.find('select, input ').change(function () {
             var status = $(this).val();
             $.ajax({
                 url: AJS.contextPath() + "/chat/setstatus.action",
@@ -423,7 +438,7 @@ ConfluenceChatConfig = {
                     status: that.configurationBox.find('select[name=status]').val()
                 },
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     that.setStatus(status);
                 }
             });
@@ -444,7 +459,7 @@ ConfluenceChatConfig = {
             if ($('html.audio').size() === 0) {
                 this.bar.find('.csound').hide();
             } else {
-                this.bar.find('.csound').click(function() {
+                this.bar.find('.csound').click(function () {
                     if (that.isSound()) {
                         that.deactivateSound();
                     } else {
@@ -454,36 +469,36 @@ ConfluenceChatConfig = {
             }
 
             this.getOnlineUsers();
-            this.intervall = setInterval(function() {
+            this.intervall = setInterval(function () {
                 that.getOnlineUsers();
             }, 5000);
 
-            $(window).mousemove(function() {
+            $(window).mousemove(function () {
                 that.mousemove = true;
                 var chatStatus = that.bar.find('#chatbar-status');
                 if ($.trim(chatStatus.attr('oldStatus')).length > 0) {
                     chatStatus.attr('class', chatStatus.attr('oldStatus'));
                     chatStatus.removeAttr('oldStatus');
                 }
-            }).resize(function() {
+            }).resize(function () {
                 that.restructureChatBoxes();
             });
             this.startChatSession();
             this.bindChatWithLinks();
-            if (this.isOpen()) {
+            if (!isInEditMode() && this.isOpen()) {
                 this.maximize();
             }
         }
     };
 
-    ChatBar.prototype.getChatBoxes = function() {
+    ChatBar.prototype.getChatBoxes = function () {
         return this.chatBoxes;
     };
 
-    ChatBar.prototype.isOnline = function() {
+    ChatBar.prototype.isOnline = function () {
         return  this.bar.hasClass("online") && !this.chatDeactivated;
     };
-    ChatBar.prototype.setStatus = function(status) {
+    ChatBar.prototype.setStatus = function (status) {
         if (status === "xa") {
             this.bar.removeClass("online").addClass("offline");
         } else {
@@ -497,7 +512,7 @@ ConfluenceChatConfig = {
         this.bar.find('#chatbar-status').attr('class', status);
     };
 
-    ChatBar.prototype.getOnlineUsers = function() {
+    ChatBar.prototype.getOnlineUsers = function () {
         if (this.isOnline() && coordinator) {
             var that = this;
             $.ajax({
@@ -508,10 +523,10 @@ ConfluenceChatConfig = {
                 },
                 cache: false,
                 dataType: "json",
-                error: function() {
+                error: function () {
                     that.requestErrorHandler();
                 },
-                success: function(data) {
+                success: function (data) {
                     that.requestSuccessHandler();
                     $.jStorage.publish(CHAT_CHANNEL_USERS, data);
                 }
@@ -519,7 +534,7 @@ ConfluenceChatConfig = {
         }
     };
 
-    ChatBar.prototype.chatWith = function(options) {
+    ChatBar.prototype.chatWith = function (options) {
         var opts = $.extend({
             chatBoxId: null,
             chatUserList: null,
@@ -550,10 +565,10 @@ ConfluenceChatConfig = {
         }
     };
 
-    ChatBar.prototype.bindChatWithLinks = function() {
+    ChatBar.prototype.bindChatWithLinks = function () {
         var that = this,
                 links = $('.chatuser-link:not([data-user-chat-bound=true])');
-        links.click(function() {
+        links.click(function () {
             var link = $(this);
             that.chatWith({
                 chatBoxId: link.attr('chatboxid'),
@@ -564,8 +579,8 @@ ConfluenceChatConfig = {
             return false;
         }).attr('data-user-chat-bound', true);
     };
-    ChatBar.prototype.reorderUser = function() {
-        var sortByFullname = function(a, b) {
+    ChatBar.prototype.reorderUser = function () {
+        var sortByFullname = function (a, b) {
             var val = $(a).find('.user-hover-trigger').text().toLowerCase() > $(b).find('.user-hover-trigger').text().toLowerCase();
             if (val) {
                 return 1;
@@ -574,16 +589,16 @@ ConfluenceChatConfig = {
             }
         };
         var that = this,
-                reorderEl = function(el) {
+                reorderEl = function (el) {
                     var container = that.chatOnlineUserDiv;
                     container.empty();
-                    el.each(function() {
+                    el.each(function () {
                         $(this).appendTo(container);
                     });
                 };
         reorderEl(this.chatOnlineUserDiv.find('.chat-user').sort(sortByFullname));
 
-        this.chatOnlineUserDiv.find('.chat-user').click(function() {
+        this.chatOnlineUserDiv.find('.chat-user').click(function () {
             that.chatWith({
                 chatBoxId: $(this).attr('chatBoxId'),
                 chatUserList: $(this).attr('username'),
@@ -592,7 +607,7 @@ ConfluenceChatConfig = {
             });
         });
     };
-    ChatBar.prototype.refreshUser = function(data) {
+    ChatBar.prototype.refreshUser = function (data) {
         var that = this,
                 tmpAttr = 'chatOfflineMeFlag-' + Math.round(Math.random() * 10000);
         this.chatOnlineUserDiv.find('.chat-user').attr(tmpAttr, 'true');
@@ -600,7 +615,7 @@ ConfluenceChatConfig = {
         this.users = Object();
         var ownUserInList = false;
         $('.chatuser-link-holder > span').attr('class', 'xa');
-        $.each(data.users, function(j, user) {
+        $.each(data.users, function (j, user) {
             var username = user.un,
                     chatBoxId = user.id;
             that.users[username] = user;
@@ -664,47 +679,47 @@ ConfluenceChatConfig = {
     };
 
 
-    ChatBar.prototype.getConfigParameter = function(param) {
+    ChatBar.prototype.getConfigParameter = function (param) {
         return this.bar.find('.parameters input[name="' + param + '"]').val();
     };
 
-    ChatBar.prototype.initCompatibility = function() {
+    ChatBar.prototype.initCompatibility = function () {
         /**
          * Compatibility with Task List
          * The task list elements flickers
          */
-        $(document).ready(function() {
+        $(document).ready(function () {
             // aus confluence.extra.dynamictasklist2:web-resources.js
             var S = "input.taskname-text, button.add-button, button.uncheck-all, select.sort-select, button.sort-order, "
                     + "input.complete, p.taskname input, radio.high-priority, radio.medium-priority, radio.low-priority, input.assignee";
             if ($('.task-list').size()) {
                 var intervall = null;
                 AJS.log('Chat: Init compatibility with Task List');
-                $('body').ajaxSend(function(e, xhr, opt) {
+                $('body').ajaxSend(function (e, xhr, opt) {
                     if (typeof (opt.url) !== "undefined" && opt.url.search('/chat/') >= 0) {
                         var items = $(S);
                         clearInterval(intervall);
-                        intervall = setInterval(function() {
+                        intervall = setInterval(function () {
                             items.removeAttr('disabled');
                         }, 1);
                     }
 
                 });
-                $('body').ajaxStop(function(e, xhr, opt) {
+                $('body').ajaxStop(function (e, xhr, opt) {
                     clearInterval(intervall);
                 });
             }
         });
     };
 
-    ChatBar.prototype.retrieveChatMessages = function(chatboxes) {
+    ChatBar.prototype.retrieveChatMessages = function (chatboxes) {
         var that = this;
-        $.each(chatboxes, function(j, chatbox) {
+        $.each(chatboxes, function (j, chatbox) {
             that.log(chatbox);
             if (typeof (chatbox.messages) !== "undefined") {
                 if (isChatBox(that.chatBoxes[chatbox.id])) {
                     chatBar.log("chatbox exists " + chatbox.id + " loop over messages");
-                    $.each(chatbox.messages, function(i, item) {
+                    $.each(chatbox.messages, function (i, item) {
                         if (item) {
                             that.chatBoxes[chatbox.id].retrieveMessage(item);
                         }
@@ -714,7 +729,7 @@ ConfluenceChatConfig = {
                     var chatPartner = chatbox.un[0];
                     var chatTitle = '';
                     // retrieve name
-                    $.each(chatbox.messages, function(i, item) {
+                    $.each(chatbox.messages, function (i, item) {
                         if (item) {
                             if (typeof (item.to) !== "undefined") {
                                 if (typeof (item.to.un) !== "undefined") {
@@ -789,18 +804,18 @@ ConfluenceChatConfig = {
             this.hide();
         }
 
-        $.jStorage.subscribe('chatbox-' + that.chatBoxId, function(channel, data) {
+        $.jStorage.subscribe('chatbox-' + that.chatBoxId, function (channel, data) {
             if (data === "stopBlink") {
                 that.stopBlink();
             }
         });
         chatBar.log("created chatbox init with " + len + " messages");
     }
-    ChatBox.prototype.getId = function() {
+    ChatBox.prototype.getId = function () {
         return this.chatBoxId;
     };
 
-    ChatBox.prototype.isMinimized = function() {
+    ChatBox.prototype.isMinimized = function () {
         var cookie = 'cb-min' + this.chatBoxId;
         var min = AJS.Cookie.read(cookie);
         if (min === "true") {
@@ -810,7 +825,7 @@ ConfluenceChatConfig = {
         }
     };
 
-    ChatBox.prototype.isOlderThan = function(chatbox) {
+    ChatBox.prototype.isOlderThan = function (chatbox) {
         if (isChatBox(chatbox)) {
             if (this.lastMessageDate instanceof Date && chatbox.lastMessageDate instanceof Date) {
                 return this.lastMessageDate < chatbox.lastMessageDate;
@@ -820,31 +835,31 @@ ConfluenceChatConfig = {
     };
 
 
-    ChatBox.prototype.isClosed = function() {
+    ChatBox.prototype.isClosed = function () {
         return this.box.hasClass('closed');
     };
 
-    ChatBox.prototype.focusChatBox = function() {
+    ChatBox.prototype.focusChatBox = function () {
         this.maximize();
         if (this.isClosed()) {
             this.show();
         }
         this.textarea.focus();
     };
-    ChatBox.prototype.startBlink = function() {
+    ChatBox.prototype.startBlink = function () {
         this.show();
         if (!this.textarea.hasClass('cb-ts')
                 && this.blinkInterval === null
                 && chatBar.getHeartbeatCount() > 0
                 ) {
             var that = this;
-            this.blinkInterval = window.setInterval(function() {
+            this.blinkInterval = window.setInterval(function () {
                 that.blink();
             }, 1000);
         }
     };
-    ChatBox.prototype.playSound = function() {
-        if (chatBar.isCoordinator() 
+    ChatBox.prototype.playSound = function () {
+        if (chatBar.isCoordinator()
                 && chatBar.getHeartbeatCount() > 0) {
             if (!chatBar.windowHasFocus() ||
                     !this.textarea.hasClass('cb-ts')) {
@@ -859,13 +874,13 @@ ConfluenceChatConfig = {
             }
         }
     };
-    ChatBox.prototype.stopBlink = function() {
+    ChatBox.prototype.stopBlink = function () {
         window.clearInterval(this.blinkInterval);
         this.blinkInterval = null;
         document.title = chatBar.getOriginalTitle();
         this.box.removeClass('blink');
     };
-    ChatBox.prototype.blink = function() {
+    ChatBox.prototype.blink = function () {
         if (this.box.hasClass('blink')) {
             document.title = this.opt.dispayTitle + ' ' + AJS.I18n.getText('chat.says.name');
         } else {
@@ -874,7 +889,7 @@ ConfluenceChatConfig = {
         this.box.toggleClass('blink');
     };
 
-    ChatBox.prototype.init = function() {
+    ChatBox.prototype.init = function () {
         var that = this;
         this.box = $('<div/>');
         this.hide();
@@ -900,7 +915,7 @@ ConfluenceChatConfig = {
         dropdownList.appendTo(parent);
         var dropdownItem = $('<li/>').addClass('dropdown-item');
         dropdownItem.appendTo(dropdownList);
-        var dropdownItemLink = $('<a/>').attr('href', '#').text(chatBar.getConfigParameter('chat.box.more.history')).addClass('item-link').click(function(e) {
+        var dropdownItemLink = $('<a/>').attr('href', '#').text(chatBar.getConfigParameter('chat.box.more.history')).addClass('item-link').click(function (e) {
             that.deleteHistory();
             return true;
         });
@@ -909,7 +924,7 @@ ConfluenceChatConfig = {
         // history
         dropdownItem = $('<li/>').addClass('dropdown-item');
         dropdownItem.appendTo(dropdownList);
-        dropdownItemLink = $('<a/>').attr('href', '#').text(AJS.I18n.getText("chat.history.show")).addClass('item-link').click(function(e) {
+        dropdownItemLink = $('<a/>').attr('href', '#').text(AJS.I18n.getText("chat.history.show")).addClass('item-link').click(function (e) {
             new ChatHistory(that.opt);
             return true;
         });
@@ -924,21 +939,21 @@ ConfluenceChatConfig = {
         $('<a/>').attr('href', '#')
                 .text('+')
                 .attr('title', chatBar.getConfigParameter('chat.icon.max'))
-                .addClass('opt-max').click(function() {
+                .addClass('opt-max').click(function () {
             that.toggleChatBoxGrowth();
         }).appendTo(options);
 
         $('<a/>').attr('href', '#')
                 .text('-')
                 .attr('title', chatBar.getConfigParameter('chat.icon.min'))
-                .addClass('opt-min').click(function() {
+                .addClass('opt-min').click(function () {
             that.toggleChatBoxGrowth();
         }).appendTo(options);
 
         $('<a/>').attr('href', '#')
                 .text('X')
                 .attr('title', chatBar.getConfigParameter('chat.icon.close'))
-                .click(function() {
+                .click(function () {
                     that.closeChatBox();
                 }).appendTo(options);
         var titleBox = $('<div/>').addClass('cb-title').text(this.opt.dispayTitle);
@@ -962,16 +977,16 @@ ConfluenceChatConfig = {
 
         this.textarea = $('<textarea/>');
         this.textarea.attr('placeholder', AJS.I18n.getText("chat.box.textarea.placeholder"));
-        this.textarea.keydown(function(event) {
+        this.textarea.keydown(function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault();
                 that.send();
             }
         });
 
-        this.textarea.blur(function() {
+        this.textarea.blur(function () {
             $(this).removeClass('cb-ts');
-        }).focus(function() {
+        }).focus(function () {
             $(this).addClass('cb-ts');
         });
         $('<div/>').addClass('cb-input').append(this.textarea).appendTo(contentHolder);
@@ -981,15 +996,15 @@ ConfluenceChatConfig = {
             this.minimize();
         }
 
-        this.box.focus(function() {
+        this.box.focus(function () {
             $.jStorage.publish('chatbox-' + that.chatBoxId, "stopBlink");
-        }).mouseover(function() {
+        }).mouseover(function () {
             $.jStorage.publish('chatbox-' + that.chatBoxId, "stopBlink");
         });
         this.box.find('textarea').chatAutogrow();
 
     };
-    ChatBox.prototype.show = function() {
+    ChatBox.prototype.show = function () {
         if (this.initialized) {
             if (this.isClosed()) {
                 this.box.removeClass('closed');
@@ -1000,16 +1015,16 @@ ConfluenceChatConfig = {
         this.box.find(".cb-content").scrollTop(this.box.find(".cb-content")[0].scrollHeight);
     };
 
-    ChatBox.prototype.hide = function() {
+    ChatBox.prototype.hide = function () {
         this.box.addClass('closed');
         chatBar.restructureChatBoxes();
     };
-    ChatBox.prototype.position = function(number) {
+    ChatBox.prototype.position = function (number) {
         var width = (number * (ConfluenceChatConfig.chatBoxWidth + ConfluenceChatConfig.margin)) + 250;
         this.box.css('right', width + 'px');
     };
 
-    ChatBox.prototype.closeChatBox = function() {
+    ChatBox.prototype.closeChatBox = function () {
         this.hide();
         chatBar.restructureChatBoxes();
         $.post(AJS.contextPath() + "/chat/close.action", {
@@ -1018,32 +1033,32 @@ ConfluenceChatConfig = {
         });
     };
 
-    ChatBox.prototype.deleteHistory = function() {
+    ChatBox.prototype.deleteHistory = function () {
         var that = this;
         if (confirm('Delete this history?')) {
             $.post(AJS.contextPath() + "/chat/delete.action", {
                 spaceKey: AJS.params.spaceKey,
                 deleteBox: that.chatBoxId
-            }, function() {
+            }, function () {
                 that.box.find('.cb-content').empty();
             });
         }
     };
 
-    ChatBox.prototype.minimize = function() {
+    ChatBox.prototype.minimize = function () {
 
         var cookie = 'cb-min' + this.chatBoxId;
         this.box.addClass('min');
         AJS.Cookie.save(cookie, "true");
     };
-    ChatBox.prototype.maximize = function() {
+    ChatBox.prototype.maximize = function () {
         var cookie = 'cb-min' + this.chatBoxId;
         this.box.removeClass('min');
         this.textarea.focus();
         AJS.Cookie.save(cookie, "false");
     };
 
-    ChatBox.prototype.toggleChatBoxGrowth = function() {
+    ChatBox.prototype.toggleChatBoxGrowth = function () {
         if (this.isMinimized()) {
             this.maximize();
         } else {
@@ -1052,7 +1067,7 @@ ConfluenceChatConfig = {
     };
 
 
-    ChatBox.prototype.send = function() {
+    ChatBox.prototype.send = function () {
         var that = this;
         var message = AJS.escapeHtml(this.textarea.val());
         this.textarea.val('').focus().css('height', '44px');
@@ -1066,7 +1081,7 @@ ConfluenceChatConfig = {
         }
         return false;
     };
-    ChatBox.prototype.retrieveMessage = function(item) {
+    ChatBox.prototype.retrieveMessage = function (item) {
         if (item === null) {
             return;
         }
@@ -1147,7 +1162,7 @@ ConfluenceChatConfig = {
         content.scrollTop(content[0].scrollHeight);
     };
 
-    ChatBox.prototype.formatTime = function(dt) {
+    ChatBox.prototype.formatTime = function (dt) {
         if (typeof dt === "object") {
             var hours = dt.getHours();
             var minutes = dt.getMinutes();
@@ -1165,12 +1180,12 @@ ConfluenceChatConfig = {
         return "";
     };
 
-    ChatBox.prototype.replaceChatMessage = function(text) {
+    ChatBox.prototype.replaceChatMessage = function (text) {
         text = this.urlify(text);
         text = this.replaceEmoticons(text);
         return text;
     };
-    ChatBox.prototype.replaceEmoticons = function(text) {
+    ChatBox.prototype.replaceEmoticons = function (text) {
         var emoticons = {
             ':-)': 'happy',
             ':)': 'happy',
@@ -1206,16 +1221,16 @@ ConfluenceChatConfig = {
         }
 
         // build the regular expression and replace
-        return text.replace(new RegExp(patterns.join('|'), 'g'), function(match) {
+        return text.replace(new RegExp(patterns.join('|'), 'g'), function (match) {
             return typeof emoticons[match] !== 'undefined' ?
                     '<img title="' + emoticons[match] + '" src="' + AJS.contextPath() + '/download/resources/confluence.chat/clear.png" class="smiley ' + emoticons[match] + '"/>' :
                     match;
         });
     };
-    ChatBox.prototype.urlify = function(text) {
+    ChatBox.prototype.urlify = function (text) {
         if (typeof text !== 'undefined') {
             var urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, function(url) {
+            return text.replace(urlRegex, function (url) {
                 return '<a href="' + url + '" target="_blank" title="' + url + '">' + url + '</a>';
             });
         } else {
@@ -1232,7 +1247,7 @@ ConfluenceChatConfig = {
         this.init();
     }
 
-    ChatHistory.prototype.init = function() {
+    ChatHistory.prototype.init = function () {
         var that = this;
         if (historyDialog === null) {
             historyDialog = AJS.ConfluenceDialog({
@@ -1313,22 +1328,28 @@ ConfluenceChatConfig = {
     };
 
     var chatBar = new ChatBar();
-    ConfluenceChatAPI.isOnline = function() {
+
+    AJS.bind('rte-quick-edit-push-state', function () {
+        chatBar.minimize();
+        chatBar.closeAllChatBoxes();
+    });
+
+    ConfluenceChatAPI.isOnline = function () {
         return chatBar.isOnline();
     };
-    ConfluenceChatAPI.getStatusOfUser = function(username) {
+    ConfluenceChatAPI.getStatusOfUser = function (username) {
         return chatBar.getStatusOfUser(username);
     };
 
-    ConfluenceChatAPI.getVersion = function() {
+    ConfluenceChatAPI.getVersion = function () {
         return chatBar.version;
     };
 
-    ConfluenceChatAPI.enableDebugMode = function() {
+    ConfluenceChatAPI.enableDebugMode = function () {
         return chatBar.setDebugMode(true);
     };
 
-    ConfluenceChatAPI.showHistory = function(username) {
+    ConfluenceChatAPI.showHistory = function (username) {
         new ChatHistory({
             chatUserList: username
         });

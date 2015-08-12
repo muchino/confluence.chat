@@ -232,3 +232,7 @@
 #chatbar #chatbar-buttons .csound.csound-off {
     background-image:  url("images-chat/sound_mute.png");  
 }
+
+body.chat-active .toolbar-split-right {
+    margin-right: 30px;
+}

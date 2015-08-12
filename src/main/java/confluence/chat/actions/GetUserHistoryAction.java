@@ -5,6 +5,9 @@
 package confluence.chat.actions;
 
 import bucket.core.actions.PaginationSupport;
+import com.atlassian.confluence.security.Permission;
+import com.atlassian.confluence.security.PermissionManager;
+import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.confluence.user.actions.AbstractUserProfileAction;
 import com.atlassian.confluence.user.actions.UserAware;
 import com.atlassian.user.User;
@@ -20,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -32,13 +36,27 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
     private ChatMessageList messages = new ChatMessageList();
     private ChatUser chatUser = null;
     private Integer days = 7;
-    private DateFormat miuntes = new SimpleDateFormat("yMdkm");
+    private final DateFormat miuntes = new SimpleDateFormat("yMdkm");
     private String lastWrittenMessageDate = null;
     private Date messagesince = null;
     private String usernameList;
     private ChatManager chatManager;
     private PaginationSupport paginationSupport;
     private Integer startIndex = 0;
+    private static final Logger logger = Logger.getLogger(LoginLogoutListener.class);
+    private String username;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String getUsername() {
+        if (StringUtils.isBlank(username)) {
+            username = getRemoteUser().getName();
+        }
+        return username;
+    }
 
     /**
      * @return the messages
@@ -55,6 +73,13 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
     @Override
     public String execute() throws Exception {
         super.execute();
+        User currentUser = AuthenticatedUserThreadLocal.getUser();
+        boolean hasPermission = permissionManager.hasPermission(
+                currentUser, Permission.ADMINISTER, PermissionManager.TARGET_SYSTEM);
+        if (!(currentUser == getUser() || hasPermission)) {
+            return NONE;
+        }
+
         HttpServletRequest request = ServletActionContext.getRequest();
         usernameList = request.getParameter(PARAM_CHATBOX);
         if (StringUtils.isNumeric(request.getParameter(PARAM_DAYS))) {
@@ -64,19 +89,18 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
             }
         }
 
-
         if (StringUtils.isNotBlank(usernameList)) {
             messagesince = GetHistoryAjaxAction.getSinceDate(getDays());
             chatUser = getChatManager().getChatUser(usernameList);
             if (getDays() > 0) {
-                messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
+                messages = getChatManager().getChatBoxes(getUser()).getChatBoxWithUser(usernameList).getMessagesSince(getMessagesince());
                 Collections.reverse(messages);
             } else {
-                messages = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxWithUser(usernameList).getMessages();
+                messages = getChatManager().getChatBoxes(getUser()).getChatBoxWithUser(usernameList).getMessages();
             }
 
         } else {
-            paginationSupport = new PaginationSupport(getChatManager().getKeysOfChats(getRemoteUser()), 10);
+            paginationSupport = new PaginationSupport(getChatManager().getKeysOfChats(getUser()), 10);
             paginationSupport.setStartIndex(startIndex);
         }
         return SUCCESS;
@@ -89,7 +113,7 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
 
     @Override
     public User getUser() {
-        return getRemoteUser();
+        return userAccessor.getUser(getUsername());
     }
 
     /**

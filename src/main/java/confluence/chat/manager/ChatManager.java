@@ -24,7 +24,7 @@ public interface ChatManager {
     public static final String KEY_GLOBAL_CONFIGURATION = "confluence.chat.configuration";
     public static final String SESSION_LAST_REQUEST = "confluence.chat.time.last.message";
     public static final String KEY_HISTORY = "confluence.chat.history.";
-    public static final String QUERY_HISTORIES = "SELECT DISTINCT BANDANACONTEXT FROM bandana WHERE BANDANACONTEXT LIKE '" + KEY_HISTORY + "%'";
+    public static final String QUERY_HISTORIES = "SELECT DISTINCT BANDANACONTEXT FROM BANDANA WHERE BANDANACONTEXT LIKE '" + KEY_HISTORY + "%'";
     public static final String SESSION_OPEN_CHAT_KEY = "confluence.chat.open.chats";
     public static final String SESSION_SHOW_MESSAGES_SINCE = "confluence.chat.show.message.since.";
     public static final Integer SECONDS_TO_BE_AWAY = 60 * 10;
