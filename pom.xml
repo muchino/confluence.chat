@@ -111,9 +111,38 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.atlassian.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>compile-less</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <suffix>.css</suffix>
+                            <sourceDirectory>${project.basedir}/src/main/resources</sourceDirectory>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <fork>true</fork>
+                    <meminitial>128m</meminitial>
+                    <maxmem>512m</maxmem>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <repositories>
+        <repository>
+            <id>maven-central</id>
+            <name>Maven Central</name>
+            <url>http://central.maven.org/maven2/</url>
+        </repository>
         <repository>
             <id>mvn-public</id>
             <name>MVNRepository</name>
@@ -131,6 +160,11 @@
         </repository>
     </repositories>
     <pluginRepositories>
+        <pluginRepository>
+            <id>maven-central</id>
+            <name>Maven Central</name>
+            <url>http://central.maven.org/maven2/</url>
+        </pluginRepository>
         <pluginRepository>
             <id>mvn-public</id>
             <name>MVNRepository</name>
