@@ -61,27 +61,26 @@
         <table id="browse-user-table" class="aui user-table">
             <thead>
                 <tr>
-                    <th width="30%">$action.getText("user.name")</th>
-                    <th width="40%">$action.getText("username.name")</th>
-                    <th width="30%">$action.getText("show.word")</th>
+                    <th width="80%">$action.getText("user.name")</th>
+                    <th width="20%">$action.getText("heading.operations")</th>
                 </tr>
             </thead>
             <tbody>
                 #foreach ($chatboxId in $action.paginationSupport.page.iterator())
                     #if($chatManager.isRenameUserImplemented())
-                        #set($username = $chatboxId)
+                        #set($historyUsername = $chatboxId)
                     #else
-                        #set($username = $chatManager.getChatBoxes($remoteUser).getChatBoxByStringId($chatboxId).getUserKeyMembers().get(0))
+                        #set($historyUsername = $chatManager.getChatBoxes($remoteUser).getChatBoxByStringId($chatboxId).getUserKeyMembers().get(0))
                     #end
-                    #set($userProfileLink = "viewuser.action?username=$!generalUtil.doubleUrlEncode($username)")
-                    #set($htmlSafeUsername = $!generalUtil.htmlEncode($username))
-
                     <tr >
                         <td>
-                            #usernameLink($username)
+                            #usernameLink($historyUsername)
                         </td>
-                        <td>$htmlSafeUsername</td>
-                        <td><a href="?historyUsername=$username&username=$user.name">$i18n.getText('show.word')</a></td>
+                        <td>
+							<a href="$req.contextPath/users/chat/history.action?historyUsername=$historyUsername&username=$user.name">$i18n.getText('show.word')</a>
+							&middot;
+							<a href="$req.contextPath/users/chat/deletehistory.action?historyUsername=$historyUsername&username=$user.name">$i18n.getText('remove.name')</a> 
+						</td>
                     </tr>
                 #end
             </tbody>

@@ -41,7 +41,7 @@
                 #set ($filter = "groupName=$groupName")
                 #end
 
-                #if($users && ($stringUtils.isNotEmpty($usernameTerm) || $stringUtils.isNotEmpty($fullnameTerm) || $stringUtils.isNotEmpty($emailTerm) || $stringUtils.isNotEmpty($searchTerm) ))
+                #if($users &&  $stringUtils.isNotEmpty($searchTerm) )
                 #if( $users.isEmpty())
                 $action.getText("there.are.no.users")
                 #else

@@ -51,12 +51,6 @@
                     <input class="checkbox" type="checkbox"  name="overwriteAllowAll" title="$i18n.getText('chat.config.import.settings.all.desc')" autocomplete="false" checked="checked">
                         <div class="description">$i18n.getText('chat.config.import.settings.all.desc')</div>
                 </div>
-                <!--
-                <div class="field-group">
-                    <label>$i18n.getText('chat.config.import.settings.groups.title')</label>
-                    <input class="checkbox" type="checkbox"  name="overwriteGroups" title="$i18n.getText('chat.config.import.settings.groups.desc')" autocomplete="false" checked="checked">
-                        <div class="description">$i18n.getText('chat.config.import.settings.groups.desc')</div>
-                </div>-->
                 <div class="field-group">
                     <label>$i18n.getText('chat.config.import.settings.groups.append')</label>
                     <input class="checkbox" type="checkbox"  name="appendGroups" title="$i18n.getText('chat.config.import.settings.groups.append.desc')" autocomplete="false" checked="checked">
@@ -66,7 +60,6 @@
             <div class="buttons-container">
                 <div class="buttons">
                     <input class="button submit" type="submit" value="$i18n.getText('save.name')">
-                        <a href="viewconfiguration.action">$i18n.getText('cancel.name')</a>
                 </div>
             </div>
         </form>

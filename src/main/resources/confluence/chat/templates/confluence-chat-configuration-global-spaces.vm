@@ -2,7 +2,7 @@
     <head>
         <title>$i18n.getText('chat.config.tab.spacesettings')</title>
         <meta name="help-path" content="confluence/chat/templates/help.vm"/>
-        <content tag="selectedWebItem">chat.config.tab.spacesettings</content>
+        <content tag="selectedWebItem">confluence-chat-admin-spaces</content>
     </head>
     <body>
         <h2>$i18n.getText('space.name')</h2>
@@ -28,7 +28,7 @@
                     </td>
                     <td>$action.getGroups($config)</td>
 
-                    <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('chat.config.tab.chat')</a></td>
+                    <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('configure.word')</a></td>
                 </tr>
                 #end
                 #end
@@ -56,7 +56,7 @@
                         #end
                     </td>
                     <td>$action.getGroups($config)</td>
-                    <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('chat.config.tab.chat')</a></td>
+                    <td><a href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$space.getKey()" >$i18n.getText('configure.word')</a></td>
                 </tr>
                 #end
                 #end
