@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.actions;
 
 import bucket.core.actions.PaginationSupport;
@@ -22,10 +18,6 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-/**
- *
- * @author oli
- */
 public class GetUserHistoryAction extends AbstractUserProfileAction implements UserAware {
 
 	private static final Logger logger = Logger.getLogger(GetUserHistoryAction.class);

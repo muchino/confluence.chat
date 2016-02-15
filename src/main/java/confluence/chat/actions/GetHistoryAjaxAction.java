@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
@@ -18,107 +14,99 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
-/**
- *
- * @author oli
- */
 public class GetHistoryAjaxAction extends AbstractChatAction {
 
-    private static final String PARAM_CHATBOX = "chatBoxId";
-    private static final String PARAM_DAYS = "days";
-    private ChatMessageList messages = new ChatMessageList();
-    private ChatUser chatUser = null;
-    private Integer days = 7;
-    private DateFormat miuntes = new SimpleDateFormat("yMdkm");
-    private String lastWrittenMessageDate = null;
-    private Date messagesince = null;
-    private String chatBoxId;
+	private static final String PARAM_DAYS = "days";
+	private ChatMessageList messages = new ChatMessageList();
+	private ChatUser chatUser = null;
+	private Integer days = 7;
+	private DateFormat miuntes = new SimpleDateFormat("yMdkm");
+	private String lastWrittenMessageDate = null;
+	private Date messagesince = null;
 
-    /**
-     * @return the messages
-     */
-    public ChatMessageList getMessages() {
-        return messages;
-    }
+	/**
+	 * @return the messages
+	 */
+	public ChatMessageList getMessages() {
+		return messages;
+	}
 
-    public GetHistoryAjaxAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-        super(chatManager, pageManager, permissionManager);
-    }
+	public GetHistoryAjaxAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
+		super(chatManager, pageManager, permissionManager);
+	}
 
-    @Override
-    public String execute() throws Exception {
+	@Override
+	public String execute() throws Exception {
 
-        HttpServletRequest request = ServletActionContext.getRequest();
-        chatBoxId = request.getParameter(PARAM_CHATBOX);
-        if (StringUtils.isNumeric(request.getParameter(PARAM_DAYS))) {
-            try {
-                days = new Integer(request.getParameter(PARAM_DAYS));
-            } catch (Exception e) {
-            }
-        }
+		HttpServletRequest request = ServletActionContext.getRequest();
+		if (StringUtils.isNumeric(request.getParameter(PARAM_DAYS))) {
+			try {
+				days = new Integer(request.getParameter(PARAM_DAYS));
+			} catch (Exception e) {
+			}
+		}
 
-        messagesince = GetHistoryAjaxAction.getSinceDate(days);
-        if (StringUtils.isNotBlank(chatBoxId)) {
-            ChatBox box = getChatManager().getChatBoxes(getRemoteUser()).getChatBoxByStringId(chatBoxId);
-            if (days > 0) {
-                messages = box.getMessagesSince(getMessagesince());
-                Collections.reverse(messages);
-            } else {
-                messages = box.getMessages();
-            }
-            List<String> userKeyMembers = box.getUserKeyMembers();
-            for (int i = 0; i < userKeyMembers.size(); i++) {
-                String userKey = userKeyMembers.get(i);
-                String userName = ChatUtils.getUserNameByKeyOrUserName(userKey);
-                chatUser = getChatManager().getChatUser(userName);
-                break;
-            }
-        }
-        return SUCCESS;
-    }
+		messagesince = GetHistoryAjaxAction.getSinceDate(days);
+		if (StringUtils.isNotBlank(getChatBoxId())) {
+			ChatBox box = chatManager.getChatBoxes(getRemoteUser()).getChatBoxByStringId(getChatBoxId());
+			if (days > 0) {
+				messages = box.getMessagesSince(getMessagesince());
+				Collections.reverse(messages);
+			} else {
+				messages = box.getMessages();
+			}
+			List<String> userKeyMembers = box.getUserKeyMembers();
+			for (int i = 0; i < userKeyMembers.size(); i++) {
+				String userKey = userKeyMembers.get(i);
+				String userName = ChatUtils.getUserNameByKeyOrUserName(userKey);
+				chatUser = chatManager.getChatUser(userName);
+				break;
+			}
+		}
+		return SUCCESS;
+	}
 
-    public static Date getSinceDate(Integer numberOfDays) {
+	public static Date getSinceDate(Integer numberOfDays) {
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.AM_PM, Calendar.AM);
-        cal.add(Calendar.DATE, -1 * numberOfDays);
-        return cal.getTime();
-    }
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.AM_PM, Calendar.AM);
+		cal.add(Calendar.DATE, -1 * numberOfDays);
+		return cal.getTime();
+	}
 
-    public List<String> getKeysOfChats() {
-        return getChatManager().getKeysOfChats(getRemoteUser());
-    }
+	public List<String> getKeysOfChats() {
+		return chatManager.getKeysOfChats(getRemoteUser());
+	}
 
-    /**
-     * @return the chatUser
-     */
-    public ChatUser getChatUser() {
-        return chatUser;
-    }
+	/**
+	 * @return the chatUser
+	 */
+	public ChatUser getChatUser() {
+		return chatUser;
+	}
 
-    public boolean writeNewLine(Date newDate) {
-        String formated = miuntes.format(newDate);
-        boolean isSame = false;
-        if (lastWrittenMessageDate != null) {
-            isSame = lastWrittenMessageDate.equals(formated);
+	public boolean writeNewLine(Date newDate) {
+		String formated = miuntes.format(newDate);
+		boolean isSame = false;
+		if (lastWrittenMessageDate != null) {
+			isSame = lastWrittenMessageDate.equals(formated);
 
-        }
+		}
 
-        lastWrittenMessageDate = formated;
-        return !isSame;
-    }
+		lastWrittenMessageDate = formated;
+		return !isSame;
+	}
 
-    /**
-     * @return the messagesince
-     */
-    public Date getMessagesince() {
-        return messagesince;
-    }
+	/**
+	 * @return the messagesince
+	 */
+	public Date getMessagesince() {
+		return messagesince;
+	}
 }

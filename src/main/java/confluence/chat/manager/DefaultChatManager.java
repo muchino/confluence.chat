@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.manager;
 
 import com.atlassian.bandana.BandanaManager;
@@ -27,14 +23,15 @@ import confluence.chat.model.ChatStatus;
 import confluence.chat.model.ChatUser;
 import confluence.chat.model.ChatUserList;
 import confluence.chat.utils.ChatUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.StringUtils;
 
-/**
- *
- * @author osr
- */
 public final class DefaultChatManager implements ChatManager {
 
 	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
@@ -160,7 +157,7 @@ public final class DefaultChatManager implements ChatManager {
 	}
 
 	@Override
-	public void sendMessage(final String sender, final String receiver, final String message, final String id) {
+	public void sendMessage(final String sender, final String receiver, final String message) {
 
 		transactionTemplate.execute(new TransactionCallback() {
 			@Override
@@ -169,7 +166,6 @@ public final class DefaultChatManager implements ChatManager {
 				chatMessage.setFrom(sender);
 				chatMessage.setTo(receiver);
 				chatMessage.setMessage(message);
-				chatMessage.setId(id);
 
 //        chatboxes of receiver
 				ChatBox chatBoxWithReceiver = getChatBoxes(receiver).getChatBoxWithUser(sender);

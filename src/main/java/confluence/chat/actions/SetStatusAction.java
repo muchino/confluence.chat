@@ -7,18 +7,17 @@ import confluence.chat.manager.ChatManager;
 
 public class SetStatusAction extends AbstractChatAction implements Beanable {
 
-    public SetStatusAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-        super(chatManager, pageManager, permissionManager);
-    }
+	public SetStatusAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
+		super(chatManager, pageManager, permissionManager);
+	}
 
-    @Override
-    public final String execute() throws Exception {
-        setStatus();
-        return SUCCESS;
-    }
+	@Override
+	public final String execute() throws Exception {
+		return SUCCESS;
+	}
 
-    @Override
-    public Object getBean() {
-        return true;
-    }
+	@Override
+	public Object getBean() {
+		return true;
+	}
 }

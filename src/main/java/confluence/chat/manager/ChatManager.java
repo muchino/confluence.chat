@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.manager;
 
 import com.atlassian.confluence.setup.bandana.ConfluenceBandanaContext;
@@ -15,10 +11,6 @@ import confluence.chat.model.ChatStatus;
 import confluence.chat.model.ChatUser;
 import java.util.List;
 
-/**
- *
- * @author oli
- */
 public interface ChatManager {
 
 	public static final String KEY_GLOBAL_CONFIGURATION = "confluence.chat.configuration";
@@ -46,7 +38,7 @@ public interface ChatManager {
 
 	public List<ChatUser> getOnlineUsers(String spaceKey);
 
-	public void sendMessage(final String sender, final String receiver, final String message, final String id);
+	public void sendMessage(final String sender, final String receiver, final String message);
 
 	public void setOnlineStatus(String user, ChatStatus status);
 
