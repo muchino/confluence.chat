@@ -627,7 +627,7 @@ ConfluenceChatConfig = {
 					chatUser.attr('chatBoxId', chatBoxId);
 					chatUser.attr('username', username);
 					chatUser.find('.chat-user-info .is').text(user.fn).addClass('user-hover-trigger').attr('data-username', username);
-					chatUser.find('.chat-where').addClass('chat-where' + chatBoxId);
+					chatUser.find('.chat-where').addClass('chat-where-' + chatBoxId);
 					that.chatOnlineUserDiv.append(chatUser);
 					that.reorderUser();
 					try {
@@ -643,22 +643,25 @@ ConfluenceChatConfig = {
 				if (img.attr('src') !== user.p) {
 					img.attr('src', user.p);
 				}
-				/**
-				 *wo befindet sich der user
-				 */
-				var userWhere = $('.chat-where' + chatBoxId);
 
-				if (typeof user.su !== "undefined" && typeof user.st !== "undefined") {
+				// update where state
+				$('.chat-where-' + chatBoxId).replaceWith(ConfluenceChat.Templates.where({
+					id: chatBoxId,
+					url: user.su,
+					title: user.st
+				}));
 
-					var title = user.st;
-					userWhere.find('a').attr('href', user.su).attr('title', user.st);
-					userWhere.find('span').text(title);
-					userWhere.show();
-				} else {
-					userWhere.find('a').attr('href', '').attr('title', '');
-					userWhere.find('span').text('');
-					userWhere.hide();
-				}
+//				if (typeof user.su !== "undefined" && typeof user.st !== "undefined") {
+//
+//					var title = user.st;
+//					userWhere.find('a').attr('href', user.su).attr('title', user.st);
+//					userWhere.find('span').text(title);
+//					userWhere.show();
+//				} else {
+//					userWhere.find('a').attr('href', '').attr('title', '');
+//					userWhere.find('span').text('');
+//					userWhere.hide();
+//				}
 			} else {
 				ownUserInList = true;
 				var chatStatus = that.bar.find('#chatbar-status');
@@ -891,106 +894,47 @@ ConfluenceChatConfig = {
 
 	ChatBox.prototype.init = function () {
 		var that = this;
-		this.box = $('<div/>');
-		this.hide();
-		this.box.addClass('chatbox').attr('id', 'chatbox_' + this.chatBoxId);
+
+		var $box = $(ConfluenceChat.Templates.chatBox({
+			id: this.chatBoxId,
+			title: this.opt.dispayTitle,
+		}));
+
+		$('body').append($box);
+		this.box = $box;
+
+
 		this.box.width(ConfluenceChatConfig.chatBoxWidth);
-		var box = $('<div/>').appendTo(this.box);
-		var header = $('<div/>').addClass('cb-head');
-		var options = $('<div/>').addClass('cb-opt');
-		options.appendTo(header);
-		header.appendTo(box);
-
-		var dropdownHolder = $('<div/>');
-		dropdownHolder.addClass('cb-actions-more');
-		var dropdown = $('<ul/>').addClass('cb-dropdown');
-		dropdown.appendTo(dropdownHolder);
-		var parent = $('<li/>').addClass('aui-dd-parent');
-		parent.appendTo(dropdown);
-		var trigger = $('<a/>').attr('href', '#').addClass('aui-dd-trigger');
-		trigger.attr('title', chatBar.getConfigParameter('chat.box.more'));
-		trigger.appendTo(parent);
-
-		var dropdownList = $('<ul/>').addClass('aui-dropdown');
-		dropdownList.appendTo(parent);
-		var dropdownItem = $('<li/>').addClass('dropdown-item');
-		dropdownItem.appendTo(dropdownList);
-		var dropdownItemLink = $('<a/>').attr('href', '#').text(chatBar.getConfigParameter('chat.box.more.history')).addClass('item-link').click(function (e) {
+		$box.find('.chat-delete-history').click(function (e) {
 			that.deleteHistory();
 			return true;
 		});
-		dropdownItemLink.appendTo(dropdownItem);
 
-		// history
-		dropdownItem = $('<li/>').addClass('dropdown-item');
-		dropdownItem.appendTo(dropdownList);
-		dropdownItemLink = $('<a/>').attr('href', '#').text(AJS.I18n.getText("chat.history.show")).addClass('item-link').click(function (e) {
+		$box.find('.chat-show-history').click(function (e) {
 			new ChatHistory(that.opt);
-			return true;
-		});
-		dropdownItemLink.appendTo(dropdownItem);
-
-
-		dropdownHolder.appendTo(options);
-		dropdown.dropDown("Standard", {
-			alignment: 'right'
+			return false;
 		});
 
-		$('<a/>').attr('href', '#')
-				.text('+')
-				.attr('title', chatBar.getConfigParameter('chat.icon.max'))
-				.addClass('opt-max').click(function () {
+		$box.find('.opt-min, .opt-max').click(function () {
 			that.toggleChatBoxGrowth();
-		}).appendTo(options);
+			return false;
+		});
 
-		$('<a/>').attr('href', '#')
-				.text('-')
-				.attr('title', chatBar.getConfigParameter('chat.icon.min'))
-				.addClass('opt-min').click(function () {
-			that.toggleChatBoxGrowth();
-		}).appendTo(options);
+		$box.find('.opt-close').click(function () {
+			that.closeChatBox();
+		});
 
-		$('<a/>').attr('href', '#')
-				.text('X')
-				.attr('title', chatBar.getConfigParameter('chat.icon.close'))
-				.click(function () {
-					that.closeChatBox();
-				}).appendTo(options);
-		var titleBox = $('<div/>').addClass('cb-title').text(this.opt.dispayTitle);
-
-		titleBox.appendTo(header);
-
-
-		var contentHolder = $('<div/>').addClass('cb-content-hold');
-		contentHolder.appendTo(box);
-
-		$('<div/>').addClass('cb-content').appendTo(contentHolder);
-		/**
-		 * Who ist der User gerade
-		 */
-
-		var chatWhere = $('<div/>').addClass('chat-where chat-where' + this.chatBoxId).hide();
-		$('<span/>').appendTo($('<a/>').attr('href', '#').addClass('icon icon-page').text('').appendTo(chatWhere));
-		$('<span/>').appendTo($('<a/>').attr('href', '#').addClass('chat-where-text').text('').appendTo(chatWhere));
-
-		chatWhere.appendTo(contentHolder);
-
-		this.textarea = $('<textarea/>');
-		this.textarea.attr('placeholder', AJS.I18n.getText("chat.box.textarea.placeholder"));
+		this.textarea = $box.find('textarea');
 		this.textarea.keydown(function (event) {
 			if (event.keyCode === 13) {
 				event.preventDefault();
 				that.send();
 			}
-		});
-
-		this.textarea.blur(function () {
+		}).blur(function () {
 			$(this).removeClass('cb-ts');
 		}).focus(function () {
 			$(this).addClass('cb-ts');
-		});
-		$('<div/>').addClass('cb-input').append(this.textarea).appendTo(contentHolder);
-		this.box.appendTo($("body"));
+		}).chatAutogrow();
 
 		if (this.minimizeChatBox === 1 || this.isMinimized()) {
 			this.minimize();
@@ -1001,7 +945,8 @@ ConfluenceChatConfig = {
 		}).mouseover(function () {
 			$.jStorage.publish('chatbox-' + that.chatBoxId, "stopBlink");
 		});
-		this.box.find('textarea').chatAutogrow();
+
+		chatBar.chatBoxes[this.chatBoxId] = this;
 
 	};
 	ChatBox.prototype.show = function () {
@@ -1012,7 +957,7 @@ ConfluenceChatConfig = {
 				chatBar.restructureChatBoxes();
 			}
 		}
-		this.box.find(".cb-content").scrollTop(this.box.find(".cb-content")[0].scrollHeight);
+		this.box.find(".chat-discussion").scrollTop(this.box.find(".chat-discussion")[0].scrollHeight);
 	};
 
 	ChatBox.prototype.hide = function () {
@@ -1040,7 +985,7 @@ ConfluenceChatConfig = {
 				spaceKey: AJS.params.spaceKey,
 				chatBoxId: that.chatBoxId
 			}, function () {
-				that.box.find('.cb-content').empty();
+				that.box.find('.chat-discussion').empty();
 			});
 		}
 	};
@@ -1084,81 +1029,96 @@ ConfluenceChatConfig = {
 		if (item === null) {
 			return;
 		}
-		// wenn die nachricht schon da ist -> abbrechen
-		var id = "";
+
+		var otherUser = item.f.un !== AJS.params.remoteUser;
+
 		// check if messages is already added 
-		if (typeof (item.id) !== "undefined") {
-			id = "cm" + item.id;
-			if (id.length > 0) {
-				if ($("#" + id).size()) {
-					return;
-				}
-			}
+		if ($("#" + item.id).size()) {
+			return;
 		}
+
+		chatBar.log("retrieve message " + item.id);
 
 		if (this.isClosed() && this.initialized) {
 			this.show();
 			chatBar.restructureChatBoxes();
 		}
 
-		if (item.f.un !== AJS.params.remoteUser) {
+		if (otherUser) {
 			this.startBlink();
 			this.playSound();
 		}
 
 		var message = this.replaceChatMessage(item.m);
-		var content = this.box.find('.cb-content');
+		var $discussion = this.box.find('.chat-discussion');
 		var dt = new Date(item.t);
 		this.lastMessageDate = dt;
 
-		var holderId = dt.getFullYear() + '' + dt.getMonth() + dt.getDate() + dt.getHours() + dt.getMinutes();
-		var messageBox = content.find('.cb-mc[slot=' + holderId + ']');
-		if (messageBox.size() === 0) {
-			// pro zeit / datum eine box
-			messageBox = $('<div/>').addClass('cb-mc').attr('slot', holderId);
-			messageBox.appendTo(content);
-			var messageTime = $('<div/>').addClass('cb-mt');
-			messageTime.text(this.formatTime(dt));
-			messageTime.appendTo(messageBox);
-		}
-		;
-		// habe nun aktuellen messageBox -> ist letzter eintrag auch von item.f.un  user?
-		var userBox = messageBox.find('.cb-ut:last');
-		if (userBox.attr('unid') !== item.f.id) {
-			userBox = null;
-		}
 
-		var messageHolder;
-		if (userBox === null) {
-			userBox = $('<div/>').addClass('cb-ut').attr('unid', item.f.id);
-			userBox.appendTo(messageBox);
-			var userLink = $('<a/>').attr('href', AJS.contextPath() + '/display/~' + item.f.un);
-			userLink.addClass('userLogoLink').attr('data-username', item.f.un);
-			var userLogo = $('<img/>').attr('src', AJS.contextPath() + item.f.p)
-					.attr('alt', 'User icon: ' + item.f.un)
-					.attr('title', item.f.fn);
-			userLogo.appendTo(userLink);
-			// user image am content
-			userLink.appendTo(userBox);
-			messageHolder = $('<div/>').addClass('cb-mh');
-			var from = $('<div/>').addClass('cb-f').text(item.f.fn);
-			from.appendTo(messageHolder);
-			messageHolder.appendTo(userBox);
-			try {
-				AJS.Confluence.Binder.userHover();
-			} catch (e) {
-			}
-		} else {
-			messageHolder = userBox.find('.cb-mh');
+		var $message = ConfluenceChat.Templates.message({
+			timeFormatted: this.formatTime(dt),
+			time: item.t,
+			messageHTML: message,
+			picture: item.f.p,
+			username: item.f.un,
+			displayName: item.f.fn,
+			id: item.id,
+			otherUser: otherUser
+
+
+		});
+
+		chatBar.log($message);
+		$discussion.append($message);
+
+//		var holderId = dt.getFullYear() + '' + dt.getMonth() + dt.getDate() + dt.getHours() + dt.getMinutes();
+//		var messageBox = content.find('.cb-mc[slot=' + holderId + ']');
+//		if (messageBox.size() === 0) {
+//			// pro zeit / datum eine box
+//			messageBox = $('<div/>').addClass('cb-mc').attr('slot', holderId);
+//			messageBox.appendTo(content);
+//			var messageTime = $('<div/>').addClass('cb-mt');
+//			messageTime.text(this.formatTime(dt));
+//			messageTime.appendTo(messageBox);
+//		}
+//		;
+//		// habe nun aktuellen messageBox -> ist letzter eintrag auch von item.f.un  user?
+//		var userBox = messageBox.find('.cb-ut:last');
+//		if (userBox.attr('unid') !== item.f.id) {
+//			userBox = null;
+//		}
+//
+//		var messageHolder;
+//		if (userBox === null) {
+//			userBox = $('<div/>').addClass('cb-ut').attr('unid', item.f.id);
+//			userBox.appendTo(messageBox);
+//			var userLink = $('<a/>').attr('href', AJS.contextPath() + '/display/~' + item.f.un);
+		//			userLink.addClass('userLogoLink').attr('data-username', item.f.un);
+//			var userLogo = $('<img/>').attr('src', AJS.contextPath() + item.f.p)
+//					.attr('alt', 'User icon: ' + item.f.un)
+//					.attr('title', item.f.fn);
+//			userLogo.appendTo(userLink);
+//			// user image am content
+//			userLink.appendTo(userBox);
+//			messageHolder = $('<div/>').addClass('cb-mh');
+//			var from = $('<div/>').addClass('cb-f').text(item.f.fn);
+//			from.appendTo(messageHolder);
+//			messageHolder.appendTo(userBox);
+		try {
+			AJS.Confluence.Binder.userHover();
+		} catch (e) {
 		}
-		//     nun einfach die nachricht noch drann
-		var messageItem = $('<div/>').addClass('cb-mtext').html(message).attr('t', item.t);
-		// check if message is already added
-		if (id.length > 0) {
-			messageItem.attr('id', id);
-		}
-		messageItem.appendTo(messageHolder);
-		content.scrollTop(content[0].scrollHeight);
+//		} else {
+//			messageHolder = userBox.find('.cb-mh');
+//		}
+//		//     nun einfach die nachricht noch drann
+//		var messageItem = $('<div/>').addClass('cb-mtext').html(message).attr('t', item.t);
+//		// check if message is already added
+//		if (id.length > 0) {
+//			messageItem.attr('id', id);
+//		}
+//		messageItem.appendTo(messageHolder);
+		$discussion.scrollTop($discussion[0].scrollHeight);
 	};
 
 	ChatBox.prototype.formatTime = function (dt) {

@@ -1,21 +1,18 @@
-.chatbox {
-    position: fixed;
-    position:expression("absolute");
-    width: 260px;
-    background-color: #ffffff;
-}
+/*.chatbox {
 
-.chatbox.min .cb-content-hold {
+}*/
+
+/*.chatbox.min .cb-content-hold {
     display: none;
-}
-
+}*/
+/*
 .chatbox .cb-content-hold {
     background-color: #FFFFFF !important;
-}
+}*/
 
-.chatbox.closed {
+/*.chatbox.closed {
     display: none;
-}
+}*/
 
 .cb-head {
     background-color: #003366;
@@ -49,7 +46,7 @@
     font-family: arial,sans-serif;
     font-size: 13px;
 }
-.cb-content {
+/*.cb-content {
 
 
     height:221px;
@@ -57,34 +54,10 @@
     overflow-x:auto;
     padding:0 5px;
 
-}
+}*/
 
-.chatbox .chat-where {
-    padding: 5px 5px 0 5px;
-    border-left:1px solid #cccccc;
-    border-right:1px solid #cccccc;
-}
 
-.cb-input {
-    padding: 5px;
-    border-left:1px solid #cccccc;
-    border-right:1px solid #cccccc;
-    border-bottom:1px solid #cccccc;
-}
 
-.cb-input textarea{
-    width: 235px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    margin:0;
-    box-shadow: 0 1px 3px #ccc inset;
-}
-
-/*textarea selected*/
-.cb-ts {
-    border: 2px solid #003366;
-
-}
 /*message hoder*/
 .cb-m {
     margin-left:1em;
@@ -151,7 +124,7 @@ cb-title {
     /*    float: left;*/
     margin-right: 50px;
 }
-
+/*
 .chatbox .userLogoLink {
 
 
@@ -160,7 +133,7 @@ cb-title {
 .chatbox .userLogoLink  img {
     width: 40px;
     height: 40px;
-}
+}*/
 
 .chatbox .cb-mh{
     margin-left: 45px;  
@@ -180,9 +153,7 @@ cb-title {
     clear: both;
 }
 
-.chatbox.min .opt-min {
-    display: none;
-}
+
 .chatbox .cb-opt a {
     margin-left: 5px 0 5px 5px;
 }
@@ -202,27 +173,27 @@ cb-title {
     margin-left: 5px;
 }
 
-.chatbox  a.opt-max {
+/*.chatbox  a.opt-max {
     display: none;
-}
-.chatbox.min .opt-max {
+}*/
+/*.chatbox.min .opt-max {
     display: inline-block;
-}
-.chatbox .chat-where-text span{
+}*/
+/*.chatbox .chat-where-text span{
     font-size: 11px;
-}
-.chatbox .chat-where-text {
+}*/
+/*.chatbox .chat-where-text {
     display: block; 
     margin-left: 20px;
-}
-.chatbox .chat-where a.icon{
+}*/
+/*.chatbox .chat-where a.icon{
     float: left;
     margin-top: 1px;
-}
+}*/
 
-#chatsound {
-    /*display: none;*/
-}
+/*#chatsound {
+    display: none;
+}*/
 
 .chat-history-link {
     float: left;

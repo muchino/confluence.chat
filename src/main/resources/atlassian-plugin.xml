@@ -176,6 +176,12 @@
 		<transformation extension="js">
 			<transformer key="jsI18n"/>
 		</transformation>   
+		<transformation extension="less">
+			<transformer key="less-transformer"/>
+		</transformation>
+		<transformation extension="soy">
+			<transformer key="soyTransformer"/>
+		</transformation>
 		<resource type="download" name="buzz.js" location="confluence/chat/js/buzz.js"/>
 		<resource type="download" name="json2.js" location="confluence/chat/js/json2.js"/>
 		<resource type="download" name="jstorage.min.js" location="confluence/chat/js/jstorage.min.js"/>
@@ -187,9 +193,12 @@
         
 		<resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css" />
 		<resource type="download" name="chatbar.css" location="confluence/chat/css/chatbar.css"/>
+		<resource type="download" name="chatbox.css" location="confluence/chat/css/chatbox.less"/>
+		
 		<resource type="download" name="screen_ie.css" location="confluence/chat/css/screen_ie.css">
 			<param name="ieonly" value="true"/>
 		</resource>
+		<resource name="chatbox.soy.js" type="download" location="confluence/chat/templates/chatbox.soy"/>
 		<context>main</context>
      
 	</web-resource>

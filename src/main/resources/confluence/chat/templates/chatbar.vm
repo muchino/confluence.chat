@@ -7,6 +7,9 @@
 #if($status == "xa")
 #set($onlineOffline = "offline")
 #end
+
+
+
 <div id="chatbar" class="$onlineOffline">
     <div id="chatbar-status" class="$status">
         <fieldset class="parameters hidden">

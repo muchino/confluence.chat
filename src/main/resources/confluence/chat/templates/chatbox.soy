@@ -1,0 +1,104 @@
+{namespace ConfluenceChat.Templates}
+
+
+/**
+ * Template to render the chatBox
+ * @param id the id of the chatbox
+ * @param title the title of the chatbox
+ */
+{template .chatBox}
+<section class="chatbox" id="chatbox_{$id}" data-id="{$id}">
+	<div id="id="status_{$id}"">
+		{call ConfluenceChat.Templates.header}
+			{param title: $title /}
+		{/call}  
+		<header class="top-bar" style="display: none;">        
+			<div class="left">      
+				<span class="icon typicons-message"></span>      
+				<h1>Hangouts</h1>    
+			</div>        
+			<div class="right">      
+				<span class="icon typicons-minus"></span>      
+				<span class="icon typicons-times"></span>    
+			</div>      
+		</header>    
+		<ol class="discussion">    
+			<li class="other">      
+				<div class="avatar">        
+					<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/5/profile/profile-80_9.jpg" />      
+				</div>      
+				<div class="messages">        
+					<p>yeah, they do early flights cause they connect with big airports.  they wanna get u to your connection</p>        
+					<time datetime="2009-11-13T20:00">Timothy • 51 min</time>      
+				</div>    
+			</li>    
+			<li class="self">      
+				<div class="avatar">        
+					<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/3/profile/profile-80_20.jpg" />      
+				</div>      
+				<div class="messages">        
+					<p>That makes sense.</p>        
+					<p>It's a pretty small airport.</p>        
+					<time datetime="2009-11-13T20:14">37 mins</time>      
+				</div>    
+			</li>    
+			<li class="other">      
+				<div class="avatar">        
+					<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/5/profile/profile-80_9.jpg" />      
+				</div>      
+				<div class="messages">        
+					<p>that mongodb thing looks good, huh?</p>        
+					<p>          tiny master db, and huge document store</p>      
+				</div>    
+			</li>  
+		</ol>  
+		{call ConfluenceChat.Templates.textarea /}
+	</div>
+</section>
+{/template}
+
+/**
+ * Template to render the chatBox
+ * @param message the id of the chatbox
+*/
+{template .message}
+{/template}
+
+/**
+ * Template to render the chatBox
+ * @param title the id of the chatbox
+*/
+{template .header}
+<div class="cb-head">
+	<div class="cb-opt">
+		<div class="cb-actions-more">
+			<ul class="cb-dropdown dd-allocated">
+				<li class="aui-dd-parent">
+					<a href="#" class="aui-dd-trigger"></a>
+					<ul class="aui-dropdown hidden">
+						<li class="dropdown-item">
+							<a href="#" class="item-link">{getText('chat.box.delete.history')}</a>
+						</li>
+						<li class="dropdown-item">
+							<a href="#" class="item-link">{getText('chat.history.show')}</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<a href="#" title="{getText('chat.icon.max')}" class="opt-max">+</a>
+		<a href="#" title="{getText('chat.icon.min')}" class="opt-min">-</a>
+		<a href="#" title="{getText('chat.icon.close')}" class="opt-close">X</a>
+	</div>
+	<div class="cb-title">{$title}</div>
+</div>
+{/template}
+
+/**
+ * Template to render the textarea of the chat
+*/
+{template .textarea}
+<div class="cb-input">
+	<textarea placeholder="{getText('chat.box.textarea.placeholder')}"></textarea>
+</div>
+{/template}
