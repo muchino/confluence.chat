@@ -377,6 +377,7 @@ ConfluenceChatConfig = {
 		var $body = $('body');
 		this.version = this.getConfigParameter('chat-version');
 		this.debug = "true" === this.getConfigParameter('chat-debugMode');
+		this.showHistoryEnabled = "true" === this.getConfigParameter('chat-showHistory');
 		this.hideInEditMode = "true" === this.getConfigParameter('chat-hideInEditMode');
 		AJS.log('Init Confluence Chat in version: ' + this.version);
 		if (this.hideInEditMode) {
@@ -498,6 +499,11 @@ ConfluenceChatConfig = {
 	ChatBar.prototype.isOnline = function () {
 		return  this.bar.hasClass("online") && !this.chatDeactivated;
 	};
+
+	ChatBar.prototype.isHistoryEnabled = function () {
+		return  this.showHistoryEnabled;
+	};
+
 	ChatBar.prototype.setStatus = function (status) {
 		if (status === "xa") {
 			this.bar.removeClass("online").addClass("offline");
@@ -900,41 +906,42 @@ ConfluenceChatConfig = {
 		var options = $('<div/>').addClass('cb-opt');
 		options.appendTo(header);
 		header.appendTo(box);
+		if (chatBar.isHistoryEnabled()) {
+			var dropdownHolder = $('<div/>');
+			dropdownHolder.addClass('cb-actions-more');
+			var dropdown = $('<ul/>').addClass('cb-dropdown');
+			dropdown.appendTo(dropdownHolder);
+			var parent = $('<li/>').addClass('aui-dd-parent');
+			parent.appendTo(dropdown);
+			var trigger = $('<a/>').attr('href', '#').addClass('aui-dd-trigger');
+			trigger.attr('title', chatBar.getConfigParameter('chat.box.more'));
+			trigger.appendTo(parent);
 
-		var dropdownHolder = $('<div/>');
-		dropdownHolder.addClass('cb-actions-more');
-		var dropdown = $('<ul/>').addClass('cb-dropdown');
-		dropdown.appendTo(dropdownHolder);
-		var parent = $('<li/>').addClass('aui-dd-parent');
-		parent.appendTo(dropdown);
-		var trigger = $('<a/>').attr('href', '#').addClass('aui-dd-trigger');
-		trigger.attr('title', chatBar.getConfigParameter('chat.box.more'));
-		trigger.appendTo(parent);
+			var dropdownList = $('<ul/>').addClass('aui-dropdown');
+			dropdownList.appendTo(parent);
+			var dropdownItem = $('<li/>').addClass('dropdown-item');
+			dropdownItem.appendTo(dropdownList);
+			var dropdownItemLink = $('<a/>').attr('href', '#').text(chatBar.getConfigParameter('chat.box.more.history')).addClass('item-link').click(function (e) {
+				that.deleteHistory();
+				return true;
+			});
+			dropdownItemLink.appendTo(dropdownItem);
 
-		var dropdownList = $('<ul/>').addClass('aui-dropdown');
-		dropdownList.appendTo(parent);
-		var dropdownItem = $('<li/>').addClass('dropdown-item');
-		dropdownItem.appendTo(dropdownList);
-		var dropdownItemLink = $('<a/>').attr('href', '#').text(chatBar.getConfigParameter('chat.box.more.history')).addClass('item-link').click(function (e) {
-			that.deleteHistory();
-			return true;
-		});
-		dropdownItemLink.appendTo(dropdownItem);
-
-		// history
-		dropdownItem = $('<li/>').addClass('dropdown-item');
-		dropdownItem.appendTo(dropdownList);
-		dropdownItemLink = $('<a/>').attr('href', '#').text(AJS.I18n.getText("chat.history.show")).addClass('item-link').click(function (e) {
-			new ChatHistory(that.opt);
-			return true;
-		});
-		dropdownItemLink.appendTo(dropdownItem);
+			// history
+			dropdownItem = $('<li/>').addClass('dropdown-item');
+			dropdownItem.appendTo(dropdownList);
+			dropdownItemLink = $('<a/>').attr('href', '#').text(AJS.I18n.getText("chat.history.show")).addClass('item-link').click(function (e) {
+				new ChatHistory(that.opt);
+				return true;
+			});
+			dropdownItemLink.appendTo(dropdownItem);
 
 
-		dropdownHolder.appendTo(options);
-		dropdown.dropDown("Standard", {
-			alignment: 'right'
-		});
+			dropdownHolder.appendTo(options);
+			dropdown.dropDown("Standard", {
+				alignment: 'right'
+			});
+		}
 
 		$('<a/>').attr('href', '#')
 				.text('+')

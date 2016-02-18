@@ -14,7 +14,7 @@
             <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
             <input type="hidden" name="chat-debugMode" id="chat-debugMode" value="$chatManager.getChatConfiguration().getDebugMode()" />
             <input type="hidden" name="chat-heartbeat" id="chat-heartbeat" value="$chatManager.getChatConfiguration().getHeartBeat()" />
-            <input type="hidden" name="chat-hideInEditMode" id="chat-hideInEditMode" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
+			<input type="hidden" name="chat-showHistory" id="chat-showHistory" value="$chatManager.getChatConfiguration().getShowHistory()" />
             <input type="hidden" name="chat.icon.close" id="chat-icon.close" value="$i18n.getText('close.name')" />
             <input type="hidden" name="chat.icon.more" id="chat-icon.more" value="$i18n.getText('chat.icon.more')" />
             <input type="hidden" name="chat.icon.min" id="chat-icon.min" value="$i18n.getText('chat.icon.min')" />

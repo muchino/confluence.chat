@@ -106,7 +106,23 @@
                                 #end
                             </div>
                         </div>
-                    </div>                    
+                    </div>  
+					<div class="field-group">
+                        <label for="chat-showHistory">$i18n.getText('chat.config.showHistory.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-showHistory" name="showHistory" autocomplete="off" title="$i18n.getText('chat.config.showHistory.desc')" #if ($action.getShowHistory()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.showHistory.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-showHistory" class="field-value">
+                                #if ($action.getShowHistory())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </div>
+                        </div>
+                    </div>                   
                     <div class="field-group">
                         <label for="chat-heartbeat">$i18n.getText('chat.config.heartbeat.title')</label>
                         <div class="edit">
