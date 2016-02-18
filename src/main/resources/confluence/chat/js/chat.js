@@ -16,12 +16,18 @@ ConfluenceChatConfig = {
 			// timestamp plays a key role!   
 			// youngest (newest) tab always gets coordinator
 			guid = (new Date()).getTime(),
-			isTaCPage = window.location.href.indexOf('termsandconditions/termsandconditions.action') > 0,
-			SOUND = new buzz.sound(AJS.contextPath() + "/download/resources/confluence.chat/button9", {
-				formats: ["ogg", "mp3", "m4a"],
-				preload: true,
-				autoplay: false
-			});
+			isTaCPage = window.location.href.indexOf('termsandconditions/termsandconditions.action') > 0;
+
+	SOUND = null;
+	try {
+		SOUND = new buzz.sound(AJS.contextPath() + "/download/resources/confluence.chat/button9", {
+			formats: ["ogg", "mp3", "m4a"],
+			preload: true,
+			autoplay: false
+		})
+	} catch (e) {
+		AJS.log(e);
+	}
 	function iAmCoordinator(value) {
 		coordinator = value;
 	}
@@ -449,6 +455,9 @@ ConfluenceChatConfig = {
 		this.chatBox = this.chatOnlineUserDiv.find('.chat-user').clone(true);
 		this.chatOnlineUserDiv.empty();
 
+		if (SOUND === null) {
+			this.bar.find('.csound').remove();
+		}
 
 		if (!this.chatDeactivated) {
 			var soundDeactivated = AJS.Cookie.read("chatsoundoff");
@@ -870,7 +879,7 @@ ConfluenceChatConfig = {
 			if (!chatBar.windowHasFocus() ||
 					!this.textarea.hasClass('cb-ts')) {
 				try {
-					if (chatBar.isSound()) {
+					if (chatBar.isSound() && SOUND !== null) {
 						SOUND.load().play();
 					}
 				}
