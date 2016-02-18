@@ -1,5 +1,6 @@
 package confluence.chat.config;
 
+import com.atlassian.gzipfilter.org.apache.commons.lang.StringEscapeUtils;
 import com.atlassian.user.EntityException;
 import com.atlassian.user.GroupManager;
 import com.opensymphony.webwork.ServletActionContext;
@@ -28,12 +29,12 @@ public class UpdateConfigurationAction extends ViewConfigurationAction {
 			String group = stringToList.get(i);
 			try {
 				if (groupManager.getGroup(group) == null) {
-					addActionError(getText("chat.config.import.error.group", new String[]{group}));
+					addActionError(getText("chat.config.import.error.group", new String[]{StringEscapeUtils.escapeHtml(group)}));
 				} else {
 					groupList.add(group);
 				}
 			} catch (EntityException ex) {
-				addActionError(getText("chat.config.import.error.group", new String[]{group}));
+				addActionError(getText("chat.config.import.error.group", new String[]{StringEscapeUtils.escapeHtml(group)}));
 			}
 
 		}
