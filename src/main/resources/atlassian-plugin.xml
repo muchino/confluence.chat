@@ -279,14 +279,15 @@
 		</icon>
 	</web-item>   
     
-	<web-item key="chat-history" name="Chat Histoty Tab" weight="30" section="system.profile">
+	<web-item key="chat-history" name="Chat Histoty User Profile Tab" weight="30" section="system.profile">
 		<label key="chat.history.title"/>
 		<link>/users/chat/history.action?username=$generalUtil.urlEncode($action.username)</link>
 		<condition class="confluence.chat.conditions.CanViewHistoryCondition" />
 	</web-item>    
     
-	<web-item key="chat-history-userlink" name="Chat Histoty Tab" weight="30" section="system.user/user-content">
+	<web-item key="chat-history-userlink" name="Chat Histoty Menu Item" weight="30" section="system.user/user-content">
 		<label key="chat.history.title"/>
 		<link>/users/chat/history.action</link>
+		<condition class="confluence.chat.conditions.ChatHistoryEnabledCondition" />
 	</web-item>     
 </atlassian-plugin>

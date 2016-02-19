@@ -7,71 +7,75 @@ import java.util.List;
 
 abstract class AbstractChatConfigAction extends ConfluenceActionSupport {
 
-    private ChatManager chatManager;
-    private String accessGroupsCSV;
+	private ChatManager chatManager;
+	private String accessGroupsCSV;
 
-    @Override
-    public String execute() throws Exception {
-        return SUCCESS;
-    }
+	@Override
+	public String execute() throws Exception {
+		return SUCCESS;
+	}
 
-    public String getGroups(Configuration config) {
-        return ChatUtils.listToString(config.getGroups());
-    }
+	public String getGroups(Configuration config) {
+		return ChatUtils.listToString(config.getGroups());
+	}
 
-    public Boolean getAllowAllUsers() {
-        return getChatManager().getChatConfiguration().getAllowAll();
-    }
+	public Boolean getAllowAllUsers() {
+		return getChatManager().getChatConfiguration().getAllowAll();
+	}
 
-    public Boolean getDebugMode() {
-        return getChatManager().getChatConfiguration().getDebugMode();
-    }
+	public Boolean getDebugMode() {
+		return getChatManager().getChatConfiguration().getDebugMode();
+	}
 
-    public Boolean getHideInEditMode() {
-        return getChatManager().getChatConfiguration().getHideInEditMode();
-    }
+	public Boolean getHideInEditMode() {
+		return getChatManager().getChatConfiguration().getHideInEditMode();
+	}
 
-    public Boolean getShowWhereIam() {
-        return getChatManager().getChatConfiguration().getShowWhereIam();
-    }
+	public Boolean getShowWhereIam() {
+		return getChatManager().getChatConfiguration().getShowWhereIam();
+	}
 
-    public Boolean getPlaySound() {
-        return getChatManager().getChatConfiguration().getPlaySound();
-    }
+	public Boolean getPlaySound() {
+		return getChatManager().getChatConfiguration().getPlaySound();
+	}
 
-    public String getAccessGroupsLines() {
+	public String getAccessGroupsLines() {
 
-        return this.getAccessGroupsCSV().replaceAll(",", "\n");
-    }
+		return this.getAccessGroupsCSV().replaceAll(",", "\n");
+	}
 
-    public Integer getHeartBeat() {
-        return getChatManager().getChatConfiguration().getHeartBeat();
-    }
+	public Integer getHeartBeat() {
+		return getChatManager().getChatConfiguration().getHeartBeat();
+	}
 
-    public String getAccessGroupsCSV() {
+	public String getAccessGroupsCSV() {
 
-        if (this.accessGroupsCSV == null) {
-            this.accessGroupsCSV = getGroups(getChatManager().getChatConfiguration());
-        }
+		if (this.accessGroupsCSV == null) {
+			this.accessGroupsCSV = getGroups(getChatManager().getChatConfiguration());
+		}
 
-        return this.accessGroupsCSV;
-    }
+		return this.accessGroupsCSV;
+	}
 
-    public List<String> getKeysOfChats() {
-        return chatManager.getKeysOfChats(null);
-    }
+	public List<String> getKeysOfChats() {
+		return chatManager.getKeysOfChats(null);
+	}
 
-    /**
-     * @return the chatManager
-     */
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
+	/**
+	 * @return the chatManager
+	 */
+	public ChatManager getChatManager() {
+		return chatManager;
+	}
 
-    /**
-     * @param chatManager the chatManager to set
-     */
-    public void setChatManager(ChatManager chatManager) {
-        this.chatManager = chatManager;
-    }
+	/**
+	 * @param chatManager the chatManager to set
+	 */
+	public void setChatManager(ChatManager chatManager) {
+		this.chatManager = chatManager;
+	}
+
+	public Boolean getShowHistory() {
+		return chatManager.getChatConfiguration().getShowHistory();
+	}
 }
