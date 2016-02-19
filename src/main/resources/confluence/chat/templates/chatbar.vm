@@ -65,9 +65,11 @@
                     <option  value="dnd" #if($status == "dnd") selected="selected" #end >$i18n.getText('chat.bar.config.dnd')</option>
                     <option  value="xa" #if($status == "xa") selected="selected" #end>$i18n.getText('chat.bar.config.offline')</option>
                 </select>
-                <br/>
-                <a href="$req.contextPath/users/chat/history.action" class="aui-button">$i18n.getText('chat.history.title')</a>
-            </div>
+				 #if($chatManager.getChatConfiguration().getShowHistory())
+					<br/>
+					<a href="$req.contextPath/users/chat/history.action" class="aui-button">$i18n.getText('chat.history.title')</a>
+				#end
+			</div>
         </div>
     </div>
 </div>
