@@ -14,7 +14,7 @@
             <input type="hidden" name="chat-version" id="chat-version" value="$chatManager.getVersion()" />
             <input type="hidden" name="chat-debugMode" id="chat-debugMode" value="$chatManager.getChatConfiguration().getDebugMode()" />
             <input type="hidden" name="chat-heartbeat" id="chat-heartbeat" value="$chatManager.getChatConfiguration().getHeartBeat()" />
-            <input type="hidden" name="chat-hideInEditMode" id="chat-hideInEditMode" value="$chatManager.getChatConfiguration().getHideInEditMode()" />
+			<input type="hidden" name="chat-showHistory" id="chat-showHistory" value="$chatManager.getChatConfiguration().getShowHistory()" />
             <input type="hidden" name="chat.icon.close" id="chat-icon.close" value="$i18n.getText('close.name')" />
             <input type="hidden" name="chat.icon.more" id="chat-icon.more" value="$i18n.getText('chat.icon.more')" />
             <input type="hidden" name="chat.icon.min" id="chat-icon.min" value="$i18n.getText('chat.icon.min')" />
@@ -62,9 +62,11 @@
                     <option  value="dnd" #if($status == "dnd") selected="selected" #end >$i18n.getText('chat.bar.config.dnd')</option>
                     <option  value="xa" #if($status == "xa") selected="selected" #end>$i18n.getText('chat.bar.config.offline')</option>
                 </select>
-                <br/>
-                <a href="$req.contextPath/users/chat/history.action" class="aui-button">$i18n.getText('chat.history.title')</a>
-            </div>
+				 #if($chatManager.getChatConfiguration().getShowHistory())
+					<br/>
+					<a href="$req.contextPath/users/chat/history.action" class="aui-button">$i18n.getText('chat.history.title')</a>
+				#end
+			</div>
         </div>
     </div>
 </div>

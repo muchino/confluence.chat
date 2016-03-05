@@ -106,7 +106,23 @@
                                 #end
                             </div>
                         </div>
-                    </div>                    
+                    </div>  
+					<div class="field-group">
+                        <label for="chat-showHistory">$i18n.getText('chat.config.showHistory.title')</label>
+                        <div class="edit">
+                            <input class="checkbox" type="checkbox" id="chat-showHistory" name="showHistory" autocomplete="off" title="$i18n.getText('chat.config.showHistory.desc')" #if ($action.getShowHistory()) checked="checked" #end>
+                                <div class="description">$i18n.getText('chat.config.showHistory.desc')</div>
+                        </div>
+                        <div class="view">
+                            <div id="chat-showHistory" class="field-value">
+                                #if ($action.getShowHistory())
+                                $i18n.getText('yes.name')
+                                #else
+                                $i18n.getText('no.name')
+                                #end
+                            </div>
+                        </div>
+                    </div>                   
                     <div class="field-group">
                         <label for="chat-heartbeat">$i18n.getText('chat.config.heartbeat.title')</label>
                         <div class="edit">
@@ -125,8 +141,8 @@
                         <a id="chat-edit" class="view" href="#edit">$i18n.getText('edit.name')</a>
                     </div>
                     <div class="buttons edit">
-                        <input id="chat-save" class="button submit" type="submit" value="$i18n.getText('save.name')">
-                            <a href="viewconfigure.action">$i18n.getText('cancel.name')</a>
+                        <input id="chat-save" class="aui-button aui-button-primary submit" type="submit" value="$i18n.getText('save.name')">
+						<a class="aui-button-link aui-button" href="viewconfiguration.action">$i18n.getText('cancel.name')</a>
                     </div>
                 </div>
             </form>

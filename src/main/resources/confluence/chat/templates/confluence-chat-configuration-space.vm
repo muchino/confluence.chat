@@ -71,8 +71,8 @@
                         <a id="chat-edit" class="view" href="#edit">$i18n.getText('edit.name')</a>
                     </div>
                     <div class="buttons edit">
-                        <input id="chat-save" class="button submit" type="submit" value="$i18n.getText('save.name')">
-                            <a href="viewconfiguration.action?key=$helper.spaceKey">$i18n.getText('cancel.name')</a>
+                        <input id="chat-save" class="aui-button aui-button-primary submit" type="submit" value="$i18n.getText('save.name')">
+						<a class="aui-button-link aui-button" href="$req.contextPath/spaces/confluence.chat/viewconfiguration.action?key=$helper.spaceKey">$i18n.getText('cancel.name')</a>
                     </div>
                 </div>
             </form>
