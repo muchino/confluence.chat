@@ -22,36 +22,7 @@
 				<span class="icon typicons-times"></span>    
 			</div>      
 		</header>    
-		<ol class="discussion">    
-			<li class="other">      
-				<div class="avatar">        
-					<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/5/profile/profile-80_9.jpg" />      
-				</div>      
-				<div class="messages">        
-					<p>yeah, they do early flights cause they connect with big airports.  they wanna get u to your connection</p>        
-					<time datetime="2009-11-13T20:00">Timothy • 51 min</time>      
-				</div>    
-			</li>    
-			<li class="self">      
-				<div class="avatar">        
-					<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/3/profile/profile-80_20.jpg" />      
-				</div>      
-				<div class="messages">        
-					<p>That makes sense.</p>        
-					<p>It's a pretty small airport.</p>        
-					<time datetime="2009-11-13T20:14">37 mins</time>      
-				</div>    
-			</li>    
-			<li class="other">      
-				<div class="avatar">        
-					<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/5/profile/profile-80_9.jpg" />      
-				</div>      
-				<div class="messages">        
-					<p>that mongodb thing looks good, huh?</p>        
-					<p>          tiny master db, and huge document store</p>      
-				</div>    
-			</li>  
-		</ol>  
+		<ol class="chat-discussion" />
 		{call ConfluenceChat.Templates.textarea /}
 	</div>
 </section>
@@ -59,11 +30,37 @@
 
 /**
  * Template to render the chatBox
- * @param message the id of the chatbox
+ * @param id the unique id of the message
+ * @param self is the message from the current user or from another user
+ * @param messageHTML the message as HTML
+ * @param timeFormatted the send date of the message
+ * @param picture the profile image of the user
+ * @param username the username if the sender
 */
-{template .message}
+{template .messageSlot}
+	<li class="{$self}">      
+		<div class="avatar" data-username ="{$username}">        
+			<img src="{$picture}" />      
+		</div>      
+		<div class="messages"> 
+			{call .message }
+				{param id: $id /}
+           		{param messageHTML: $messageHTML/}
+			{/call} 
+			<p id="{$id}">{$messageHTML} </p>      
+			<time datetime="2009-11-13T20:14">{$timeFormatted}</time>      
+		</div>    
+	</li> 
 {/template}
 
+/**
+ * Template to render the chatBox
+ * @param id the unique id of the message
+ * @param messageHTML the message as HTML
+ */
+{template .message}
+	<p id="{$id}">{$messageHTML} </p>      
+{/template}
 /**
  * Template to render the chatBox
  * @param title the id of the chatbox

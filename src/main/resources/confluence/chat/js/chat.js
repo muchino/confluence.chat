@@ -1,4 +1,4 @@
-ConfluenceChatAPI = new Object();
+FConfluenceChatAPI = new Object();
 
 ConfluenceChatConfig = {
 	margin: 25,
@@ -302,7 +302,7 @@ ConfluenceChatConfig = {
 				}
 			}
 		}
-		this.log(lastBox);
+//		this.log(lastBox);
 		if (isChatBox(lastBox)) {
 			lastBox.closeChatBox();
 			return true;
@@ -354,9 +354,9 @@ ConfluenceChatConfig = {
 	};
 
 	ChatBar.prototype.log = function (msg) {
-		if (this.debug) {
-			AJS.log(msg);
-		}
+//		if (this.debug) {
+		AJS.log(msg);
+//		}
 	};
 
 	ChatBar.prototype.windowHasFocus = function () {
@@ -733,7 +733,6 @@ ConfluenceChatConfig = {
 	ChatBar.prototype.retrieveChatMessages = function (chatboxes) {
 		var that = this;
 		$.each(chatboxes, function (j, chatbox) {
-			that.log(chatbox);
 			if (typeof (chatbox.messages) !== "undefined") {
 				if (isChatBox(that.chatBoxes[chatbox.id])) {
 					chatBar.log("chatbox exists " + chatbox.id + " loop over messages");
@@ -800,7 +799,7 @@ ConfluenceChatConfig = {
 			messages: new Array()
 		}, options);
 
-		chatBar.log("create chatbox " + this.opt.chatBoxId);
+		chatBar.log("construct chatbox " + this.opt.chatBoxId);
 		var that = this;
 		this.chatBoxId = this.opt.chatBoxId;
 		this.chatUserList = this.opt.chatUserList;
@@ -808,6 +807,7 @@ ConfluenceChatConfig = {
 		this.textarea = null;
 		this.initialized = false;
 		this.init();
+
 		this.blinkInterval = null;
 		this.lastMessageDate = new Date();
 		var len = this.opt.messages.length;
@@ -929,7 +929,7 @@ ConfluenceChatConfig = {
 			new ChatHistory(that.opt);
 			return false;
 		});
-	
+
 		$box.find('.opt-min, .opt-max').click(function () {
 			that.toggleChatBoxGrowth();
 			return false;
@@ -1070,7 +1070,7 @@ ConfluenceChatConfig = {
 		this.lastMessageDate = dt;
 
 
-		var $message = ConfluenceChat.Templates.message({
+		var $message = ConfluenceChat.Templates.messageSlot({
 			timeFormatted: this.formatTime(dt),
 			time: item.t,
 			messageHTML: message,
@@ -1078,12 +1078,14 @@ ConfluenceChatConfig = {
 			username: item.f.un,
 			displayName: item.f.fn,
 			id: item.id,
-			otherUser: otherUser
+			self: otherUser ? 'other' : 'self'
 
 
 		});
 
-		chatBar.log($message);
+		AJS.log($message);
+
+//		chatBar.log($message);
 		$discussion.append($message);
 
 //		var holderId = dt.getFullYear() + '' + dt.getMonth() + dt.getDate() + dt.getHours() + dt.getMinutes();
