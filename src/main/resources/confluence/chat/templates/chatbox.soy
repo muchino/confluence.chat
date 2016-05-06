@@ -12,16 +12,7 @@
 		{call ConfluenceChat.Templates.header}
 			{param title: $title /}
 		{/call}  
-		<header class="top-bar" style="display: none;">        
-			<div class="left">      
-				<span class="icon typicons-message"></span>      
-				<h1>Hangouts</h1>    
-			</div>        
-			<div class="right">      
-				<span class="icon typicons-minus"></span>      
-				<span class="icon typicons-times"></span>    
-			</div>      
-		</header>    
+		 
 		<ol class="chat-discussion" />
 		{call ConfluenceChat.Templates.textarea /}
 	</div>
@@ -31,24 +22,27 @@
 /**
  * Template to render the chatBox
  * @param id the unique id of the message
+ * @param slot a unique id of this time slot
  * @param self is the message from the current user or from another user
  * @param messageHTML the message as HTML
  * @param timeFormatted the send date of the message
  * @param picture the profile image of the user
  * @param username the username if the sender
+ * @param displayName Fullname of the sender
+ * @param time the timestamp of this slot
 */
 {template .messageSlot}
-	<li class="{$self}">      
-		<div class="avatar" data-username ="{$username}">        
+	<li class="{$self}" data-slot="{$slot}" data-user="{$username}">      
+		<div class="avatar">        
 			<img src="{$picture}" />      
 		</div>      
 		<div class="messages"> 
+			<strong data-username ="{$username}">{$displayName}</strong>
 			{call .message }
 				{param id: $id /}
            		{param messageHTML: $messageHTML/}
-			{/call} 
-			<p id="{$id}">{$messageHTML} </p>      
-			<time datetime="2009-11-13T20:14">{$timeFormatted}</time>      
+			{/call}     
+			<time data-time="{$time}">{$timeFormatted}</time>
 		</div>    
 	</li> 
 {/template}
@@ -66,29 +60,19 @@
  * @param title the id of the chatbox
 */
 {template .header}
-<div class="cb-head">
-	<div class="cb-opt">
-		<div class="cb-actions-more">
-			<ul class="cb-dropdown dd-allocated">
-				<li class="aui-dd-parent">
-					<a href="#" class="aui-dd-trigger"></a>
-					<ul class="aui-dropdown hidden">
-						<li class="dropdown-item">
-							<a href="#" class="item-link">{getText('chat.box.delete.history')}</a>
-						</li>
-						<li class="dropdown-item">
-							<a href="#" class="item-link">{getText('chat.history.show')}</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		<a href="#" title="{getText('chat.icon.max')}" class="opt-max">+</a>
-		<a href="#" title="{getText('chat.icon.min')}" class="opt-min">-</a>
-		<a href="#" title="{getText('chat.icon.close')}" class="opt-close">X</a>
-	</div>
-	<div class="cb-title">{$title}</div>
-</div>
+	<header class="cb-head">        
+		<div class="left">      
+			<span class="chaticon-chat"></span>      
+			<h1>{$title}</h1>    
+		</div>        
+		<div class="right">      
+			
+			<span class="chaticon-history opt-history" title="{getText('chat.history.show')}" ></span>  
+			<span class="chaticon-group opt-min" title="{getText('chat.icon.min')}" ></span>      
+			<span class="chaticon-group opt-max" title="{getText('chat.icon.max')}"></span>    
+			<span class="chaticon-group opt-close" title="{getText('chat.icon.close')}"></span>
+		</div>      
+	</header>   
 {/template}
 
 /**

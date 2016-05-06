@@ -920,12 +920,12 @@ ConfluenceChatConfig = {
 
 
 		this.box.width(ConfluenceChatConfig.chatBoxWidth);
-		$box.find('.chat-delete-history').click(function (e) {
-			that.deleteHistory();
-			return true;
-		});
+//		$box.find('.chat-delete-history').click(function (e) {
+//			that.deleteHistory();
+//			return true;
+//		});
 
-		$box.find('.chat-show-history').click(function (e) {
+		$box.find('.opt-history').click(function (e) {
 			new ChatHistory(that.opt);
 			return false;
 		});
@@ -1067,74 +1067,35 @@ ConfluenceChatConfig = {
 		var message = this.replaceChatMessage(item.m);
 		var $discussion = this.box.find('.chat-discussion');
 		var dt = new Date(item.t);
+		var slot = '' + dt.getFullYear() + dt.getMonth() + dt.getDate() + dt.getHours() + dt.getMinutes();
 		this.lastMessageDate = dt;
 
 
-		var $message = ConfluenceChat.Templates.messageSlot({
-			timeFormatted: this.formatTime(dt),
-			time: item.t,
-			messageHTML: message,
-			picture: item.f.p,
-			username: item.f.un,
-			displayName: item.f.fn,
-			id: item.id,
-			self: otherUser ? 'other' : 'self'
+		var $messageSlot = $discussion.find('li[data-slot=' + slot + ']');
+		if ($messageSlot.size()
+				&& $messageSlot.data('user') === item.f.un) {
+			$(ConfluenceChat.Templates.message({
+				messageHTML: message,
+				id: item.id
+			})).insertAfter($messageSlot.find('.messages p'));
+		} else {
+			$discussion.append(ConfluenceChat.Templates.messageSlot({
+				timeFormatted: this.formatTime(dt),
+				time: item.t,
+				messageHTML: message,
+				picture: item.f.p,
+				username: item.f.un,
+				displayName: item.f.fn,
+				id: item.id,
+				slot: slot,
+				self: otherUser ? 'other' : 'self'
+			}));
+		}
 
-
-		});
-
-		AJS.log($message);
-
-//		chatBar.log($message);
-		$discussion.append($message);
-
-//		var holderId = dt.getFullYear() + '' + dt.getMonth() + dt.getDate() + dt.getHours() + dt.getMinutes();
-//		var messageBox = content.find('.cb-mc[slot=' + holderId + ']');
-//		if (messageBox.size() === 0) {
-//			// pro zeit / datum eine box
-//			messageBox = $('<div/>').addClass('cb-mc').attr('slot', holderId);
-//			messageBox.appendTo(content);
-//			var messageTime = $('<div/>').addClass('cb-mt');
-//			messageTime.text(this.formatTime(dt));
-//			messageTime.appendTo(messageBox);
-//		}
-//		;
-//		// habe nun aktuellen messageBox -> ist letzter eintrag auch von item.f.un  user?
-//		var userBox = messageBox.find('.cb-ut:last');
-//		if (userBox.attr('unid') !== item.f.id) {
-//			userBox = null;
-//		}
-//
-//		var messageHolder;
-//		if (userBox === null) {
-//			userBox = $('<div/>').addClass('cb-ut').attr('unid', item.f.id);
-//			userBox.appendTo(messageBox);
-//			var userLink = $('<a/>').attr('href', AJS.contextPath() + '/display/~' + item.f.un);
-		//			userLink.addClass('userLogoLink').attr('data-username', item.f.un);
-//			var userLogo = $('<img/>').attr('src', AJS.contextPath() + item.f.p)
-//					.attr('alt', 'User icon: ' + item.f.un)
-//					.attr('title', item.f.fn);
-//			userLogo.appendTo(userLink);
-//			// user image am content
-//			userLink.appendTo(userBox);
-//			messageHolder = $('<div/>').addClass('cb-mh');
-//			var from = $('<div/>').addClass('cb-f').text(item.f.fn);
-//			from.appendTo(messageHolder);
-//			messageHolder.appendTo(userBox);
 		try {
 			AJS.Confluence.Binder.userHover();
 		} catch (e) {
 		}
-//		} else {
-//			messageHolder = userBox.find('.cb-mh');
-//		}
-//		//     nun einfach die nachricht noch drann
-//		var messageItem = $('<div/>').addClass('cb-mtext').html(message).attr('t', item.t);
-//		// check if message is already added
-//		if (id.length > 0) {
-//			messageItem.attr('id', id);
-//		}
-//		messageItem.appendTo(messageHolder);
 		$discussion.scrollTop($discussion[0].scrollHeight);
 	};
 

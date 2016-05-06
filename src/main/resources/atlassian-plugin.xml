@@ -194,7 +194,7 @@
 		<resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css" />
 		<resource type="download" name="chatbar.css" location="confluence/chat/css/chatbar.css"/>
 		<resource type="download" name="chatbox.css" location="confluence/chat/css/chatbox.less"/>
-		
+		<resource type="download" name="font.css" location="confluence/chat/font/chat.css"/>
 		<resource type="download" name="screen_ie.css" location="confluence/chat/css/screen_ie.css">
 			<param name="ieonly" value="true"/>
 		</resource>
@@ -289,5 +289,20 @@
 		<label key="chat.history.title"/>
 		<link>/users/chat/history.action</link>
 		<condition class="confluence.chat.conditions.ChatHistoryEnabledCondition" />
-	</web-item>     
+	</web-item>  
+	
+	   
+	<resource type="download" name="font/chat.eot" location="confluence/chat/font/chat.eot" >
+		<property key="content-type" value="application/vnd.ms-fontobject"/>
+	</resource>
+	<resource type="download" name="font/chat.woff" location="confluence/chat/font/chat.woff" >
+		<property key="content-type" value="application/x-font-woff"/>
+	</resource>
+	<resource type="download" name="font/chat.ttf" location="confluence/chat/font/chat.ttf" >
+		<property key="content-type" value="application/x-font-ttf"/>
+	</resource>
+	<resource type="download" name="font/chat.svg" location="confluence/chat/font/chat.svg" >
+		<property key="content-type" value="image/svg+xml"/>
+	</resource>
+			    
 </atlassian-plugin>

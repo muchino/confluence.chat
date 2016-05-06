@@ -37,7 +37,7 @@
     display: block;
 }
 #chatbar.open.config #chatbar-config{
-    
+
 }
 
 #chatbar #chatbar-button-online {
@@ -83,7 +83,7 @@
 #chatbar.offline  .online,
 #chatbar.online  .offline{
     display: none;
-   text-align: center;
+	text-align: center;
 }
 
 
@@ -143,16 +143,7 @@
 .chat-user .chat-user-status {
     color: gray;
     font-size: 11px;
-}
-#chatbar #chatbar-status #chatbar-status-icon{
-    background: url("images-chat/chat-bubble.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    width: 17px;
-    min-width: 17px;
-
-}
-.chatuser-link-holder .chat, 
+}.chatuser-link-holder .chat, 
 .chatuser-link-holder .away, 
 .chatuser-link-holder .dnd, 
 .chatuser-link-holder .xa,
@@ -181,7 +172,7 @@
 }
 
 #chatbar #chatbar-status.away #chatbar-status-icon{
-    background-image:  url("images-chat/away-bubble.png") 
+	color: yellow;
 }
 .chatuser-link-holder .xa,
 #chatbar  .chat-user .offline .chat-user-info  {
@@ -195,11 +186,11 @@
 }
 
 #chatbar #chatbar-status.dnd #chatbar-status-icon{
-    background-image:  url("images-chat/dnd-bubble.png");
+	color: red;
 }
 
 #chatbar #chatbar-status.xa #chatbar-status-icon {
-    background-image:  url("images-chat/xa-bubble.png");
+	color: grey;
 }
 
 #chatbar #chatbar-config select {
@@ -225,7 +216,7 @@
     height: 16px;
     width: 16px;
     margin: 0 10px;
-    
+
 }
 
 #chatbar #chatbar-buttons .csound.csound-off {

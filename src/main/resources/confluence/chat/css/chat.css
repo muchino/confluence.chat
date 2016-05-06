@@ -13,7 +13,7 @@
 /*.chatbox.closed {
     display: none;
 }*/
-
+/*
 .cb-head {
     background-color: #003366;
     padding:7px;
@@ -46,7 +46,7 @@
     font-family: arial,sans-serif;
     font-size: 13px;
 }
-/*.cb-content {
+.cb-content {
 
 
     height:221px;
@@ -54,20 +54,20 @@
     overflow-x:auto;
     padding:0 5px;
 
-}*/
+}
 
 
 
-/*message hoder*/
+message hoder
 .cb-m {
     margin-left:1em;
 }
-/*user from*/
+user from
 .cb-f {
     font-weight: bold;
 }
 
-/*messsage content*/
+messsage content
 .cb-mc {
     clear: both;
 }
@@ -79,11 +79,11 @@
     padding-bottom: 5px;
 }
 
-/*messsage text*/
+messsage text
 .cb-mtext {
     margin-bottom: 4px;
 }
-/*options*/
+options
 
 #chatbar .cb-opt{
     float: right;
@@ -121,10 +121,10 @@
 }
 
 cb-title {
-    /*    float: left;*/
+        float: left;
     margin-right: 50px;
 }
-/*
+
 .chatbox .userLogoLink {
 
 
@@ -133,7 +133,7 @@ cb-title {
 .chatbox .userLogoLink  img {
     width: 40px;
     height: 40px;
-}*/
+}
 
 .chatbox .cb-mh{
     margin-left: 45px;  
@@ -163,15 +163,15 @@ cb-title {
 
 .chatbox .opt-remove-history {
     background: url(images-chat/history.png);
-}
+}*/
 
-
+/*
 .chatbox .opt-sub-head {
     display: inline-block;
     text-indent: 99999px;
     width: 16px;
     margin-left: 5px;
-}
+}*/
 
 /*.chatbox  a.opt-max {
     display: none;

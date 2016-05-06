@@ -33,7 +33,7 @@
                 <div class="online">$i18n.getText('chat.bar.online',[$action.getOnlineUsers().size()])</div>
                 <div class="offline">$i18n.getText('chat.bar.offline')</div>
             </div>
-            <div id="chatbar-status-icon">&nbsp;</div>
+            <span class="chaticon-chat"></span>
             <br style="clear: both; " />
         </div>
         <div class="chatbar-box">
