@@ -1,7 +1,6 @@
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
 import java.util.HashMap;
@@ -14,8 +13,8 @@ public class SendAction extends AbstractChatAction {
 	private String message;
 	private String receiver;
 
-	public SendAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public SendAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override

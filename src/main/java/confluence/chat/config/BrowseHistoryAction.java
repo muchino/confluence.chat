@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.config;
 
 import bucket.core.actions.PaginationSupport;
@@ -12,12 +8,10 @@ import com.atlassian.confluence.search.contentnames.QueryToken;
 import com.atlassian.confluence.search.contentnames.QueryTokenizer;
 import com.atlassian.confluence.search.contentnames.ResultTemplate;
 import com.atlassian.confluence.search.contentnames.SearchResult;
-import com.atlassian.confluence.user.actions.SearchUsersAction;
 import com.atlassian.core.db.JDBCUtils;
 import com.atlassian.hibernate.PluginHibernateSessionFactory;
 import com.atlassian.user.User;
 import confluence.chat.manager.ChatManager;
-import confluence.chat.utils.ChatUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,31 +22,16 @@ import net.sf.hibernate.HibernateException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-/**
- *
- * @author oli
- */
 public class BrowseHistoryAction extends ConfluenceActionSupport {
 
+	private static final Logger logger = Logger.getLogger(BrowseHistoryAction.class);
 	private PaginationSupport paginationSupport;
 	private PluginHibernateSessionFactory pluginHibernateSessionFactory;
 	private QueryTokenizer contentNameQueryTokenizer;
 	private ContentNameSearcher contentNameSearcher;
-	private static final Logger logger = Logger.getLogger(BrowseHistoryAction.class);
+	private ChatManager chatManager;
 	private Integer startIndex = 0;
 	private String searchTerm;
-
-	public void setPluginHibernateSessionFactory(PluginHibernateSessionFactory sessionFactory) {
-		this.pluginHibernateSessionFactory = sessionFactory;
-	}
-
-	public void setContentNameSearcher(ContentNameSearcher contentNameSearcher) {
-		this.contentNameSearcher = contentNameSearcher;
-	}
-
-	public void setContentNameQueryTokenizer(QueryTokenizer contentNameQueryTokenizer) {
-		this.contentNameQueryTokenizer = contentNameQueryTokenizer;
-	}
 
 	public String doUserSearch() {
 		List chatResults = new ArrayList();
@@ -62,7 +41,7 @@ public class BrowseHistoryAction extends ConfluenceActionSupport {
 			addActionMessage("There are no chats stored in the systen yet");
 		} else {
 
-			List<Category> searchCategories = new ArrayList<Category>();
+			List<Category> searchCategories = new ArrayList<>();
 			searchCategories.add(Category.PEOPLE);
 
 			Map<Category, List<SearchResult>> results = contentNameSearcher.search(
@@ -70,21 +49,12 @@ public class BrowseHistoryAction extends ConfluenceActionSupport {
 					generateResultTemplate(searchCategories));
 
 			// convert search results to user objects
-			List<User> users = new ArrayList<User>();
 			for (List<SearchResult> resultCategories : results.values()) {
 				for (SearchResult resultEntry : resultCategories) {
 					User user = userAccessor.getUser(resultEntry.getUsername());
 					chatResults.add(user);
 				}
 			}
-
-//			addActionMessage(allkeysWithBoxes.size() + "");
-//			for (String userKey : allkeysWithBoxes) {
-//				User user = userAccessor.getUser(ChatUtils.getUserNameByKeyOrUserName(userKey));
-////				if (user != null) {
-//				chatResults.add(user);
-////				}
-//			}
 		}
 
 		paginationSupport = new PaginationSupport(chatResults, 10);
@@ -93,7 +63,7 @@ public class BrowseHistoryAction extends ConfluenceActionSupport {
 	}
 
 	private List<QueryToken> generateQueryTokens(String query) {
-		List<QueryToken> queryTokens = new ArrayList<QueryToken>();
+		List<QueryToken> queryTokens = new ArrayList<>();
 		if (StringUtils.isBlank(query) || query.startsWith("*")) {
 			queryTokens.add(new QueryToken("", QueryToken.Type.PARTIAL));
 		} else {
@@ -117,8 +87,12 @@ public class BrowseHistoryAction extends ConfluenceActionSupport {
 			ResultSet rs = ps.executeQuery(ChatManager.QUERY_HISTORIES);
 			while (rs.next()) {
 				String key = rs.getString(1);
-				String replace = key.replace(ChatManager.KEY_HISTORY, "");
-				usernames.add(replace);
+				String username = key.replace(ChatManager.KEY_HISTORY, "");
+				if (userAccessor.getUser(username) != null) {
+					chatManager.deleteChatBoxesOfUser(username);
+				} else {
+					usernames.add(username);
+				}
 			}
 		} catch (HibernateException ex) {
 			addActionError("Error while Hibernate execution: " + ex.getMessage());
@@ -158,6 +132,22 @@ public class BrowseHistoryAction extends ConfluenceActionSupport {
 
 	public String getSearchTerm() {
 		return searchTerm;
+	}
+
+	public void setPluginHibernateSessionFactory(PluginHibernateSessionFactory sessionFactory) {
+		this.pluginHibernateSessionFactory = sessionFactory;
+	}
+
+	public void setContentNameSearcher(ContentNameSearcher contentNameSearcher) {
+		this.contentNameSearcher = contentNameSearcher;
+	}
+
+	public void setContentNameQueryTokenizer(QueryTokenizer contentNameQueryTokenizer) {
+		this.contentNameQueryTokenizer = contentNameQueryTokenizer;
+	}
+
+	public void setChatManager(ChatManager chatManager) {
+		this.chatManager = chatManager;
 	}
 
 }
