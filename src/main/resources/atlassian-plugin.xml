@@ -192,13 +192,16 @@
 		<resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
 		<resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css" />
-		<resource type="download" name="chatbar.css" location="confluence/chat/css/chatbar.css"/>
+		<resource type="download" name="chatbar_old.css" location="confluence/chat/css/chatbar.css"/>
+		<resource type="download" name="box.css" location="confluence/chat/css/box.less"/>
 		<resource type="download" name="chatbox.css" location="confluence/chat/css/chatbox.less"/>
-		<resource type="download" name="font.css" location="confluence/chat/font/chat.css"/>
+		<resource type="download" name="chatbar.css" location="confluence/chat/css/chatbar.less"/>
+		<resource type="download" name="font.css" location="confluence/chat/font/chaticons.css"/>
 		<resource type="download" name="screen_ie.css" location="confluence/chat/css/screen_ie.css">
 			<param name="ieonly" value="true"/>
 		</resource>
-		<resource name="chatbox.soy.js" type="download" location="confluence/chat/templates/chatbox.soy"/>
+		<resource name="chat.soy.js" type="download" location="confluence/chat/templates/chat.soy"/>
+		<dependency>com.atlassian.auiplugin:aui-experimental-soy-templates</dependency>
 		<context>main</context>
      
 	</web-resource>
@@ -291,16 +294,16 @@
 	</web-item>  
 	
 	   
-	<resource type="download" name="font/chat.eot" location="confluence/chat/font/chat.eot" >
+	<resource type="download" name="font/chaticons.eot" location="confluence/chat/font/chaticons.eot" >
 		<property key="content-type" value="application/vnd.ms-fontobject"/>
 	</resource>
-	<resource type="download" name="font/chat.woff" location="confluence/chat/font/chat.woff" >
+	<resource type="download" name="font/chaticons.woff" location="confluence/chat/font/chaticons.woff" >
 		<property key="content-type" value="application/x-font-woff"/>
 	</resource>
-	<resource type="download" name="font/chat.ttf" location="confluence/chat/font/chat.ttf" >
+	<resource type="download" name="font/chaticons.ttf" location="confluence/chat/font/chaticons.ttf" >
 		<property key="content-type" value="application/x-font-ttf"/>
 	</resource>
-	<resource type="download" name="font/chat.svg" location="confluence/chat/font/chat.svg" >
+	<resource type="download" name="font/chaticons.svg" location="confluence/chat/font/chaticons.svg" >
 		<property key="content-type" value="image/svg+xml"/>
 	</resource>
 			    

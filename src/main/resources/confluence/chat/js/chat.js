@@ -131,15 +131,15 @@ ConfluenceChatConfig = {
 	};
 
 	ChatBar.prototype.isSound = function () {
-		return !$('#chatbar .csound').hasClass('csound-off');
+		return $('#chatbar').hasClass('csound-on');
 	};
 
 	ChatBar.prototype.deactivateSound = function () {
-		$('#chatbar .csound').addClass('csound-off');
+		$('#chatbar').removeClass('csound-on');
 		AJS.Cookie.save("chatsoundoff", "true");
 	};
 	ChatBar.prototype.activateSound = function () {
-		$('#chatbar .csound').removeClass('csound-off');
+		$('#chatbar').addClass('csound-on');
 		AJS.Cookie.erase("chatsoundoff");
 	};
 	ChatBar.prototype.getStatusOfUser = function (username) {
@@ -157,7 +157,6 @@ ConfluenceChatConfig = {
 			AJS.log('Deactivate Chat, because ' + this.requestFailed + ' failed! Perhaps chat is deactivated or uninstalled, and this javascript is in the browsercache');
 
 			this.chatDeactivated = true;
-			$('#chatbar-button-online').text(this.getConfigParameter('chat.bar.deactivated'));
 			this.setStatus('xa');
 			$('#chatbar .chatbar-box').hide();
 		}
@@ -222,7 +221,7 @@ ConfluenceChatConfig = {
 						$.jStorage.publish(CHAT_CHANNEL_MESSAGES, data.chatboxes);
 
 					}
-					var beat = (parseInt(that.getConfigParameter("chat-heartbeat")));
+					var beat = (parseInt(that.bar.data("heartbeat")));
 					if (typeof (beat) !== "number") {
 						beat = 700;
 					}
@@ -381,10 +380,10 @@ ConfluenceChatConfig = {
 		var that = this;
 		this.bar = $('#chatbar');
 		var $body = $('body');
-		this.version = this.getConfigParameter('chat-version');
-		this.debug = "true" === this.getConfigParameter('chat-debugMode');
-		this.showHistoryEnabled = "true" === this.getConfigParameter('chat-showHistory');
-		this.hideInEditMode = "true" === this.getConfigParameter('chat-hideInEditMode');
+		this.version = this.bar.data('version');
+		this.debug = "true" === this.bar.data('debugMode');
+		this.showHistoryEnabled = "true" === this.bar.data('showHistory');
+		this.hideInEditMode = "true" === this.bar.data('hideInEditMode');
 		AJS.log('Init Confluence Chat in version: ' + this.version);
 		if (this.hideInEditMode) {
 			this.chatDeactivated = this.chatDeactivated || isInEditMode();
@@ -403,17 +402,12 @@ ConfluenceChatConfig = {
 		this.username = AJS.params.remoteUser;
 		this.onlineUsersBox = this.bar.find('#chatbar-online-users');
 		this.configurationBox = this.bar.find('#chatbar-config');
-		this.bar.find('#chatbar-buttons').click(function (event) {
+		this.bar.find('#chatbar').click(function (event) {
 			if (that.chatDeactivated) {
-				that.bar.removeClass('open');
 				return false;
 			}
-
-			that.bar.toggleClass('open');
-			if (that.bar.hasClass('open')) {
+			if (!that.bar.hasClass('open')) {
 				that.maximize();
-			} else {
-				that.minimize();
 			}
 
 			event.preventDefault();
@@ -569,6 +563,8 @@ ConfluenceChatConfig = {
 				if (opts.focus) {
 					this.chatBoxes[opts.chatBoxId].show();
 					this.chatBoxes[opts.chatBoxId].focusChatBox();
+				} else {
+					this.log('don not focus chatBox for ' + opts.dispayTitle + ' chatId: ' + opts.chatBoxId);
 				}
 
 				this.restructureChatBoxes();
@@ -582,12 +578,12 @@ ConfluenceChatConfig = {
 
 	ChatBar.prototype.bindChatWithLinks = function () {
 		var that = this,
-				links = $('.chatuser-link:not([data-user-chat-bound=true])');
+				links = $('.chatuser-link:not([data-user-chat-bound=true]), .chat-user:not([data-user-chat-bound=true])');
 		links.click(function () {
 			var link = $(this);
 			that.chatWith({
-				chatBoxId: link.attr('chatboxid'),
-				chatUserList: link.attr('data-username'),
+				chatBoxId: link.data('chatboxid'),
+				chatUserList: link.data('username'),
 				dispayTitle: link.text(),
 				focus: true
 			});
@@ -612,15 +608,6 @@ ConfluenceChatConfig = {
 					});
 				};
 		reorderEl(this.chatOnlineUserDiv.find('.chat-user').sort(sortByFullname));
-
-		this.chatOnlineUserDiv.find('.chat-user').click(function () {
-			that.chatWith({
-				chatBoxId: $(this).attr('chatBoxId'),
-				chatUserList: $(this).attr('username'),
-				dispayTitle: $(this).find('.chat-user-info span.user-hover-trigger').text(),
-				focus: true
-			});
-		});
 	};
 	ChatBar.prototype.refreshUser = function (data) {
 		var that = this,
@@ -635,48 +622,30 @@ ConfluenceChatConfig = {
 					chatBoxId = user.id;
 			that.users[username] = user;
 			if (that.username !== user.un) {
-				var chatUser = that.chatOnlineUserDiv.find('.chat-user[chatBoxId=' + chatBoxId + ']');
-				if (!chatUser.size()) {
-					chatUser = that.chatBox.clone(true);
-					chatUser.show();
-					chatUser.attr('chatBoxId', chatBoxId);
-					chatUser.attr('username', username);
-					chatUser.find('.chat-user-info .is').text(user.fn).addClass('user-hover-trigger').attr('data-username', username);
-					chatUser.find('.chat-where').addClass('chat-where-' + chatBoxId);
-					that.chatOnlineUserDiv.append(chatUser);
-					that.reorderUser();
+				var $chatUser = that.chatOnlineUserDiv.find('.chat-user[data-chatboxid=' + chatBoxId + ']');
+				if (!$chatUser.size()) {
+					that.chatOnlineUserDiv.append($(ConfluenceChat.Templates.chatBarUser(user)));
+
 					try {
 						AJS.Confluence.Binder.userHover();
 					} catch (e) {
 					}
 				} else {
-					chatUser.removeAttr(tmpAttr);
+					$chatUser.removeAttr(tmpAttr);
 				}
-				// aktionen die immer gemacht werden müssen
-				chatUser.find('> div').attr('class', user.s);
-				var img = chatUser.find('img');
-				if (img.attr('src') !== user.p) {
-					img.attr('src', user.p);
-				}
+				// append the state of the user to that list
+				$chatUser.find('> div').attr('class', user.s);
+//				var img = $chatUser.find('img');
+//				if (img.attr('src') !== user.p) {
+//					img.attr('src', user.p);
+//				}
 
 				// update where state
-				$('.chat-where-' + chatBoxId).replaceWith(ConfluenceChat.Templates.where({
-					id: chatBoxId,
-					url: user.su,
-					title: user.st
-				}));
+				$('.chat-where-' + chatBoxId).replaceWith(ConfluenceChat.Templates.where(user));
+				if (jQuery().tooltip) {
+					$('.chat-where-' + chatBoxId + ' a').tooltip();
+				}
 
-//				if (typeof user.su !== "undefined" && typeof user.st !== "undefined") {
-//
-//					var title = user.st;
-//					userWhere.find('a').attr('href', user.su).attr('title', user.st);
-//					userWhere.find('span').text(title);
-//					userWhere.show();
-//				} else {
-//					userWhere.find('a').attr('href', '').attr('title', '');
-//					userWhere.find('span').text('');
-//					userWhere.hide();
-//				}
 			} else {
 				ownUserInList = true;
 				var chatStatus = that.bar.find('#chatbar-status');
@@ -685,20 +654,19 @@ ConfluenceChatConfig = {
 					chatStatus.attr('class', user.s);
 				}
 			}
-			$('#chatbox_' + chatBoxId + ' > div , .chatuser-link-holder[chatboxid=' + chatBoxId + "] > span").attr('class', user.s);
+			$('#chatbox_' + chatBoxId + ' > div ,#status_' + chatBoxId + ' , .chatuser-link-holder[chatboxid=' + chatBoxId + "] > span").attr('class', user.s);
 		});
+
 		$('.chatbox > div.unknown').attr('class', '');
 		this.chatOnlineUserDiv.find('.chat-user[' + tmpAttr + ']').remove();
 		var count = data.users.length;
 		if (count > 0 && ownUserInList) {
 			count--;
 		}
-		this.bar.find('#chatbar-button-online span').text(count);
-	};
+		this.bar.find('#chatbar h1 span').text("(" + count + ")");
 
-
-	ChatBar.prototype.getConfigParameter = function (param) {
-		return this.bar.find('.parameters input[name="' + param + '"]').val();
+		this.reorderUser();
+		this.bindChatWithLinks();
 	};
 
 	ChatBar.prototype.initCompatibility = function () {
@@ -789,6 +757,9 @@ ConfluenceChatConfig = {
 		});
 	};
 
+
+	var ACTIVE_TEXTAREA = "chat-active-textarea";
+
 	function ChatBox(options) {
 
 		this.opt = $.extend({
@@ -866,7 +837,7 @@ ConfluenceChatConfig = {
 	};
 	ChatBox.prototype.startBlink = function () {
 		this.show();
-		if (!this.textarea.hasClass('cb-ts')
+		if (!this.textarea.hasClass(ACTIVE_TEXTAREA)
 				&& this.blinkInterval === null
 				&& chatBar.getHeartbeatCount() > 0
 				) {
@@ -880,7 +851,7 @@ ConfluenceChatConfig = {
 		if (chatBar.isCoordinator()
 				&& chatBar.getHeartbeatCount() > 0) {
 			if (!chatBar.windowHasFocus() ||
-					!this.textarea.hasClass('cb-ts')) {
+					!this.textarea.hasClass(ACTIVE_TEXTAREA)) {
 				try {
 					if (chatBar.isSound() && SOUND !== null) {
 						SOUND.load().play();
@@ -899,12 +870,12 @@ ConfluenceChatConfig = {
 		this.box.removeClass('blink');
 	};
 	ChatBox.prototype.blink = function () {
-		if (this.box.hasClass('blink')) {
+		if (this.box.find('header').hasClass('blink')) {
 			document.title = this.opt.dispayTitle + ' ' + AJS.I18n.getText('chat.says.name');
 		} else {
 			document.title = chatBar.getOriginalTitle();
 		}
-		this.box.toggleClass('blink');
+		this.box.find('header').toggleClass('blink');
 	};
 
 	ChatBox.prototype.init = function () {
@@ -935,6 +906,10 @@ ConfluenceChatConfig = {
 			return false;
 		});
 
+		$box.find('.cb-head').click(function () {
+			that.maximize();
+		});
+
 		$box.find('.opt-close').click(function () {
 			that.closeChatBox();
 		});
@@ -946,10 +921,12 @@ ConfluenceChatConfig = {
 				that.send();
 			}
 		}).blur(function () {
-			$(this).removeClass('cb-ts');
+			$(this).removeClass(ACTIVE_TEXTAREA);
 		}).focus(function () {
-			$(this).addClass('cb-ts');
-		}).chatAutogrow();
+			$(this).addClass(ACTIVE_TEXTAREA);
+		}).autogrow({
+			onInitialize: true
+		});
 
 		if (this.minimizeChatBox === 1 || this.isMinimized()) {
 			this.minimize();

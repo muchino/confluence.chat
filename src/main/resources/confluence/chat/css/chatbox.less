@@ -1,73 +1,6 @@
 @import "colors.less";
 
 .chatbox {
-
-    position: fixed;
-    position:expression("absolute");
-    width: 260px;
-   	background: #F5F5F5;
-
-	&.closed {
-		display: none;
-	}
-
-	&.min {
-		.chat-where,
-		.cb-input,
-		.chat-discussion{
-			display: none;
-		}
-		.opt-min {
-			display: none;
-		}
-
-		.opt-max {
-			display: inline-block;
-		}
-	}
-
-	.opt-max {
-		display: none;
-	}
-
-	.cb-head {
-		background: #666;
-		color: white;
-		padding: 0.5rem;
-		position: relative;
-		overflow: hidden;
-
-		h1 {
-			display: inline;
-			font-size: 1.1rem;
-		}
-
-		.left {
-			float: left;
-		}
-		.right {
-			float: right;
-			cursor: pointer;
-			/*padding-top: 5px;*/
-		}
-		> * {
-			position: relative;
-		}
-	}
-
-	.cb-head:before {
-		content: "";
-		position: absolute;
-		top: -100%;
-		left: 0;
-		right: 0;
-		bottom: -100%;
-		opacity: 0.25;
-		background: radial-gradient(#ffffff, #000000);
-		animation: pulse 1s ease alternate infinite;
-	}
-
-
 	.chat-discussion {
 		height:221px;
 		overflow-y:auto;
@@ -75,8 +8,6 @@
 		list-style: none;
 		margin: 0;
 		padding: 0 0 50px 0;
-		border-left: 1px solid @border-color;
-		border-right: 1px solid @border-color;
 		li {
 			padding: 0.5rem;
 			overflow: hidden;
@@ -167,10 +98,6 @@
 
 	.cb-input {
 		padding: 5px;
-		border-left:1px solid @border-color;
-		border-right:1px solid @border-color;
-		border-bottom:1px solid @border-color;
-
 
 		textarea{
 			width: 235px;

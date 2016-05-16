@@ -1,0 +1,94 @@
+@import "colors.less";
+
+.chat-boxed {
+
+	z-index: 3000;
+    position: fixed;
+    position:expression("absolute");
+    width: 260px;
+   	background: #F5F5F5;
+	bottom: 0;
+
+	&.closed {
+		display: none;
+	}
+
+	&.min {
+		.chat-where,
+		.cb-input,
+		.chat-discussion{
+			display: none;
+		}
+		.opt-min {
+			display: none;
+		}
+
+		.opt-max {
+			display: inline-block;
+		}
+	}
+
+	.opt-max {
+		display: none;
+	}
+
+	.cb-head {
+
+		background: @color-bar-background;
+		border-right:1px solid @color-bar-background;
+		border-left:1px solid @color-bar-background;
+		color: @color-bar-color;
+		padding: 0.5rem;
+		position: relative;
+		overflow: hidden;
+		.background-transform();
+		.chat-head(@status-offline);
+		
+		a {
+			color: @color-bar-color;
+		}
+		
+		&.blink {
+			background-color: @color-bar-background-blink;
+			border-right:1px solid @color-bar-background-blink;
+			border-left:1px solid @color-bar-background-blink;
+			.background-transform();
+		}
+
+		h1 {
+			display: inline;
+			font-size: 16px;
+			color: @color-bar-color;
+		}
+
+		.left {
+			float: left;
+		}
+		.right {
+			float: right;
+			cursor: pointer;
+			/*padding-top: 5px;*/
+		}
+		> * {
+			position: relative;
+		}
+
+	}
+
+	.away .cb-head {
+		.chat-head(@status-away);
+	}
+	.dnd .cb-head {
+		.chat-head(@status-dnd);
+	}
+	.chat .cb-head,
+	.online .cb-head {
+		.chat-head(@status-online);
+	}
+
+	.chat-content {
+		border-left: 1px solid @border-color;
+		border-right: 1px solid @border-color;
+	}
+
+}

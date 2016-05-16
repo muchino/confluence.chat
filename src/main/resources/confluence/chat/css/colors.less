@@ -1,1 +1,25 @@
 @border-color: #eaeaea;
+@color-bar-color: #ffffff;
+@color-bar-background-blink: #3572b0;
+@color-bar-background: #205081;
+
+@status-online: #14892c;
+@status-away: #f6c342;
+@status-offline: #d04437;
+@status-dnd: #d04437;
+
+.background-transform() {
+	-webkit-transition: background-color 500ms linear;
+	-moz-transition: background-color 500ms linear;
+	-o-transition: background-color 500ms linear;
+	-ms-transition: background-color 500ms linear;
+	transition: background-color 500ms linear;	
+
+}
+
+
+.chat-head(@color) {
+	border-bottom-width: 3px;
+	border-bottom-style: solid;
+	border-bottom-color: @color;
+}

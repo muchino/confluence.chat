@@ -1,0 +1,65 @@
+@import "colors.less";
+
+#chatbar {
+    right:  0;
+	width: 240px;
+    /*height: 30px;*/
+
+
+
+	.csound-active {
+		display: none;
+	}
+
+	&.csound-on {
+		.csound-active {
+			display: inline-block;
+		}
+		.csound-deactive {
+			display: none;
+		}
+	}
+
+	#chatbar-config {
+		display: none;
+	}
+
+	&.config {
+		#chatbar-config {
+			display: block;
+		}
+		#chatbar-online-users{
+			display: none;	
+		}
+	}
+
+
+	#chatbar-online-users-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		.chat-user {
+			padding: 5px;
+			border-bottom: 1px solid @border-color;
+
+			:last-child {
+
+			}
+
+			.chat-status:before {
+				color: @status-offline;
+			}
+			.away .chat-status:before {
+				color: @status-away;
+			}
+			.dnd .chat-status:before {
+				color: @status-dnd;
+			}
+			.chat .chat-status:before,
+				.online .chat-status:before {
+				color: @status-online;
+			}
+		}
+	}
+}

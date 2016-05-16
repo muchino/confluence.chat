@@ -1,0 +1,185 @@
+{namespace ConfluenceChat.Templates}
+
+
+/**
+ * Template to render the chatBox
+ * @param id the id of the chatbox
+ * @param title the title of the chatbox
+ */
+{template .chatBox}
+<section class="chatbox chat-boxed" id="chatbox_{$id}" data-id="{$id}">
+	<div id="status_{$id}"">
+		{call ConfluenceChat.Templates.header}
+			{param title}
+				{$title|noAutoescape}
+				{call ConfluenceChat.Templates.where data="all" /}
+			{/param}
+			{param options}
+				<span class="chaticon-history opt-history" title="{getText('chat.history.show')}" ></span>  
+				<span class="chaticon-minus opt-min" title="{getText('chat.icon.min')}" ></span>      
+				<span class="chaticon-plus opt-max" title="{getText('chat.icon.max')}"></span>    
+				<span class="chaticon-cancel opt-close" title="{getText('chat.icon.close')}"></span>
+			{/param}
+		{/call}  
+		<div class="chat-content">
+			<ol class="chat-discussion" />
+			{call ConfluenceChat.Templates.textarea /}
+		</div>
+	</div>
+</section>
+{/template}
+
+/**
+ * Template to render the chatBox
+ * @param id the unique id of the message
+ * @param slot a unique id of this time slot
+ * @param self is the message from the current user or from another user
+ * @param messageHTML the message as HTML
+ * @param timeFormatted the send date of the message
+ * @param picture the profile image of the user
+ * @param username the username if the sender
+ * @param displayName Fullname of the sender
+ * @param time the timestamp of this slot
+*/
+{template .messageSlot}
+	<li class="{$self}" data-slot="{$slot}" data-user="{$username}">      
+		<div class="avatar">        
+			<img src="{$picture}" />      
+		</div>      
+		<div class="messages"> 
+			<strong data-username ="{$username}">{$displayName}</strong>
+			{call .message }
+				{param id: $id /}
+           		{param messageHTML: $messageHTML/}
+			{/call}     
+			<time data-time="{$time}">{$timeFormatted}</time>
+		</div>    
+	</li> 
+{/template}
+
+/**
+ * Template to render the chatBox
+ * @param id the unique id of the message
+ * @param messageHTML the message as HTML
+ */
+{template .message}
+	<p id="{$id}">{$messageHTML} </p>      
+{/template}
+
+/**
+ * Template to render the chatBox
+ * @param title the id of the chatbox
+ * @param options The options on the right side
+*/
+{template .header}
+	<header class="cb-head">        
+		<div class="left">      
+			<span class="chaticon-chat"></span>      
+			<h1>{$title|noAutoescape}</h1>    
+		</div>        
+		<div class="right">      
+			{$options|noAutoescape}
+			
+		</div>      
+	</header>   
+{/template}
+
+/**
+ * Template to render the textarea of the chat
+*/
+{template .textarea}
+<div class="cb-input">
+	<textarea placeholder="{getText('chat.box.textarea.placeholder')}"></textarea>
+</div>
+{/template}
+
+
+
+/**
+ * Template to render the chatBar
+ * @param showHistory Show the link to the history
+ * @param playSound Play an incomming sound
+ * @param debugMode Enables debugging
+ * @param heartbeat The configured heartbeat
+ * @param hideInEditor Hide the chat in the editor
+ * @param version the version of the chat add-on
+ * @param status the status of the user
+ * @param onlineOffline Shows if the user is online
+ */
+{template .chatBar}
+<section id="chatbar" 
+	class=" chat-boxed {$onlineOffline} {if $playSound} csound-on {/if}" 
+	data-debugMode="{$debugMode}"
+	data-heartbeat="{$heartbeat}"
+	data-hideInEditor="{$hideInEditor}"	
+	data-version="{$version}"	
+	>
+    <div id="chatbar-status" class="{$status}">
+		{call ConfluenceChat.Templates.header}
+			{param title}
+				{getText('chat.bar.contacts')} <span></span>
+			{/param}	
+			{param options}
+				{if $showHistory}
+					<a href="{contextPath()}/users/chat/history.action" class="chaticon-history opt-history" title="{getText('chat.history.show')}" ></a>  
+				{/if}
+				<span class="chaticon-cogs cb-config" title="{getText('chat.icon.config')}" ></span>  
+				<span class="chaticon-minus opt-min" title="{getText('chat.icon.min')}" ></span>      
+				<span class="chaticon-plus opt-max" title="{getText('chat.icon.max')}"></span>    
+			{/param}
+		{/call} 
+		<div class="chat-content">
+			<div id="chatbar-online-users" class="chatbar-box-content">
+				<ol id="chatbar-online-users-list" />
+			</div>
+			<div id="chatbar-config" class="chatbar-box-content chat-options">
+				<select name="status">
+					<option  value="chat" {if $status == 'chat'} selected="selected" {/if} >{getText('chat.bar.config.online')}</option>
+					<option  value="away" {if $status == 'away'} selected="selected" {/if} >{getText('chat.bar.config.away')}</option>
+					<option  value="dnd" {if $status == 'dnd'} selected="selected" {/if} >{getText('chat.bar.config.dnd')}</option>
+					<option  value="xa" {if $status == 'xa'} selected="selected" {/if}>{getText('chat.bar.config.offline')}</option>
+				</select>
+				<span title="{getText('chat.icon.sound')}"  class="chaticon-volume-off-1 csound csound-deactive"></span>
+				<span title="{getText('chat.icon.sound')}"  class="chaticon-volume-up csound csound-active"></span>
+				<a class="cb-users" href="#">{getText('back.name')}</a>
+			</div>
+		</div>
+    </div>
+</section>
+{/template}
+
+
+/**
+ * Template to render the single user in the chatbar
+ * @param un The Username of the user
+ * @param id the id for the chatbox
+ * @param fn the fullname of the user 
+ * @param s the current status of the user
+ * @param? su Where is the user at the momen? 
+ * @param? st the title of the location
+ */
+{template .chatBarUser}
+	<li class="chat-user" data-chatboxid="{$id}" data-username="{$un}">
+		<div class="{$s}">  
+			<div class="chat-user-info">
+				<span class="is"><span class="chat-status chaticon-circle-empty">{$fn}</span>
+				{call ConfluenceChat.Templates.where data="all" /}
+			</div>
+		</div>
+	</li>
+{/template}
+
+
+/**
+ * Template to render where the user is currently
+ * @param id the id for the chatbox
+ * @param? su Where is the user at the momen? 
+ * @param? st the title of the location
+ */
+{template .where}
+	<span class="chat-where-{$id}">
+		{if $su}
+			<a class="chaticon-link" title="{$st}" href="{$su}" ></a>
+		{/if}
+	</span>
+{/template}

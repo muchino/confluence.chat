@@ -1,15 +1,4 @@
-.chatbox,
-#chatbar {
-    right:  0;
-    position: fixed;
-    bottom:  0%;
-    z-index: 3000;
-}
-
-#chatbar {
-    background-color: #003366;
-    height: 30px;
-}
+/*
 
 #chatbar #chatbar-config{
     padding: 10px;
@@ -117,7 +106,7 @@
     background: #ffffff;
 }
 #chatbar-online-users-list .chat-user:last-child{
-    /*    border-bottom: none;*/
+        border-bottom: none;
 }
 .chat-user.hover,
 .chat-user:hover{
@@ -208,20 +197,8 @@
     margin-right: -16px;
     position: relative;
 }
+*/
 
-#chatbar #chatbar-buttons .csound {
-    background-image:  url("images-chat/sound.png");  
-    background-repeat: no-repeat;
-    float: left;
-    height: 16px;
-    width: 16px;
-    margin: 0 10px;
-
-}
-
-#chatbar #chatbar-buttons .csound.csound-off {
-    background-image:  url("images-chat/sound_mute.png");  
-}
 
 body.chat-active .toolbar-split-right {
     margin-right: 30px;

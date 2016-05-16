@@ -45,9 +45,9 @@
         var headerColor = $('#header').css('backgroundColor');
         if ($.inArray(headerColor, forbiddenColors) < 0) {
             try {
-                $.chatstyle.insertRule(['div.cb-head', '#chatbar'], 'background-color:' + headerColor + ";");
-                $.chatstyle.insertRule(['div.cb-head'], 'border-color:' + headerColor + ";");
-                $.chatstyle.insertRule(['div.cb-head'], 'color:' + $('#header a').css('color') + ";");
+                $.chatstyle.insertRule(['.cb-head'], 'background-color:' + headerColor + ";");
+                $.chatstyle.insertRule(['.cb-head'], 'border-color:' + headerColor + ";");
+                $.chatstyle.insertRule(['.cb-head'], 'color:' + $('#header a').css('color') + ";");
             } catch (ex) {
             }
         }

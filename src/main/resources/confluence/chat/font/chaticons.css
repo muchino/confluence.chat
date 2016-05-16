@@ -1,11 +1,11 @@
 @font-face {
-  font-family: 'chat';
-  src: url('font/chat.eot?5555505');
-  src: url('font/chat.eot?5555505#iefix') format('embedded-opentype'),
-       url('font/chat.woff2?5555505') format('woff2'),
-       url('font/chat.woff?5555505') format('woff'),
-       url('font/chat.ttf?5555505') format('truetype'),
-       url('font/chat.svg?5555505#chat') format('svg');
+  font-family: 'chaticons';
+  src: url('font/chaticons.eot?71197798');
+  src: url('font/chaticons.eot?71197798#iefix') format('embedded-opentype'),
+       url('font/chaticons.woff2?71197798') format('woff2'),
+       url('font/chaticons.woff?71197798') format('woff'),
+       url('font/chaticons.ttf?71197798') format('truetype'),
+       url('font/chaticons.svg?71197798#chaticons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,14 +14,14 @@
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
-    font-family: 'chat';
-    src: url('font/chat.svg?5555505#chat') format('svg');
+    font-family: 'chaticons';
+    src: url('font/chaticons.svg?71197798#chaticons') format('svg');
   }
 }
 */
  
- [class^="chaticon"]:before, [class*="chaticon-"]:before {
-  font-family: "chat";
+ [class^="chaticon-"]:before, [class*=" chaticon-"]:before {
+  font-family: "chaticons";
   font-style: normal;
   font-weight: normal;
   speak: none;
@@ -66,5 +66,19 @@
 .chaticon-group:before { content: '\e808'; } /* '' */
 .chaticon-cogs:before { content: '\e809'; } /* '' */
 .chaticon-clock:before { content: '\e80a'; } /* '' */
-.chaticon-volume-up-1:before { content: '\e80b'; } /* '' */
-.chaticon-volume-off:before { content: '\e80c'; } /* '' */
+.chaticon-user:before { content: '\e80b'; } /* '' */
+.chaticon-tools:before { content: '\e80c'; } /* '' */
+.chaticon-plus:before { content: '\e80d'; } /* '' */
+.chaticon-minus:before { content: '\e80e'; } /* '' */
+.chaticon-help-circled:before { content: '\e80f'; } /* '' */
+.chaticon-info-circled:before { content: '\e810'; } /* '' */
+.chaticon-link:before { content: '\e811'; } /* '' */
+.chaticon-attach:before { content: '\e812'; } /* '' */
+.chaticon-right-open-mini:before { content: '\e813'; } /* '' */
+.chaticon-down-open-mini:before { content: '\e814'; } /* '' */
+.chaticon-circle:before { content: '\e815'; } /* '' */
+.chaticon-circle-empty:before { content: '\e816'; } /* '' */
+.chaticon-comment:before { content: '\e817'; } /* '' */
+.chaticon-chat-1:before { content: '\e818'; } /* '' */
+.chaticon-cancel:before { content: '\e819'; } /* '' */
+.chaticon-cancel-squared:before { content: '\e81a'; } /* '' */
