@@ -3,19 +3,13 @@
 #chatbar {
     right:  0;
 	width: 240px;
-    /*height: 30px;*/
 
+	&.min:not(:hover) {
+		width: 40px;
+		cursor:pointer;
 
-
-	.csound-active {
-		display: none;
-	}
-
-	&.csound-on {
-		.csound-active {
-			display: inline-block;
-		}
-		.csound-deactive {
+		h1,
+		.right {
 			display: none;
 		}
 	}
@@ -30,6 +24,19 @@
 		}
 		#chatbar-online-users{
 			display: none;	
+		}
+
+		.csound-active {
+			display: none;
+		}
+
+		&.csound-on {
+			.csound-active {
+				display: inline-block;
+			}
+			.csound-deactive {
+				display: none;
+			}
 		}
 	}
 

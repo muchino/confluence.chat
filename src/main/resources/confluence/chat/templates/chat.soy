@@ -108,7 +108,7 @@
  */
 {template .chatBar}
 <section id="chatbar" 
-	class=" chat-boxed {$onlineOffline} {if $playSound} csound-on {/if}" 
+	class=" chat-boxed min {$onlineOffline} {if $playSound} csound-on {/if}" 
 	data-debugMode="{$debugMode}"
 	data-heartbeat="{$heartbeat}"
 	data-hideInEditor="{$hideInEditor}"	
@@ -162,7 +162,7 @@
 	<li class="chat-user" data-chatboxid="{$id}" data-username="{$un}">
 		<div class="{$s}">  
 			<div class="chat-user-info">
-				<span class="is"><span class="chat-status chaticon-circle-empty">{$fn}</span>
+				<span class="is"><span class="chat-status chaticon-circle">{$fn}</span>
 				{call ConfluenceChat.Templates.where data="all" /}
 			</div>
 		</div>
