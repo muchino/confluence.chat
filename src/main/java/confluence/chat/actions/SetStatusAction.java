@@ -2,13 +2,12 @@ package confluence.chat.actions;
 
 import com.atlassian.confluence.core.Beanable;
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
 import confluence.chat.manager.ChatManager;
 
 public class SetStatusAction extends AbstractChatAction implements Beanable {
 
-	public SetStatusAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public SetStatusAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override

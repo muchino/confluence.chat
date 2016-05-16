@@ -11,16 +11,18 @@ import confluence.chat.manager.ChatManager;
 import confluence.chat.model.ChatBoxId;
 import confluence.chat.model.ChatMessageList;
 import confluence.chat.model.ChatUser;
+import confluence.chat.utils.ChatUtils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-public class GetUserHistoryAction extends AbstractUserProfileAction implements UserAware {
+public class UserHistoryAction extends AbstractUserProfileAction implements UserAware {
 
-	private static final Logger logger = Logger.getLogger(GetUserHistoryAction.class);
+	private static final Logger logger = Logger.getLogger(UserHistoryAction.class);
 	private ChatMessageList messages = new ChatMessageList();
 	private ChatUser chatUser = null;
 	private Integer days = 7;
@@ -38,13 +40,11 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
 	}
 
 	@Override
-	public void validate() {
-		super.validate();
-	}
-
-	@Override
 	public String execute() throws Exception {
-		super.execute();
+		if (getRemoteUser() == null) {
+			return NONE;
+		}
+
 		User currentUser = AuthenticatedUserThreadLocal.getUser();
 		boolean hasPermission = permissionManager.hasPermission(
 				currentUser, Permission.ADMINISTER, PermissionManager.TARGET_SYSTEM);
@@ -52,29 +52,32 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
 			return NONE;
 		}
 
-		if (StringUtils.isNotBlank(historyUsername)) {
-			messagesince = GetHistoryAjaxAction.getSinceDate(getDays());
-			chatUser = getChatManager().getChatUser(historyUsername);
+		if (StringUtils.isBlank(historyUsername)
+				|| (StringUtils.isNotBlank(historyUsername) && userAccessor.getUser(historyUsername) == null)) {
+			if (StringUtils.isNotBlank(historyUsername)) {
+				addActionError(getText("confluence.chat.error.usernotfound", new String[]{historyUsername}));
+			}
+			paginationSupport = new PaginationSupport(chatManager.getKeysOfChats(getUser()), 10);
+			paginationSupport.setStartIndex(startIndex);
+
+		} else if (StringUtils.isNotBlank(historyUsername)) {
+			messagesince = HistoryAjaxAction.getSinceDate(getDays());
+			chatUser = chatManager.getChatUser(historyUsername);
 			if (getDays() > 0) {
-				messages = getChatManager().getChatBoxes(getUser()).getChatBoxWithUser(historyUsername).getMessagesSince(getMessagesince());
+				messages = chatManager.getChatBoxes(getUser()).getChatBoxWithUser(historyUsername).getMessagesSince(getMessagesince());
 				Collections.reverse(messages);
 			} else {
-				messages = getChatManager().getChatBoxes(getUser()).getChatBoxWithUser(historyUsername).getMessages();
+				messages = chatManager.getChatBoxes(getUser()).getChatBoxWithUser(historyUsername).getMessages();
 			}
-
-		} else {
-			paginationSupport = new PaginationSupport(getChatManager().getKeysOfChats(getUser()), 10);
-			paginationSupport.setStartIndex(startIndex);
 		}
 		return SUCCESS;
 	}
 
 	public String deleteBox() {
 		if (StringUtils.isNotBlank(historyUsername)) {
-			User historyUser = userAccessor.getUser(historyUsername);
-			ChatBoxId chatBoxId = new ChatBoxId(historyUser);
-			logger.debug(chatBoxId);
-			chatManager.deleteChatBox(getRemoteUser(), chatBoxId.toString());
+			AbstractChatAction.logger.debug(ChatUtils.getCorrectUserKey(historyUsername));
+			ChatBoxId chatBoxId = new ChatBoxId(ChatUtils.getCorrectUserKey(historyUsername));
+//			chatManager.deleteChatBox(getRemoteUser(), chatBoxId.toString());
 		}
 		return SUCCESS;
 	}
@@ -153,7 +156,8 @@ public class GetUserHistoryAction extends AbstractUserProfileAction implements U
 
 	@Override
 	public String getUsername() {
-		if (StringUtils.isBlank(username)) {
+		if (StringUtils.isBlank(username)
+				&& getRemoteUser() != null) {
 			username = getRemoteUser().getName();
 		}
 		return username;

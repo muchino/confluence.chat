@@ -71,4 +71,6 @@ public interface ChatManager {
 	public List<String> getKeysOfChats(User user);
 
 	public Boolean isRenameUserImplemented();
+
+	public void deleteChatBoxesOfUser(final String usernameOrkey);
 }

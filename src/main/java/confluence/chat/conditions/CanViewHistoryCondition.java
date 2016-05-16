@@ -6,7 +6,7 @@ import com.atlassian.confluence.security.Permission;
 import com.atlassian.confluence.security.PermissionManager;
 import com.atlassian.confluence.user.AuthenticatedUserThreadLocal;
 import com.atlassian.user.User;
-import confluence.chat.actions.LoginLogoutListener;
+import confluence.chat.listener.LoginLogoutListener;
 import confluence.chat.manager.ChatManager;
 import org.apache.log4j.Logger;
 

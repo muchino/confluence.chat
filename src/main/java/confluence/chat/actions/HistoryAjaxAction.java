@@ -1,7 +1,6 @@
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
 import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.model.ChatBox;
@@ -17,25 +16,19 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
-public class GetHistoryAjaxAction extends AbstractChatAction {
+public class HistoryAjaxAction extends AbstractChatAction {
 
 	private static final String PARAM_DAYS = "days";
+	private final DateFormat miuntes = new SimpleDateFormat("yMdkm");
 	private ChatMessageList messages = new ChatMessageList();
 	private ChatUser chatUser = null;
 	private Integer days = 7;
-	private DateFormat miuntes = new SimpleDateFormat("yMdkm");
+
 	private String lastWrittenMessageDate = null;
 	private Date messagesince = null;
 
-	/**
-	 * @return the messages
-	 */
-	public ChatMessageList getMessages() {
-		return messages;
-	}
-
-	public GetHistoryAjaxAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public HistoryAjaxAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override
@@ -49,7 +42,7 @@ public class GetHistoryAjaxAction extends AbstractChatAction {
 			}
 		}
 
-		messagesince = GetHistoryAjaxAction.getSinceDate(days);
+		messagesince = HistoryAjaxAction.getSinceDate(days);
 		if (StringUtils.isNotBlank(getChatBoxId())) {
 			ChatBox box = chatManager.getChatBoxes(getRemoteUser()).getChatBoxByStringId(getChatBoxId());
 			if (days > 0) {
@@ -82,6 +75,10 @@ public class GetHistoryAjaxAction extends AbstractChatAction {
 
 	public List<String> getKeysOfChats() {
 		return chatManager.getKeysOfChats(getRemoteUser());
+	}
+
+	public ChatMessageList getMessages() {
+		return messages;
 	}
 
 	/**
