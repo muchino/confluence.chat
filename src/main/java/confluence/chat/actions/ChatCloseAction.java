@@ -1,24 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.actions;
 
-import confluence.chat.manager.ChatManager;
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
-import com.opensymphony.webwork.ServletActionContext;
-import javax.servlet.http.HttpServletRequest;
+import confluence.chat.manager.ChatManager;
 import org.apache.commons.lang.StringUtils;
 
-/**
- *
- * @author oli
- */
 public class ChatCloseAction extends AbstractChatAction {
 
-	public ChatCloseAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public ChatCloseAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override
