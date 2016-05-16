@@ -49,21 +49,12 @@ public class BrowseHistoryAction extends ConfluenceActionSupport {
 					generateResultTemplate(searchCategories));
 
 			// convert search results to user objects
-			List<User> users = new ArrayList<>();
 			for (List<SearchResult> resultCategories : results.values()) {
 				for (SearchResult resultEntry : resultCategories) {
 					User user = userAccessor.getUser(resultEntry.getUsername());
 					chatResults.add(user);
 				}
 			}
-
-//			addActionMessage(allkeysWithBoxes.size() + "");
-//			for (String userKey : allkeysWithBoxes) {
-//				User user = userAccessor.getUser(ChatUtils.getUserNameByKeyOrUserName(userKey));
-////				if (user != null) {
-//				chatResults.add(user);
-////				}
-//			}
 		}
 
 		paginationSupport = new PaginationSupport(chatResults, 10);
