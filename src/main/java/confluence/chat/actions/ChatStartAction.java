@@ -1,13 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
 import com.opensymphony.webwork.ServletActionContext;
-import static com.opensymphony.xwork.Action.SUCCESS;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.model.ChatBox;
 import confluence.chat.model.ChatBoxMap;
@@ -18,14 +12,10 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
-/**
- *
- * @author oli
- */
 public class ChatStartAction extends AbstractChatAction {
 
-	public ChatStartAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public ChatStartAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	/**

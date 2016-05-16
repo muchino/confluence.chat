@@ -1,7 +1,6 @@
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.model.ChatUser;
 import confluence.chat.model.ChatUserMapComparable;
@@ -10,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GetOnlineUserAction extends AbstractChatAction {
+public class OnlineUserAction extends AbstractChatAction {
 
 	private List<ChatUserMapComparable> chatUserList;
 
-	public GetOnlineUserAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public OnlineUserAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override
@@ -35,6 +34,5 @@ public class GetOnlineUserAction extends AbstractChatAction {
 	public List<ChatUser> getOnlineUsers() {
 		return chatManager.getOnlineUsers(getSpaceKey());
 	}
-
 
 }

@@ -1,16 +1,13 @@
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
-import com.opensymphony.webwork.ServletActionContext;
 import confluence.chat.manager.ChatManager;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 public class ChatDeleteHistoryAction extends AbstractChatAction {
 
-	public ChatDeleteHistoryAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public ChatDeleteHistoryAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override

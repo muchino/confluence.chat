@@ -27,11 +27,10 @@ import org.apache.log4j.Logger;
 
 public abstract class AbstractChatAction extends ConfluenceActionSupport implements Beanable {
 
-	private static final Logger logger = Logger.getLogger(AbstractChatAction.class);
+	public static final Logger logger = Logger.getLogger(AbstractChatAction.class);
 
 	protected final ChatManager chatManager;
 	protected final PageManager pageManager;
-	protected final PermissionManager permissionManager;
 
 	private String status;
 	private String mouseMove;
@@ -47,10 +46,9 @@ public abstract class AbstractChatAction extends ConfluenceActionSupport impleme
 	private ChatBoxMap chatBoxMap = new ChatBoxMap();
 	private Date newRequestDate = null;
 
-	public AbstractChatAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
+	public AbstractChatAction(ChatManager chatManager, PageManager pageManager) {
 		this.chatManager = chatManager;
 		this.pageManager = pageManager;
-		this.permissionManager = permissionManager;
 
 	}
 

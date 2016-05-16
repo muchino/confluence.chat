@@ -1,7 +1,6 @@
 package confluence.chat.actions;
 
 import com.atlassian.confluence.pages.PageManager;
-import com.atlassian.confluence.security.PermissionManager;
 import confluence.chat.manager.ChatManager;
 import confluence.chat.model.ChatBox;
 import confluence.chat.model.ChatBoxMap;
@@ -12,8 +11,8 @@ import java.util.Iterator;
 
 public class HeartbeatAction extends AbstractChatAction {
 
-	public HeartbeatAction(ChatManager chatManager, PageManager pageManager, PermissionManager permissionManager) {
-		super(chatManager, pageManager, permissionManager);
+	public HeartbeatAction(ChatManager chatManager, PageManager pageManager) {
+		super(chatManager, pageManager);
 	}
 
 	@Override

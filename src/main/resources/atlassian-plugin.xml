@@ -54,7 +54,7 @@
 			</action>
 		</package>  
                 
-		<action name="gethistory" class="confluence.chat.actions.GetHistoryAjaxAction" >
+		<action name="gethistory" class="confluence.chat.actions.HistoryAjaxAction" >
 			<condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
 			<result name="success" type="velocity">/confluence/chat/templates/gethistory.vm</result>
 		</action>
@@ -107,7 +107,7 @@
 				<condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
 				<result name="success" type="velocity">/confluence/chat/templates/chatbar.vm</result>
 			</action>
-			<action name="gethistory" class="confluence.chat.actions.GetHistoryAjaxAction" >
+			<action name="gethistory" class="confluence.chat.actions.HistoryAjaxAction" >
 				<condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
 				<result name="success" type="velocity">/confluence/chat/templates/gethistory.vm</result>
 			</action>
@@ -116,14 +116,14 @@
         
 		<package name="Chat users" namespace="/users/chat" extends="default">
 			<default-interceptor-ref name="validatingStack"/>
-			<action name="history" class="confluence.chat.actions.GetUserHistoryAction">
+			<action name="history" class="confluence.chat.actions.UserHistoryAction">
 				<result name="input" type="velocity">/confluence/chat/templates/gethistory-user-page.vm</result>
 				<result name="error" type="velocity">/confluence/chat/templates/gethistory-user-page.vm</result>
 				<result name="success" type="velocity">/confluence/chat/templates/gethistory-user-page.vm</result>
 				<result name="none" type="velocity">/404.vm</result>
 			</action>
 			
-			<action name="deletehistory" class="confluence.chat.actions.GetUserHistoryAction" method="deleteBox">
+			<action name="deletehistory" class="confluence.chat.actions.UserHistoryAction" method="deleteBox">
 				<result name="success" type="redirect">/users/chat/history.action</result>
 				<result name="input" type="redirect">/users/chat/history.action</result>
 				<result name="error" type="redirect">/users/chat/history.action</result>
@@ -137,7 +137,7 @@
 		<package name="ChatActions" extends="default"  namespace="/chat">
 			<default-interceptor-ref name="defaultStack"/>
             
-			<action name="history" class="confluence.chat.actions.GetHistoryAjaxAction" >
+			<action name="history" class="confluence.chat.actions.HistoryAjaxAction" >
 				<condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
 				<result name="success" type="velocity">/confluence/chat/templates/gethistorypage.vm</result>
 			</action>
@@ -161,7 +161,7 @@
 				<condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
 				<result name="success" type="json" />
 			</action>  
-			<action name="getonlineuser" class="confluence.chat.actions.GetOnlineUserAction" >
+			<action name="getonlineuser" class="confluence.chat.actions.OnlineUserAction" >
 				<condition>com.atlassian.confluence.plugin.descriptor.web.conditions.user.UserLoggedInCondition</condition>
 				<result name="success" type="json" />
 			</action>  
@@ -243,11 +243,10 @@
 	<resource type="download" name="clear.png" location="confluence/chat/img/clear.png">
 		<param name="content-type" value="image/png"/>
 	</resource>
-	<listener name='Login Logout Listener' class='confluence.chat.actions.LoginLogoutListener'
-			  key='chatLoginListener'>
-		<description>Listen for the login or the logout an user, to set the chat status </description>
-	</listener>
-    
+	
+	<component key="login-listener" class="confluence.chat.listener.LoginLogoutListener" />
+		<component key="user-change-listener" class="confluence.chat.listener.UserListener" />
+
 	<xhtml-macro name="chat-user-link"
 				 class="confluence.chat.macros.ChatUserLink"
 				 key="chat-user-link"

@@ -26,6 +26,7 @@ import confluence.chat.utils.ChatUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,19 +35,22 @@ import org.apache.commons.lang.StringUtils;
 
 public final class DefaultChatManager implements ChatManager {
 
-	private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
-	private BandanaManager bandanaManager;
-	private UserAccessor userAccessor;
-	private ChatUserList users = new ChatUserList();
-	private Map<String, ChatBoxMap> chatBoxes = new ConcurrentHashMap<String, ChatBoxMap>();
-	private Map<String, ChatSpaceConfiguration> configurationSpace = new ConcurrentHashMap<String, ChatSpaceConfiguration>();
-	private TransactionTemplate transactionTemplate;
-	private GroupManager groupManager;
+	private final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+	private final BandanaManager bandanaManager;
+	private final UserAccessor userAccessor;
+	private final ChatUserList users = new ChatUserList();
+	private final Map<String, ChatBoxMap> chatBoxes = new ConcurrentHashMap<>();
+	private final Map<String, ChatSpaceConfiguration> configurationSpace = new ConcurrentHashMap<>();
+	private final TransactionTemplate transactionTemplate;
+	private final GroupManager groupManager;
 	private ChatUseCondition chatUseCondition;
 	private ChatConfiguration chatConfiguration;
 //    private ChatVersionTransformer chatVersionTransformer;
 
-	public DefaultChatManager(final BandanaManager bandanaManager, final UserAccessor userAccessor, final TransactionTemplate transactionTemplate, final GroupManager groupManager) {
+	public DefaultChatManager(final BandanaManager bandanaManager,
+			final UserAccessor userAccessor,
+			final TransactionTemplate transactionTemplate,
+			final GroupManager groupManager) {
 		this.bandanaManager = bandanaManager;
 		this.userAccessor = userAccessor;
 		this.transactionTemplate = transactionTemplate;
@@ -74,22 +78,25 @@ public final class DefaultChatManager implements ChatManager {
 
 		String userKey = ChatUtils.getCorrectUserKey(username);
 		if (!chatBoxes.containsKey(userKey)) {
-			ChatBoxMap chatBoxeMapOfUser = getChatBoxMapOfUserFromBandana(userKey);
+
+			logger.debug(" no boxes for " + userKey);
+
+			ChatBoxMap chatBoxMapOfUser = getChatBoxMapOfUserFromBandana(userKey);
 
 			/**
 			 * check if old chatboxes are there (pre 5.3) and convert them if
 			 * needed
 			 */
-			if (chatBoxeMapOfUser.isEmpty()
+			if (chatBoxMapOfUser.isEmpty()
 					&& UserCompatibilityHelper.isRenameUserImplemented()
 					&& !username.equals(userKey)) {
 				ChatBoxMap oldChatBoxeMapOfUser = getChatBoxMapOfUserFromBandana(username);
-				chatBoxeMapOfUser = this.transformToUserKeyChatBoxMap(username, oldChatBoxeMapOfUser);
+				chatBoxMapOfUser = this.transformToUserKeyChatBoxMap(username, oldChatBoxeMapOfUser);
 
 			}
-			chatBoxes.put(userKey, chatBoxeMapOfUser);
-			return chatBoxeMapOfUser;
 
+			chatBoxMapOfUser.removeInvalidChatBoxes(userAccessor);
+			chatBoxes.put(userKey, chatBoxMapOfUser);
 		}
 
 		return chatBoxes.get(userKey);
@@ -111,16 +118,22 @@ public final class DefaultChatManager implements ChatManager {
 						Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContext).iterator();
 						while (iterator.hasNext()) {
 							String chatBoxId = iterator.next();
-							try {
-								ChatBox chatBox = (ChatBox) bandanaManager.getValue(confluenceBandanaContext, chatBoxId);
-								if (chatBox == null) {
-									bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
+							String userName = ChatUtils.getUserNameByKeyOrUserName(chatBoxId);
+							if (userAccessor.getUser(userName) != null) {
+								try {
+									ChatBox chatBox = (ChatBox) bandanaManager.getValue(confluenceBandanaContext, chatBoxId);
+									if (chatBox == null) {
+										bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
 
-								} else {
-									chatBoxMap.put(chatBoxId, chatBox);
+									} else {
+										chatBoxMap.put(chatBoxId, chatBox);
+									}
+								} catch (Exception e) {
+									logger.warn(" error bandanaManager.getValue for chat box  " + chatBoxId + " for user: " + username);
 								}
-							} catch (Exception e) {
-								logger.warn(" error bandanaManager.getValue for chat box  " + chatBoxId + " for user: " + username);
+
+							} else {
+								bandanaManager.removeValue(confluenceBandanaContext, chatBoxId);
 							}
 						}
 					} catch (Exception e) {
@@ -219,7 +232,7 @@ public final class DefaultChatManager implements ChatManager {
 
 	@Override
 	public List<ChatUser> getOnlineUsers(String spaceKey) {
-		List<ChatUser> onlineUserList = new ArrayList<ChatUser>();
+		List<ChatUser> onlineUserList = new ArrayList<>();
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.SECOND, -ChatManager.SECONDS_TO_BE_OFFLINE);
 		Date time = cal.getTime();
@@ -423,7 +436,10 @@ public final class DefaultChatManager implements ChatManager {
 	 *
 	 * @param usernameOrkey
 	 */
-	private void deleteChatBoxesOfUser(final String usernameOrkey) {
+	@Override
+	public void deleteChatBoxesOfUser(final String usernameOrkey) {
+		logger.debug("Remove all chats of user " + usernameOrkey);
+
 		transactionTemplate.execute(new TransactionCallback() {
 			@Override
 			public Object doInTransaction() {
@@ -455,7 +471,7 @@ public final class DefaultChatManager implements ChatManager {
 
 	@Override
 	public List<String> getKeysOfChats(User user) {
-		final List<String> usernames = new ArrayList<String>();
+		final List<String> usernames = new ArrayList<>();
 		final String usernameOrKey = ChatUtils.getCorrectUserKey(user.getName());
 		transactionTemplate.execute(new TransactionCallback() {
 			@Override
@@ -463,7 +479,15 @@ public final class DefaultChatManager implements ChatManager {
 				ConfluenceBandanaContext confluenceBandanaContextHistory = getConfluenceBandanaContextHistory(usernameOrKey);
 				Iterator<String> iterator = bandanaManager.getKeys(confluenceBandanaContextHistory).iterator();
 				while (iterator.hasNext()) {
-					usernames.add(ChatUtils.getUserNameByKeyOrUserName(iterator.next()));
+
+					String key = iterator.next();
+					// check if the user was deleted in the meantime
+					String userName = ChatUtils.getUserNameByKeyOrUserName(key);
+					if (userAccessor.getUser(userName) != null) {
+						usernames.add(userName);
+					} else {
+						bandanaManager.removeValue(confluenceBandanaContextHistory, key);
+					}
 				}
 				return null;
 			}
@@ -482,10 +506,10 @@ public final class DefaultChatManager implements ChatManager {
 				// alte box
 				ChatBox box = map.get(iterator.next());
 				// change members to userkeys
-				List<String> members = new ArrayList<String>();
+				List<String> members = new ArrayList<>();
 				List<String> userKeyMembers = box.getUserKeyMembers();
-				for (int i = 0; i < userKeyMembers.size(); i++) {
-					members.add(ChatUtils.getCorrectUserKey(userKeyMembers.get(i)));
+				for (String userKeyMember : userKeyMembers) {
+					members.add(ChatUtils.getCorrectUserKey(userKeyMember));
 				}
 				box.getUserKeyMembers().clear();
 				box.getUserKeyMembers().addAll(members);
