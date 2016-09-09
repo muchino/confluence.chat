@@ -56,12 +56,12 @@ WHERE  BANDANAKEY LIKE  'confluence.chat.configuration%'
 To remove complete History: 
 
 ```sql
-FROM  bandana
+DELETE FROM  bandana
 WHERE  BANDANACONTEXT LIKE  'confluence.chat.history.%'
 ```
 To remove all user settings (Status, ... )
 ```sql
-FROM  bandana
+DELETE FROM  bandana
 WHERE  BANDANACONTEXT LIKE  'confluence.chat.preferences.%'
 ```
 
