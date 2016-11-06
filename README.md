@@ -1,9 +1,9 @@
 # Confluence Chat <img width="72px" src="https://raw.github.com/muchino/confluence.chat/master/src/main/resources/confluence/chat/img/plugin-logo.png"> 
 
 
-**Neues Repository auf [Bitbucket](https://bitbucket.org/muchino/chat-for-confluence/overview)**
+**The repository is moved to [Bitbucket](https://bitbucket.org/muchino/chat-for-confluence/overview)**
 
-**Neues Issue Tracking auf [Bitbucket](https://bitbucket.org/muchino/chat-for-confluence/issues?status=new&status=open)**
+**The Issue Tracking is moved to [Bitbucket](https://bitbucket.org/muchino/chat-for-confluence/issues?status=new&status=open)**
 
 
 [Features](#features)  
