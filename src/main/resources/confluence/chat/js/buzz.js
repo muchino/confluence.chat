@@ -6,8 +6,12 @@
 // Copyright (C) Jay Salvat
 // http://jaysalvat.com/
 // ----------------------------------------------------------------------------
+/* jshint browser: true, node: true */
+/* global define */
 
 (function (context, factory) {
+    "use strict";
+
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = factory();
     } else if (typeof define === 'function' && define.amd) {
@@ -16,18 +20,21 @@
         context.buzz = factory();
     }
 })(this, function () {
+    "use strict";
 
-    var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+
     var buzz = {
-        audioCtx: AudioContextCtor ? new AudioContextCtor() : null,
         defaults: {
             autoplay: false,
+            crossOrigin: null,
             duration: 5000,
             formats: [],
             loop: false,
             placeholder: '--',
             preload: 'metadata',
             volume: 80,
+            webAudioApi: false,
             document: window.document // iframe support
         },
         types: {
@@ -39,6 +46,19 @@
         },
         sounds: [],
         el: document.createElement('audio'),
+
+        getAudioContext: function() {
+            if (this.audioCtx === undefined) {
+                try {
+                    this.audioCtx = AudioContext ? new AudioContext() : null;
+                } catch (e) {
+                    // There is a limit to how many contexts you can have, so fall back in case of errors constructing it
+                    this.audioCtx = null;
+                }
+            }
+
+            return this.audioCtx;
+        },
 
         sound: function (src, options) {
             options = options || {};
@@ -108,8 +128,8 @@
                     return this;
                 }
 
-                this.setTime(0);
                 this.sound.pause();
+                this.setTime(0);
 
                 return this;
             };
@@ -229,7 +249,7 @@
                     if (set === true) {
                         set = false;
                         this.sound.currentTime = time;
-                   }
+                    }
                 });
 
                 return this;
@@ -451,7 +471,7 @@
 
                     for (var i = 0; i < events.length; i++) {
                         var namespace = events[i].idx.split('.');
-                        if (events[i].idx == idx || (namespace[1] && namespace[1] == idx.replace('.', ''))) {
+                        if (events[i].idx === idx || (namespace[1] && namespace[1] === idx.replace('.', ''))) {
                             this.sound.removeEventListener(type, events[i].func, true);
                             // remove event
                             events.splice(i, 1);
@@ -481,7 +501,7 @@
                 return this;
             };
 
-            this.trigger = function (types) {
+            this.trigger = function (types, detail) {
                 if (!supported) {
                     return this;
                 }
@@ -494,10 +514,12 @@
                     for (var i = 0; i < events.length; i++) {
                         var eventType = events[i].idx.split('.');
 
-                        if (events[i].idx == idx || (eventType[0] && eventType[0] == idx.replace('.', ''))) {
+                        if (events[i].idx === idx || (eventType[0] && eventType[0] === idx.replace('.', ''))) {
                             var evt = doc.createEvent('HTMLEvents');
 
                             evt.initEvent(eventType[0], false, true);
+
+                            evt.originalEvent = detail;
 
                             this.sound.dispatchEvent(evt);
                         }
@@ -521,12 +543,15 @@
 
                 var from = this.volume,
                     delay = duration / Math.abs(from - to),
-                    self = this;
+                    self = this,
+                    fadeToTimeout;
 
                 this.play();
 
                 function doFade() {
-                    setTimeout(function () {
+                    clearTimeout(fadeToTimeout);
+
+                    fadeToTimeout = setTimeout(function () {
                         if (from < to && self.volume < to) {
                             self.setVolume(self.volume += 1);
                             doFade();
@@ -592,6 +617,25 @@
                 }
             };
 
+            this.addSource = function (src) {
+                var self   = this,
+                    source = doc.createElement('source');
+
+                source.src = src;
+
+                if (buzz.types[getExt(src)]) {
+                    source.type = buzz.types[getExt(src)];
+                }
+
+                this.sound.appendChild(source);
+
+                source.addEventListener('error', function (e) {
+                    self.trigger('sourceerror', e);
+                });
+
+                return source;
+            };
+
             // privates
             function timerangeToArray(timeRange) {
                 var array = [],
@@ -611,50 +655,47 @@
                 return filename.split('.').pop();
             }
 
-            function addSource(sound, src) {
-                var source = doc.createElement('source');
-
-                source.src = src;
-
-                if (buzz.types[getExt(src)]) {
-                    source.type = buzz.types[getExt(src)];
-                }
-
-                sound.appendChild(source);
-            }
-
             // init
             if (supported && src) {
 
                 for (var i in buzz.defaults) {
                     if (buzz.defaults.hasOwnProperty(i)) {
-                        if (options[i] === undefined)
+                        if (options[i] === undefined) {
                             options[i] = buzz.defaults[i];
+                        }
                     }
                 }
 
                 this.sound = doc.createElement('audio');
-                
+
+                // Shoud we set crossOrigin?
+                if (options.crossOrigin !== null) {
+                    this.sound.crossOrigin = options.crossOrigin;
+                }
+
                 // Use web audio if possible to improve performance.
-                if (buzz.audioCtx) {
-                    this.source = buzz.audioCtx.createMediaElementSource(this.sound);
-                    this.source.connect(buzz.audioCtx.destination);
+                if (options.webAudioApi) {
+                    var audioCtx = buzz.getAudioContext();
+                    if (audioCtx) {
+                      this.source = audioCtx.createMediaElementSource(this.sound);
+                      this.source.connect(audioCtx.destination);
+                    }
                 }
 
                 if (src instanceof Array) {
                     for (var j in src) {
                         if (src.hasOwnProperty(j)) {
-                            addSource(this.sound, src[j]);
+                            this.addSource(src[j]);
                         }
                     }
                 } else if (options.formats.length) {
                     for (var k in options.formats) {
                         if (options.formats.hasOwnProperty(k)) {
-                            addSource(this.sound, src + '.' + options.formats[k]);
+                            this.addSource(src + '.' + options.formats[k]);
                         }
                     }
                 } else {
-                    addSource(this.sound, src);
+                    this.addSource(src);
                 }
 
                 if (options.loop) {
@@ -700,7 +741,7 @@
 
                 for (var a = 0; a < soundArray.length; a++) {
                     for (var i = 0; i < sounds.length; i++) {
-                        if (sounds[i] == soundArray[a]) {
+                        if (sounds[i] === soundArray[a]) {
                             sounds.splice(i, 1);
                             break;
                         }
@@ -782,6 +823,12 @@
 
             this.unloop = function () {
                 fn('unloop');
+
+                return this;
+            };
+
+            this.setSpeed = function (speed) {
+                fn('setSpeed', speed);
 
                 return this;
             };
@@ -895,11 +942,11 @@
         fromTimer: function (time) {
             var splits = time.toString().split(':');
 
-            if (splits && splits.length == 3) {
+            if (splits && splits.length === 3) {
                 time = (parseInt(splits[0], 10) * 3600) + (parseInt(splits[1], 10) * 60) + parseInt(splits[2], 10);
             }
 
-            if (splits && splits.length == 2) {
+            if (splits && splits.length === 2) {
                 time = (parseInt(splits[0], 10) * 60) + parseInt(splits[1], 10);
             }
 
