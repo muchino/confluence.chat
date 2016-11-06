@@ -183,6 +183,7 @@
 		<resource type="download" name="jquery.autogrow-textarea.js" location="confluence/chat/js/jquery.autogrow-textarea.js"/>
         
 		<resource type="download" name="chat.js" location="confluence/chat/js/chat.js"/>
+		<resource type="download" name="chat-notification.js" location="confluence/chat/js/chat-notification.js"/>
 		<resource type="download" name="chat.css" location="confluence/chat/css/chat.css"/>
         
 		<resource type="download" name="smiley.css" location="confluence/chat/css/smiley.css" />
