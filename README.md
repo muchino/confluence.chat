@@ -1,5 +1,8 @@
 # Confluence Chat <img width="72px" src="https://raw.github.com/muchino/confluence.chat/master/src/main/resources/confluence/chat/img/plugin-logo.png"> 
 
+
+**Neues Repository auf Bitbucket. https://bitbucket.org/muchino/chat-for-confluence/overview**
+**Neues Issue Tracking auf Bitbucket. https://bitbucket.org/muchino/chat-for-confluence/issues?status=new&status=open**
 [Features](#features)  
 [FAQ](#faq)  
 [Releases](#releases)  
@@ -137,4 +140,4 @@ initial release
 ## URLs
 
 * Atlassian Marketplace: https://marketplace.atlassian.com/plugins/confluence.chat
-* GitHub Pages. http://muchino.github.com/confluence.chat/
+* Neues Repository auf Bitbucket. https://bitbucket.org/muchino/chat-for-confluence/overview
